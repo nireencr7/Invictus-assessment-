@@ -45,8 +45,37 @@ variable "default_monthly_cap_usd" {
 }
 
 variable "alert_email" {
-  description = "Where budget / escalation / outage alerts go."
+  description = "Where budget / escalation / outage alerts go. Empty: alert policies exist but notify no one."
   type        = string
+  default     = ""
+}
+
+variable "llm_provider" {
+  description = "vertex (Claude on Vertex AI) or offline (the labelled stand-in, $0)."
+  type        = string
+  default     = "vertex"
+  validation {
+    condition     = contains(["vertex", "offline"], var.llm_provider)
+    error_message = "llm_provider must be vertex or offline."
+  }
+}
+
+variable "api_max_instances" {
+  description = "Upper bound on API instances. Each holds up to 10 DB connections, so keep it under db_max_connections / 10."
+  type        = number
+  default     = 10
+}
+
+variable "db_max_connections" {
+  description = "Postgres max_connections."
+  type        = number
+  default     = 100
+}
+
+variable "deletion_protection" {
+  description = "Protect Cloud SQL and Cloud Run from deletion. false for a demo, so `terraform destroy` tears everything down."
+  type        = bool
+  default     = true
 }
 
 variable "console_image" {

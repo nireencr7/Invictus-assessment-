@@ -1,0 +1,22 @@
+# Builds and pushes both images (API/worker, staff console) in parallel. Used for the first
+# deployment and for image-only rebuilds; deploy/cloudbuild.yaml is the full pipeline
+# (tests, build, migrate, roll out).
+#   gcloud builds submit --config deploy/cloudbuild-images.yaml --substitutions=_TAG=$(git rev-parse --short HEAD) \
+#     --service-account projects/$PROJECT/serviceAccounts/riverbend-build@$PROJECT.iam.gserviceaccount.com .
+substitutions:
+  _REGION: us-central1
+  _REPO: riverbend
+  _TAG: latest
+options:
+  logging: CLOUD_LOGGING_ONLY
+steps:
+  - id: app
+    name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/app:${_TAG}", "."]
+  - id: console
+    name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/console:${_TAG}", "ui"]
+    waitFor: ["-"]
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/app:${_TAG}
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/console:${_TAG}

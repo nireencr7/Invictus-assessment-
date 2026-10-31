@@ -1,6 +1,6 @@
 locals {
   common_env = {
-    LLM_PROVIDER            = "vertex"
+    LLM_PROVIDER            = var.llm_provider
     LLM_MODEL               = var.llm_model
     VERTEX_PROJECT          = var.project_id
     VERTEX_REGION           = var.vertex_region
@@ -13,15 +13,16 @@ locals {
 # --- API: intake + staff reads. Never calls the model. --------------------------------------
 
 resource "google_cloud_run_v2_service" "api" {
-  name     = "riverbend-api"
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
+  name                = "riverbend-api"
+  location            = var.region
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  deletion_protection = var.deletion_protection
 
   template {
     service_account = google_service_account.api.email
     scaling {
       min_instance_count = 0
-      max_instance_count = 10
+      max_instance_count = var.api_max_instances
     }
     volumes {
       name = "cloudsql"
@@ -33,7 +34,8 @@ resource "google_cloud_run_v2_service" "api" {
       image = var.image
       args  = ["sh", "-c", "exec python -m riverbend api --port $PORT"]
       resources {
-        limits = { cpu = "1", memory = "512Mi" }
+        limits   = { cpu = "1", memory = "512Mi" }
+        cpu_idle = true # request-based CPU: billed only while serving
       }
       dynamic "env" {
         for_each = local.common_env
@@ -87,9 +89,10 @@ resource "google_cloud_run_v2_service_iam_member" "api_public" {
 # --- Worker: always-on consumers; the only component allowed to call Claude. -----------------
 
 resource "google_cloud_run_v2_service" "worker" {
-  name     = "riverbend-worker"
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_INTERNAL_ONLY"
+  name                = "riverbend-worker"
+  location            = var.region
+  ingress             = "INGRESS_TRAFFIC_INTERNAL_ONLY"
+  deletion_protection = var.deletion_protection
 
   template {
     service_account = google_service_account.worker.email
@@ -142,8 +145,9 @@ resource "google_cloud_run_v2_service" "worker" {
 # --- Migrations: run by CI before each rollout (gcloud run jobs execute riverbend-migrate --wait) -
 
 resource "google_cloud_run_v2_job" "migrate" {
-  name     = "riverbend-migrate"
-  location = var.region
+  name                = "riverbend-migrate"
+  location            = var.region
+  deletion_protection = var.deletion_protection
 
   template {
     template {
@@ -195,12 +199,14 @@ resource "google_cloud_run_v2_job" "migrate" {
 resource "google_service_account" "console" {
   account_id   = "riverbend-console"
   display_name = "Riverbend staff console (static files + proxy; no permissions)"
+  depends_on   = [google_project_service.apis]
 }
 
 resource "google_cloud_run_v2_service" "console" {
-  name     = "riverbend-console"
-  location = var.region
-  ingress  = "INGRESS_TRAFFIC_ALL"
+  name                = "riverbend-console"
+  location            = var.region
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  deletion_protection = var.deletion_protection
 
   template {
     service_account = google_service_account.console.email
@@ -211,7 +217,8 @@ resource "google_cloud_run_v2_service" "console" {
     containers {
       image = var.console_image
       resources {
-        limits = { cpu = "1", memory = "256Mi" }
+        limits   = { cpu = "1", memory = "256Mi" }
+        cpu_idle = true # request-based CPU (always-on CPU would need >= 512Mi)
       }
       env {
         name  = "API_UPSTREAM"

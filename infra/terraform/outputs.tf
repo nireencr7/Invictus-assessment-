@@ -15,6 +15,10 @@ output "staff_token_secret" {
   description = "Read with: gcloud secrets versions access latest --secret=riverbend-staff-tokens"
 }
 
+output "build_service_account" {
+  value = google_service_account.build.email
+}
+
 output "console_url" {
   value = google_cloud_run_v2_service.console.uri
 }

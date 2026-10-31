@@ -1,0 +1,16 @@
+# What `gcloud builds submit` uploads. Everything the two Dockerfiles need, nothing else.
+.git
+.gitignore
+.gcloudignore
+.venv/
+.devdb/
+.tools/
+.pytest_cache/
+.ruff_cache/
+**/__pycache__/
+ui/node_modules/
+ui/dist/
+results/
+docs/
+infra/
+.env

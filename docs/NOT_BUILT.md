@@ -20,7 +20,8 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 | **Content-level dedupe** | Dedupe is by `message_id` | The same text under a new id from the same sender is a second request — or a resend. That needs sender identity to tell apart. |
 | **Prompt-cache tuning, Batches API** | `cache_control` is set; cache hits are not verified. Budget-held backlog could go through Batches at 50% cost. | Needs live traffic to measure |
 | **Browser tests for the console** | Unit tests on its data layer; checked by hand in live and snapshot modes, at desktop and phone widths, light and dark | Playwright against `make up` is the next step |
-| **Load tests; applying the Terraform** | Concurrency tests (8 duplicate posts, 30 racing reservations, lease stealing); HCL that parses | No cloud credits; volume is tiny |
+| **Load tests** | Concurrency tests (8 duplicate posts, 30 racing reservations, lease stealing) | Volume is tiny |
+| **Identity-Aware Proxy and a custom domain on the live demo** | The demo is deployed with public Cloud Run URLs and token sign-in | Needs an OAuth consent screen and a domain; first thing to add before real staff use it |
 | **Structured logs / tracing** | Plain logs + an `events` timeline per conversation + log-based alerts | OpenTelemetry is the next step for ops |
 
 ## What I'd build next, in order

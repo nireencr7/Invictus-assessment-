@@ -2,6 +2,7 @@
 # messages handed to humans. They key off log lines the app already writes.
 
 resource "google_monitoring_notification_channel" "email" {
+  count        = var.alert_email == "" ? 0 : 1
   display_name = "Riverbend on-call"
   type         = "email"
   labels       = { email_address = var.alert_email }
@@ -29,9 +30,10 @@ locals {
 }
 
 resource "google_logging_metric" "m" {
-  for_each = local.log_metrics
-  name     = "riverbend/${each.key}"
-  filter   = each.value.filter
+  for_each   = local.log_metrics
+  depends_on = [google_project_service.apis]
+  name       = "riverbend/${each.key}"
+  filter     = each.value.filter
   metric_descriptor {
     metric_kind = "DELTA"
     value_type  = "INT64"
@@ -61,5 +63,6 @@ resource "google_monitoring_alert_policy" "a" {
     content = each.value.text
   }
 
-  notification_channels = [google_monitoring_notification_channel.email.id]
+  notification_channels = google_monitoring_notification_channel.email[*].id
+  depends_on            = [google_project_service.apis]
 }

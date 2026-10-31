@@ -5,11 +5,12 @@ resource "google_sql_database_instance" "main" {
   name                = "riverbend-pg"
   database_version    = "POSTGRES_16"
   region              = var.region
-  deletion_protection = true
+  deletion_protection = var.deletion_protection
 
   settings {
     tier              = var.db_tier
-    availability_type = "ZONAL" # REGIONAL (HA) is the first thing to buy when this matters more
+    edition           = "ENTERPRISE" # shared-core tiers (demo) exist only in this edition
+    availability_type = "ZONAL"      # REGIONAL (HA) is the first thing to buy when this matters more
     disk_autoresize   = true
 
     backup_configuration {
@@ -25,11 +26,7 @@ resource "google_sql_database_instance" "main" {
 
     database_flags {
       name  = "max_connections"
-      value = "100"
-    }
-
-    insights_config {
-      query_insights_enabled = true
+      value = tostring(var.db_max_connections)
     }
   }
 

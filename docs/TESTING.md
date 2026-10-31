@@ -30,4 +30,4 @@ Each test gets its own database, cloned from a migrated template in ~50 ms. Tena
 
 - **The live model's accuracy.** That's what `make eval-live` and the golden labels are for. It's an evaluation, not a unit test.
 - **The Anthropic/Vertex adapter against the real API.** It is thin and its error mapping is explicit, but it is unexercised without a key.
-- **The console in a real browser.** Checked by hand, in live and snapshot modes, at desktop and phone widths, light and dark; there are no automated browser tests (Playwright would be next). **Terraform:** syntax only. **Docker image:** built in CI, not locally.
+- **The console in a real browser.** Checked by hand, in live and snapshot modes, at desktop and phone widths, light and dark; there are no automated browser tests (Playwright would be next). **Terraform and Docker:** proven by a real deployment, but not by automated tests. `terraform validate` and `apply` were run against a live GCP project, and Cloud Build built both images (see [DEPLOYMENT_GCP.md](DEPLOYMENT_GCP.md)).

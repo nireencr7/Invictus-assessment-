@@ -14,7 +14,7 @@ The LLM reads; **code prices, dates and decides**:
 | Code, tests, one-command local run | this repo · **`make up`** (Docker) or **`make dev`** (no Docker) · `make test` |
 | A UI to see it all | the **staff console** in [`ui/`](ui): a separate React app with its own container and Cloud Run service |
 | Architecture note, 2 pages max | [**`docs/ARCHITECTURE.pdf`**](docs/ARCHITECTURE.pdf) (source: [`ARCHITECTURE.md`](docs/ARCHITECTURE.md)) |
-| Deployment path to GCP, IaC + plan | [`docs/DEPLOYMENT_GCP.md`](docs/DEPLOYMENT_GCP.md) · [`infra/terraform/`](infra/terraform) · [`deploy/cloudbuild.yaml`](deploy/cloudbuild.yaml) |
+| Deployment path to GCP, IaC + plan | [`docs/DEPLOYMENT_GCP.md`](docs/DEPLOYMENT_GCP.md) · [`infra/terraform/`](infra/terraform) · [`deploy/cloudbuild.yaml`](deploy/cloudbuild.yaml). **Deployed:** [staff console](https://riverbend-console-wndzwkly3a-uc.a.run.app) · [API](https://riverbend-api-wndzwkly3a-uc.a.run.app/docs) |
 | Results table for the 40 samples | [`docs/RESULTS.md`](docs/RESULTS.md) (+ chaos, spend-cap and outage runs) |
 | "Not built" list, next steps, 100 shops | [`docs/NOT_BUILT.md`](docs/NOT_BUILT.md) |
 | Loom: one AI decision I overrode | _link_ · the incident is in [`docs/AI_JUDGEMENT.md`](docs/AI_JUDGEMENT.md), evidence in [`docs/loom-evidence/`](docs/loom-evidence/) |
@@ -36,7 +36,7 @@ make console    # the staff console on http://localhost:5173 (proxies /v1 to :80
 
 The provider defaults to an **offline stand-in**: hand-written outputs, $0, deterministic, clearly labelled as not a model. To use Claude, put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY=…` in `.env`. Never commit it; `.env` is git-ignored.
 
-Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. The Docker path is built in CI; it wasn't run on the build machine (no Docker there).
+Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. The Docker images are proven by the GCP deployment (Cloud Build); `make up` itself wasn't run on the build machine, which has no Docker.
 
 ## The staff console
 

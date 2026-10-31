@@ -17,6 +17,8 @@ locals {
     "monitoring.googleapis.com",
     "logging.googleapis.com",
     "iam.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
   ]
 }
 
@@ -38,16 +40,34 @@ resource "google_artifact_registry_repository" "app" {
 resource "google_service_account" "api" {
   account_id   = "riverbend-api"
   display_name = "Riverbend API (intake + staff reads)"
+  depends_on   = [google_project_service.apis]
 }
 
 resource "google_service_account" "worker" {
   account_id   = "riverbend-worker"
   display_name = "Riverbend worker (calls Claude on Vertex AI)"
+  depends_on   = [google_project_service.apis]
 }
 
 resource "google_service_account" "migrate" {
   account_id   = "riverbend-migrate"
   display_name = "Riverbend migrations job"
+  depends_on   = [google_project_service.apis]
+}
+
+# Builds run as their own identity with exactly what they need. (Organisations that disable automatic
+# grants to default service accounts leave the default Cloud Build identity with no permissions.)
+resource "google_service_account" "build" {
+  account_id   = "riverbend-build"
+  display_name = "Riverbend image builds"
+  depends_on   = [google_project_service.apis]
+}
+
+resource "google_project_iam_member" "build" {
+  for_each = toset(["roles/artifactregistry.writer", "roles/logging.logWriter", "roles/storage.objectViewer"])
+  project  = var.project_id
+  role     = each.value
+  member   = "serviceAccount:${google_service_account.build.email}"
 }
 
 resource "google_project_iam_member" "sql_client" {

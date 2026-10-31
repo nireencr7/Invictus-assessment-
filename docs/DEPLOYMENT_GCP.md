@@ -1,6 +1,44 @@
 # Deploying to GCP
 
-Infrastructure-as-code lives in [`infra/terraform/`](../infra/terraform). The image pipeline is [`deploy/cloudbuild.yaml`](../deploy/cloudbuild.yaml). **Nothing here has been applied**: there were no credits. The Terraform is syntax-checked (HCL parses) but has not been through `terraform validate` against provider schemas or a real `apply`. Treat it as a reviewed plan, not a proven deployment.
+Infrastructure-as-code lives in [`infra/terraform/`](../infra/terraform). The image pipeline is [`deploy/cloudbuild.yaml`](../deploy/cloudbuild.yaml); first-time image builds use [`deploy/cloudbuild-images.yaml`](../deploy/cloudbuild-images.yaml).
+
+## It is deployed
+
+This Terraform has been applied for real, to a dedicated project created for it, with demo sizing (~$60–65/month while running).
+
+| | |
+|---|---|
+| Project | `riverbend-wo-ac52e3` (us-central1) |
+| Staff console | https://riverbend-console-wndzwkly3a-uc.a.run.app |
+| API | https://riverbend-api-wndzwkly3a-uc.a.run.app (`/readyz`, `/docs`) |
+| Model | the offline stand-in. Claude on Vertex AI answers, but a new project has **zero Claude quota** until Google approves an increase. Then set `llm_provider = "vertex"` and re-apply. |
+
+**What was verified on the live deployment:**
+- `terraform validate` against the provider schemas, then three `apply` runs (66 resources).
+- Both images built by Cloud Build from the Dockerfiles; the console image runs its type-check and tests during the build.
+- The migrations job applied `001`–`003` (schema, row-level security, the deadline fix) on Cloud SQL as a non-superuser owner.
+- The 40 samples posted through the public API with the real ingest key: 39 accepted, 1 duplicate recognised.
+- Every shop's work orders, inbox and spend read back with its real staff token, directly and through the console's proxy.
+- Another shop's token gets `404`.
+- Dev routes return `404` in production.
+- The console serves its security headers and live config.
+
+**Signing in to the console.** Each shop has its own staff token in Secret Manager:
+```bash
+gcloud secrets versions access latest --secret=riverbend-staff-tokens --project riverbend-wo-ac52e3
+```
+That prints `{"<token>": "<shop>", …}`; paste one or more tokens into the console. The admin token (for changing caps) is in `riverbend-admin-token`.
+
+**What the first real deployment caught** (each is now fixed in this repo):
+1. **Cloud Run rejects always-on CPU with under 512 MiB of memory.** When no CPU mode is set, the provider defaults to always-on, so the console (256 MiB) failed to create. Fix: `cpu_idle = true` set explicitly on the API and the console. It is also cheaper for services that scale to zero.
+2. **Default service accounts got no permissions**, because this organisation enforces `iam.automaticIamGrantsForDefaultServiceAccounts`. Builds now run as a dedicated `riverbend-build` account with exactly three roles.
+3. **No Claude quota in a new Vertex project** (HTTP 429 on the first call). The app's own outage handling would have sent every message to staff, so the deployment runs the stand-in until quota is granted.
+
+**Tear it all down** (deletion protection is off for this demo):
+```bash
+cd infra/terraform && terraform destroy     # then, to stop all billing for good:
+gcloud projects delete riverbend-wo-ac52e3
+```
 
 ## Services, and why these
 
@@ -58,6 +96,8 @@ After that, every merge to `main` runs `deploy/cloudbuild.yaml`: tests (against 
 The code cannot tell the two apart. No key is committed anywhere. On GCP the model credential is the service account itself.
 
 ## Rough monthly cost (list prices, us-central1; check with the GCP calculator)
+
+The live demo uses `db-f1-micro`, one worker and `api_max_instances = 3`: about **$60–65/month**, mostly the always-on worker. The table below is the production sizing.
 
 | Item | Estimate | Note |
 |---|---|---|

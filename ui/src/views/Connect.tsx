@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { devSession, whoAmI, type Session } from "../data/api";
 
+// Dev credentials only exist on a local API (DEV_MODE=true); don't offer them anywhere else.
+const LOCAL = ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
+
 /** Sign in with one or more staff tokens; each token only ever opens its own shop. */
 export function Connect({ apiBase, onConnected, onUseSnapshot, reason }: {
   apiBase: string;
@@ -67,7 +70,9 @@ export function Connect({ apiBase, onConnected, onUseSnapshot, reason }: {
         <button className="btn primary" disabled={busy}>Sign in</button>
         <div className="divider">or</div>
         <div className="row">
-          <button type="button" className="btn" disabled={busy} onClick={() => void useDev()}>Use local dev credentials</button>
+          {LOCAL ? (
+            <button type="button" className="btn" disabled={busy} onClick={() => void useDev()}>Use local dev credentials</button>
+          ) : null}
           {onUseSnapshot ? <button type="button" className="btn" onClick={onUseSnapshot}>View the demo snapshot</button> : null}
         </div>
         <p className="muted" style={{ margin: 0, fontSize: 12.5 }}>
