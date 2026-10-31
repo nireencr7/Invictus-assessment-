@@ -1,0 +1,4 @@
+project_id  = "riverbend-prod"
+region      = "us-central1"
+image       = "us-central1-docker.pkg.dev/riverbend-prod/riverbend/app:REPLACE_WITH_GIT_SHA"
+alert_email = "oncall@riverbendcycles.example"

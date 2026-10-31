@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "riverbend-dev", "runtimeExecutable": "make", "runtimeArgs": ["dev"], "port": 8000 }
+  ]
+}

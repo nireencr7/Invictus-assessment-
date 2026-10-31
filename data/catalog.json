@@ -1,0 +1,22 @@
+{
+  "shops": [
+    {"id": "rb-downtown", "name": "Riverbend Cycles Downtown"},
+    {"id": "rb-northside", "name": "Riverbend Cycles Northside"},
+    {"id": "rb-lakeshore", "name": "Riverbend Cycles Lakeshore"}
+  ],
+  "currency": "USD",
+  "services": [
+    {"code": "TUNE_BASIC", "name": "Basic tune-up", "price": 65.00, "minutes": 45, "requires_inspection": false},
+    {"code": "TUNE_FULL", "name": "Full overhaul", "price": 185.00, "minutes": 180, "requires_inspection": false},
+    {"code": "BRAKE_ADJUST", "name": "Brake adjustment (per wheel)", "price": 18.00, "minutes": 15, "requires_inspection": false},
+    {"code": "BRAKE_PADS", "name": "Brake pad replacement (per wheel, parts included)", "price": 35.00, "minutes": 20, "requires_inspection": false},
+    {"code": "BRAKE_BLEED", "name": "Hydraulic brake bleed (per wheel)", "price": 40.00, "minutes": 30, "requires_inspection": false},
+    {"code": "GEAR_ADJUST", "name": "Derailleur and gear adjustment", "price": 25.00, "minutes": 20, "requires_inspection": false},
+    {"code": "CHAIN_REPLACE", "name": "Chain replacement (parts included)", "price": 45.00, "minutes": 20, "requires_inspection": false},
+    {"code": "FLAT_FIX", "name": "Flat repair and new tube (per wheel)", "price": 15.00, "minutes": 15, "requires_inspection": false},
+    {"code": "TIRE_REPLACE", "name": "Tire replacement (per wheel, labor only)", "price": 20.00, "minutes": 15, "requires_inspection": false},
+    {"code": "WHEEL_TRUE", "name": "Wheel truing (per wheel)", "price": 30.00, "minutes": 30, "requires_inspection": false},
+    {"code": "EBIKE_DIAG", "name": "E-bike electrical diagnostic", "price": 60.00, "minutes": 45, "requires_inspection": true},
+    {"code": "GENERAL_INSPECT", "name": "General inspection", "price": 25.00, "minutes": 20, "requires_inspection": true}
+  ]
+}

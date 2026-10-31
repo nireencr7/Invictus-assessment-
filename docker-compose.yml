@@ -1,0 +1,52 @@
+# `make up` (or `docker compose up --build`) -> dashboard at http://localhost:8000
+# Model provider defaults to the offline stand-in; put LLM_PROVIDER=anthropic and
+# ANTHROPIC_API_KEY in .env to use Claude.
+x-app: &app
+  build: .
+  environment: &env
+    DATABASE_URL: postgresql://riverbend_app:${APP_DB_PASSWORD:-riverbend_app}@db:5432/riverbend
+    DATABASE_ADMIN_URL: postgresql://postgres:postgres@db:5432/riverbend
+    APP_DB_PASSWORD: ${APP_DB_PASSWORD:-riverbend_app}
+    LLM_PROVIDER: ${LLM_PROVIDER:-offline}
+    LLM_MODEL: ${LLM_MODEL:-claude-opus-5-5}
+    ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    LLM_FAULTS: ${LLM_FAULTS:-}
+    DEV_MODE: "true"
+    LOG_LEVEL: INFO
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: riverbend
+    ports: ["5434:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d riverbend"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  migrate:
+    <<: *app
+    command: ["python", "-m", "riverbend", "migrate"]
+    depends_on:
+      db: { condition: service_healthy }
+
+  api:
+    <<: *app
+    ports: ["8000:8080"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/healthz')"]
+      interval: 5s
+      retries: 10
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "riverbend", "worker"]
+    # Two workers on purpose: SKIP LOCKED + leases make concurrent processing safe.
+    deploy: { replicas: 2 }
+    depends_on:
+      migrate: { condition: service_completed_successfully }

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riverbend Work Orders</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --panel: #ffffff; --ink: #14171c; --muted: #5d6673; --line: #e3e6eb;
+    --accent: #1f6feb; --accent-soft: #e7f0ff; --ok: #1a7f37; --ok-soft: #e6f4ea;
+    --warn: #9a6700; --warn-soft: #fff4d6; --bad: #c62828; --bad-soft: #fdecec;
+    --chip: #eef1f5; --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1116; --panel: #161b22; --ink: #e6edf3; --muted: #8b949e; --line: #2a313c;
+      --accent: #4c8dff; --accent-soft: #15243d; --ok: #3fb950; --ok-soft: #12261a;
+      --warn: #d29922; --warn-soft: #2b2210; --bad: #f85149; --bad-soft: #2d1416;
+      --chip: #21262d; --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line);
+           display: flex; align-items: center; gap: 16px; padding: 10px 20px; flex-wrap: wrap; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 650; letter-spacing: .2px; }
+  .tabs { display: flex; gap: 4px; background: var(--chip); padding: 3px; border-radius: 9px; }
+  .tabs button { border: 0; background: transparent; color: var(--muted); padding: 6px 12px; border-radius: 7px;
+                 font: inherit; cursor: pointer; }
+  .tabs button.on { background: var(--panel); color: var(--ink); box-shadow: var(--shadow); font-weight: 600; }
+  .pill { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--chip); color: var(--muted); }
+  .pill.ok { background: var(--ok-soft); color: var(--ok); } .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); }
+  .spacer { flex: 1; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; padding: 20px; max-width: 1500px; margin: 0 auto; }
+  @media (max-width: 1000px) { main { grid-template-columns: 1fr; padding: 12px 16px; } }
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 700px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  .kpi { padding: 14px 16px; } .kpi .label { color: var(--muted); font-size: 12px; }
+  .kpi .value { font-size: 24px; font-weight: 650; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .bar { height: 6px; background: var(--chip); border-radius: 99px; margin-top: 8px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); }
+  section.card { margin-bottom: 16px; overflow: hidden; }
+  section h2 { font-size: 13px; margin: 0; padding: 12px 16px; border-bottom: 1px solid var(--line);
+               display: flex; justify-content: space-between; align-items: center; }
+  section h2 .muted { font-weight: 400; }
+  .muted { color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); font-weight: 600; }
+  tbody tr { cursor: pointer; } tbody tr:hover { background: var(--accent-soft); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .chip { display: inline-block; font-size: 11.5px; padding: 1px 7px; border-radius: 6px; background: var(--chip);
+          margin: 1px 3px 1px 0; white-space: nowrap; }
+  .chip.code { font-family: var(--mono); }
+  .chip.flag { background: var(--warn-soft); color: var(--warn); }
+  .chip.high { background: var(--bad-soft); color: var(--bad); } .chip.low { background: var(--ok-soft); color: var(--ok); }
+  .empty { padding: 22px 16px; color: var(--muted); }
+  .tablewrap { overflow-x: auto; }
+  aside .card { padding: 14px 16px; margin-bottom: 16px; }
+  aside h3 { font-size: 13px; margin: 0 0 10px; }
+  textarea, input, select { width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+                            border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  textarea { min-height: 84px; resize: vertical; }
+  .row { display: flex; gap: 8px; margin-top: 8px; } .row > * { flex: 1; }
+  button.btn { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+               padding: 7px 12px; border-radius: 8px; cursor: pointer; }
+  button.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.btn.danger { color: var(--bad); }
+  button.btn:disabled { opacity: .5; cursor: default; }
+  .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg);
+           padding: 8px 14px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  #toast.show { opacity: 1; }
+  /* conversation drawer */
+  #drawer { position: fixed; inset: 0 0 0 auto; width: min(560px, 100%); background: var(--panel);
+            border-left: 1px solid var(--line); box-shadow: -8px 0 24px rgba(0,0,0,.12); transform: translateX(100%);
+            transition: transform .2s; z-index: 10; display: flex; flex-direction: column; }
+  #drawer.open { transform: none; }
+  #drawer header { position: static; }
+  #drawer .body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+  .bubble { max-width: 88%; padding: 9px 12px; border-radius: 12px; margin: 8px 0; white-space: pre-wrap; }
+  .bubble.cust { background: var(--chip); }
+  .bubble.shop { background: var(--accent-soft); margin-left: auto; }
+  .bubble .meta { font-size: 11px; color: var(--muted); margin-bottom: 3px; white-space: normal; }
+  .ev { font-family: var(--mono); font-size: 11.5px; color: var(--muted); padding: 2px 0; border-left: 2px solid var(--line);
+        padding-left: 8px; margin: 2px 0; overflow-wrap: anywhere; }
+  .ev.bad { border-color: var(--bad); color: var(--bad); } .ev.good { border-color: var(--ok); }
+  h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin: 18px 0 6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Riverbend · Work orders</h1>
+  <div class="tabs" id="shopTabs"></div>
+  <span class="spacer"></span>
+  <span class="pill" id="providerPill">…</span>
+  <span class="pill" id="breakerPill">breaker: …</span>
+</header>
+
+<main>
+  <div>
+    <div class="kpis">
+      <div class="card kpi"><div class="label">Open work orders</div><div class="value" id="kOpen">–</div></div>
+      <div class="card kpi"><div class="label">Open estimate total</div><div class="value" id="kTotal">–</div></div>
+      <div class="card kpi"><div class="label">Needs attention</div><div class="value" id="kInbox">–</div></div>
+      <div class="card kpi"><div class="label">LLM spend this month</div><div class="value" id="kSpend">–</div>
+        <div class="bar"><i id="kSpendBar" style="width:0"></i></div></div>
+    </div>
+
+    <section class="card">
+      <h2>Open work orders <span class="muted" id="woNote"></span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Customer</th><th>Bike</th><th>Services</th><th>Requested</th><th>Urgency</th><th>Flags</th><th class="num">Estimate</th></tr></thead>
+        <tbody id="woBody"></tbody>
+      </table></div>
+      <div class="empty" id="woEmpty" hidden>No open work orders yet. Send a message or load the samples →</div>
+    </section>
+
+    <section class="card">
+      <h2>Inbox — not (yet) a work order <span class="muted">in flight · waiting on customer · held · staff</span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>State</th><th>Customer message</th><th>Reason</th><th></th></tr></thead>
+        <tbody id="inboxBody"></tbody>
+      </table></div>
+      <div class="empty" id="inboxEmpty" hidden>Nothing waiting.</div>
+    </section>
+  </div>
+
+  <aside>
+    <div class="card">
+      <h3>Simulate an inbound message</h3>
+      <textarea id="msgBody" placeholder="My rear brake squeals and the gears skip on hills, can I bring it Saturday?"></textarea>
+      <div class="row">
+        <select id="msgChannel"><option value="email">email</option><option value="web">web form</option></select>
+        <button class="btn primary" id="sendBtn">Send</button>
+      </div>
+      <div class="row"><input id="replyToken" placeholder="reply token (optional: continue a conversation)"></div>
+      <div class="note">Posts to the intake API as the email gateway would, for the selected shop.</div>
+    </div>
+
+    <div class="card">
+      <h3>Demo data</h3>
+      <button class="btn" id="samplesBtn">Load the 40 brief samples</button>
+      <div class="note">Posts all 40 (including the duplicate) to their shops. Idempotent: loading twice changes nothing.</div>
+    </div>
+
+    <div class="card">
+      <h3>Break the model provider</h3>
+      <div class="row">
+        <button class="btn" data-fault="">Healthy</button>
+        <button class="btn" data-fault="flaky:0.5">Flaky 50%</button>
+        <button class="btn danger" data-fault="outage">Outage</button>
+      </div>
+      <div class="note" id="faultNote">Affects the worker embedded in this process (<code>make dev</code>).</div>
+    </div>
+
+    <div class="card">
+      <h3>Monthly LLM cap for this shop</h3>
+      <div class="row"><input id="capInput" inputmode="decimal" placeholder="5.00"><button class="btn" id="capBtn">Set cap</button></div>
+      <div class="note">Try 0.10 then send messages: they are held, not lost. Raise it to release them.</div>
+    </div>
+  </aside>
+</main>
+
+<div id="drawer" aria-hidden="true">
+  <header><h1 id="dTitle">Conversation</h1><span class="spacer"></span><button class="btn" id="dClose">Close</button></header>
+  <div class="body" id="dBody"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+let cfg = null, shop = null, openConv = null;
+const $ = (id) => document.getElementById(id);
+
+// DOM builder: all text goes through textContent, so customer text can never inject markup.
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") el.className = v; else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid instanceof Node ? kid : String(kid));
+  return el;
+}
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove("show"), 2200); }
+const human = (s) => (s || "").replaceAll("_", " ");
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, opts);
+  const body = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(body.detail ? JSON.stringify(body.detail) : r.status);
+  return body;
+}
+const staff = () => ({ Authorization: "Bearer " + cfg.staff_tokens[shop] });
+const admin = () => ({ Authorization: "Bearer " + cfg.admin_token, "Content-Type": "application/json" });
+const gateway = () => ({ "X-Ingest-Key": cfg.ingest_key, "Content-Type": "application/json" });
+
+async function boot() {
+  cfg = await api("/v1/dev/config");
+  shop = localStorage.getItem("shop") || cfg.shops[0].id;
+  const tabs = $("shopTabs");
+  for (const s of cfg.shops) tabs.append(h("button", { "data-shop": s.id, onclick: () => { shop = s.id; try { localStorage.setItem("shop", shop); } catch (e) {} render(); } },
+    s.name.replace("Riverbend Cycles ", "")));
+  render(); setInterval(render, 1500);
+}
+
+async function render() {
+  for (const b of $("shopTabs").children) b.classList.toggle("on", b.dataset.shop === shop);
+  try {
+    const [wo, inbox, spend, conf] = await Promise.all([
+      api(`/v1/shops/${shop}/work-orders`, { headers: staff() }),
+      api(`/v1/shops/${shop}/inbox`, { headers: staff() }),
+      api(`/v1/shops/${shop}/spend`, { headers: staff() }),
+      api("/v1/dev/config"),
+    ]);
+    $("providerPill").textContent = `${conf.provider} · ${conf.model}`;
+    $("providerPill").className = "pill " + (conf.provider.includes("faults") ? "warn" : "ok");
+    $("breakerPill").textContent = "breaker: " + conf.breaker;
+    $("breakerPill").className = "pill " + (conf.breaker === "closed" ? "ok" : "bad");
+    renderKpis(wo, inbox, spend); renderOrders(wo); renderInbox(inbox);
+    if (openConv) renderConversation(openConv, false);
+  } catch (e) { console.error(e); }
+}
+
+function renderKpis(wo, inbox, spend) {
+  $("kOpen").textContent = wo.work_orders.filter(w => w.status === "open").length;
+  $("kTotal").textContent = wo.open_estimate_total;
+  $("kInbox").textContent = inbox.items.filter(i => i.needs_action).length;
+  const spent = Number(spend.spent_usd), cap = Number(spend.cap_usd);
+  $("kSpend").textContent = `$${spent.toFixed(3)} / $${cap.toFixed(2)}`;
+  $("kSpendBar").style.width = cap ? Math.min(100, 100 * (spent + Number(spend.reserved_usd)) / cap) + "%" : "0";
+  $("kSpendBar").style.background = spend.state === "exhausted" ? "var(--bad)" : spend.state === "warning" ? "var(--warn)" : "var(--accent)";
+}
+
+function renderOrders(data) {
+  const body = $("woBody"); body.replaceChildren();
+  $("woEmpty").hidden = data.work_orders.length > 0;
+  $("woNote").textContent = data.work_orders.length ? `${data.count} · prices from catalog, computed in code` : "";
+  for (const w of data.work_orders) {
+    const flags = [...w.review_reasons];
+    if (w.status === "cancel_requested") flags.unshift("cancel_requested");
+    body.append(h("tr", { onclick: () => renderConversation(w.conversation_id, true) },
+      h("td", {}, w.customer_name || h("span", { class: "muted" }, "—")),
+      h("td", {}, human(w.bike.type) + (w.bike.count > 1 ? ` ×${w.bike.count}` : "")),
+      h("td", {}, w.lines.map(l => h("span", { class: "chip code", title: `${l.name} · ${l.unit_price} each` },
+        l.code + (l.quantity > 1 ? ` ×${l.quantity}` : "")))),
+      h("td", {}, w.requested ? w.requested.label : h("span", { class: "muted" }, "not given")),
+      h("td", {}, h("span", { class: "chip " + w.urgency }, w.urgency)),
+      h("td", {}, flags.map(f => h("span", { class: "chip flag" }, human(f)))),
+      h("td", { class: "num" }, w.estimate.formatted + (w.estimate.provisional ? "*" : "")),
+    ));
+  }
+}
+
+function renderInbox(data) {
+  const body = $("inboxBody"); body.replaceChildren();
+  $("inboxEmpty").hidden = data.items.length > 0;
+  for (const i of data.items) {
+    const held = i.message_status === "held_budget";
+    const label = held ? "held · budget" : human(i.state);
+    const cls = i.needs_action ? "chip high" : "chip";
+    const retry = i.state === "needs_staff" && ["ai_unavailable", "invalid_model_output", "model_refused", "ai_configuration_error"].includes(i.state_reason)
+      ? h("button", { class: "btn", onclick: async (e) => { e.stopPropagation();
+          try { await api(`/v1/shops/${shop}/conversations/${i.conversation_id}/retry`, { method: "POST", headers: staff() }); toast("Re-queued for the AI"); }
+          catch (err) { toast("Retry failed: " + err.message); } } }, "Retry AI") : null;
+    body.append(h("tr", { onclick: () => renderConversation(i.conversation_id, true) },
+      h("td", {}, h("span", { class: cls }, label)),
+      h("td", {}, i.body.length > 140 ? i.body.slice(0, 140) + "…" : i.body),
+      h("td", { class: "muted" }, human(i.state_reason || i.outcome || "")),
+      h("td", {}, retry)));
+  }
+}
+
+async function renderConversation(id, open) {
+  openConv = id;
+  let c;
+  try { c = await api(`/v1/shops/${shop}/conversations/${id}`, { headers: staff() }); } catch (e) { return; }
+  if (open) { $("drawer").classList.add("open"); $("drawer").setAttribute("aria-hidden", "false"); }
+  $("dTitle").textContent = `${c.conversation.customer_name || "Customer"} · ${human(c.conversation.state)}`;
+  const timeline = [
+    ...c.inbound.map(m => ({ t: m.created_at, el: h("div", { class: "bubble cust" }, h("div", { class: "meta" }, `customer · ${m.external_id}`), m.body) })),
+    ...c.outbound.map(m => ({ t: m.created_at, el: h("div", { class: "bubble shop" }, h("div", { class: "meta" }, `sent to customer · ${m.kind}`), m.body) })),
+  ].sort((a, b) => a.t.localeCompare(b.t));
+  const calls = c.llm_calls.map(k => h("div", { class: "ev " + (k.status === "ok" ? "good" : "bad") },
+    `${k.purpose} · ${k.status} · ${k.model} · $${k.cost_usd ?? "?"} · ${k.input_tokens ?? 0}/${k.output_tokens ?? 0} tok · ${k.latency_ms ?? "–"} ms` + (k.error ? ` · ${k.error}` : "")));
+  const events = c.events.map(e => h("div", { class: "ev" + (["escalated", "validation_failed", "llm_transient_error", "held_budget"].includes(e.type) ? " bad" : "") },
+    `${e.created_at.slice(11, 19)} ${e.type} ${Object.keys(e.detail).length ? JSON.stringify(e.detail) : ""}`));
+  $("dBody").replaceChildren(
+    h("h4", {}, "Messages"), ...timeline.map(x => x.el),
+    h("h4", {}, "Model calls"), calls.length ? calls : h("div", { class: "muted" }, "none"),
+    h("h4", {}, "Timeline"), events);
+}
+$("dClose").onclick = () => { openConv = null; $("drawer").classList.remove("open"); $("drawer").setAttribute("aria-hidden", "true"); };
+
+$("sendBtn").onclick = async () => {
+  const body = $("msgBody").value.trim(); if (!body) return toast("Type a message first");
+  const payload = { message_id: "ui-" + crypto.randomUUID().slice(0, 8), channel: $("msgChannel").value,
+                    received_at: new Date().toISOString(), body };
+  if ($("replyToken").value.trim()) payload.reply_token = $("replyToken").value.trim();
+  try { const r = await api(`/v1/shops/${shop}/inbound-messages`, { method: "POST", headers: gateway(), body: JSON.stringify(payload) });
+        toast(r.duplicate ? "Duplicate — ignored" : "Accepted (202) — processing asynchronously"); $("msgBody").value = ""; render(); }
+  catch (e) { toast("Rejected: " + e.message); }
+};
+
+$("samplesBtn").onclick = async () => {
+  const btn = $("samplesBtn"); btn.disabled = true;
+  try {
+    const data = await api("/v1/dev/samples"); const counts = {};
+    for (const m of data.messages) {
+      const r = await fetch(`/v1/shops/${m.shop_id}/inbound-messages`, { method: "POST", headers: gateway(), body: JSON.stringify({
+        message_id: m.message_id, channel: m.channel, received_at: `${data.date}T${m.received}:00`, body: m.body }) });
+      counts[r.status] = (counts[r.status] || 0) + 1;
+    }
+    toast("Posted 40: " + Object.entries(counts).map(([k, v]) => `${v}× HTTP ${k}`).join(", "));
+  } finally { btn.disabled = false; render(); }
+};
+
+for (const b of document.querySelectorAll("[data-fault]")) b.onclick = async () => {
+  try { const r = await api("/v1/dev/faults", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ spec: b.dataset.fault }) });
+        $("faultNote").textContent = r.faults ? `Provider now: ${r.provider} (${r.faults})` : "Provider healthy."; render(); }
+  catch (e) { toast("Could not change faults: " + e.message); }
+};
+
+$("capBtn").onclick = async () => {
+  const v = $("capInput").value.trim(); if (!v) return;
+  try { const r = await api(`/v1/admin/shops/${shop}/budget`, { method: "PUT", headers: admin(), body: JSON.stringify({ monthly_cap_usd: v }) });
+        toast(`Cap set to $${Number(r.cap_usd).toFixed(2)}` + (r.released_held_messages ? ` — released ${r.released_held_messages} held` : "")); render(); }
+  catch (e) { toast("Rejected: " + e.message); }
+};
+
+boot();
+</script>
+</body>
+</html>

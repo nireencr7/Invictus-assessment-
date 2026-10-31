@@ -1,0 +1,17 @@
+{
+ "_note": "Simulated customer replies, sent by the eval harness only to conversations awaiting a reply.",
+ "replies": {
+  "m-1009": "Oops, wrong greeting! Yes please, Downtown is fine for this, it's closer to work. Jo",
+  "m-1027": "Thursday afternoon if possible. It's a road bike.",
+  "m-1005": "It's a hybrid with rim brakes. Saturday morning works.",
+  "m-1013": "It's the rear tire and it looks worn. Friday afternoon is fine.",
+  "m-1020": "It's a road bike, the clicking comes from the pedals. Saturday works.",
+  "m-1021": "It's the rear tire. Please supply a new tubeless tire. Thursday.",
+  "m-1025": "It's a hybrid. Please do a full service, whatever it needs. Monday.",
+  "m-1033": "Es una bicicleta de montaña con frenos de disco hidráulicos. El viernes por la mañana.",
+  "m-1012": "It's a road bike. Saturday morning around 10.",
+  "m-1040": "My daughter's is a kids' bike and mine is a hybrid. Saturday morning.",
+  "m-1019": "Yes, the rim seems bent slightly. Friday is good.",
+  "m-1028": "The derailleur itself is bent; I'd like it straightened or replaced. Thursday."
+ }
+}

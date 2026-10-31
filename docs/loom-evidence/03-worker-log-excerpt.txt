@@ -1,0 +1,7 @@
+# Excerpt from the dev server log, 2026-10-31 07:15 (stale dev database, before the reset)
+2026-10-31 07:15:32,006 ERROR riverbend.worker: job 6 crashed
+psycopg.errors.UndefinedColumn: record "new" has no field "work_order_id"
+CONTEXT:  PL/pgSQL assignment "wo_id := CASE WHEN TG_TABLE_NAME = 'work_orders' THEN NEW.id ELSE NEW.work_order_id END"
+PL/pgSQL function check_work_order_total() line 7 at assignment
+
+# The same error occurred 30 times: every work-order write failed and was retried.

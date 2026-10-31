@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 445" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+  <rect width="980" height="445" fill="#ffffff"/>
+
+  <!-- callers -->
+  <g fill="#f6f8fa" stroke="#8c959f">
+    <rect x="16" y="48" width="150" height="36" rx="7"/>
+    <rect x="16" y="96" width="150" height="36" rx="7"/>
+    <rect x="16" y="170" width="150" height="36" rx="7"/>
+    <rect x="16" y="362" width="150" height="36" rx="7"/>
+  </g>
+  <g fill="#24292f" text-anchor="middle">
+    <text x="91" y="70">Email gateway</text>
+    <text x="91" y="118">Web form backend</text>
+    <text x="91" y="192">Shop staff</text>
+    <text x="91" y="384">Customer</text>
+  </g>
+
+  <!-- API -->
+  <rect x="210" y="36" width="270" height="200" rx="10" fill="#eef4ff" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="225" y="60" font-weight="700" font-size="13" fill="#0b3d91">API · Cloud Run</text>
+  <g fill="#24292f" font-size="11.5">
+    <text x="225" y="84">POST /shops/{id}/inbound-messages</text>
+    <text x="235" y="100" fill="#57606a">ingest key · idempotent · 202 in ms</text>
+    <text x="225" y="124">GET /work-orders · /inbox · /spend</text>
+    <text x="235" y="140" fill="#57606a">bearer token bound to ONE shop</text>
+    <text x="235" y="156" fill="#57606a">other shop → 404 (existence not revealed)</text>
+    <text x="225" y="180">GET /customer/{shop}/{reply-token}</text>
+    <text x="225" y="212" font-weight="600" fill="#0b3d91">Never calls the model.</text>
+    <text x="225" y="227" fill="#57606a">Intake keeps working when the LLM is down.</text>
+  </g>
+
+  <!-- Worker -->
+  <rect x="520" y="36" width="444" height="200" rx="10" fill="#f6f2ff" stroke="#6e40c9" stroke-width="1.5"/>
+  <text x="535" y="60" font-weight="700" font-size="13" fill="#3e1f79">Worker · Cloud Run, always on (×2)</text>
+  <g fill="#ffffff" stroke="#6e40c9">
+    <rect x="536" y="72" width="128" height="32" rx="6"/>
+    <rect x="680" y="72" width="128" height="32" rx="6"/>
+    <rect x="824" y="72" width="128" height="32" rx="6"/>
+    <rect x="824" y="128" width="128" height="32" rx="6"/>
+    <rect x="680" y="128" width="128" height="32" rx="6"/>
+    <rect x="536" y="128" width="128" height="32" rx="6"/>
+  </g>
+  <g fill="#24292f" text-anchor="middle" font-size="11.5">
+    <text x="600" y="92">claim job</text>
+    <text x="744" y="92">budget.reserve</text>
+    <text x="888" y="92">LLM port</text>
+    <text x="888" y="148">validate</text>
+    <text x="744" y="148">policy.decide</text>
+    <text x="600" y="148">apply + complete</text>
+  </g>
+  <g stroke="#57606a" fill="none" marker-end="url(#a)">
+    <path d="M664,88 H678"/>
+    <path d="M808,88 H822"/>
+    <path d="M888,104 V126"/>
+    <path d="M824,144 H810"/>
+    <path d="M680,144 H666"/>
+  </g>
+  <g fill="#57606a" font-size="11">
+    <text x="536" y="182">transient error → retry w/ backoff · breaker defers · SLA → staff</text>
+    <text x="536" y="198">invalid output → one repair call → staff · never saved</text>
+    <text x="536" y="214">at cap → no call · message held, visible, released on raise</text>
+    <text x="536" y="230">model picks codes + wheels; code prices, dates, decides</text>
+  </g>
+
+  <!-- Claude -->
+  <rect x="794" y="282" width="170" height="54" rx="10" fill="#fff5e6" stroke="#bf6a02" stroke-width="1.5"/>
+  <text x="879" y="304" text-anchor="middle" font-weight="700" fill="#7a3e00">Claude · Vertex AI</text>
+  <text x="879" y="322" text-anchor="middle" font-size="11" fill="#57606a">worker SA only · no API key</text>
+  <path d="M952,88 H970 V309 H966" stroke="#bf6a02" fill="none" marker-end="url(#a)"/>
+  <text x="882" y="356" text-anchor="middle" font-size="11" fill="#57606a">structured output · no prices in</text>
+  <text x="882" y="371" text-anchor="middle" font-size="11" fill="#57606a">prompt · customer text fenced</text>
+
+  <!-- Postgres -->
+  <rect x="210" y="270" width="560" height="160" rx="10" fill="#eefbf0" stroke="#1a7f37" stroke-width="1.5"/>
+  <text x="225" y="293" font-weight="700" font-size="13" fill="#0f5323">Postgres · Cloud SQL — row-level security on every tenant table</text>
+  <g fill="#24292f" font-size="11.5">
+    <text x="225" y="316">inbound_messages <tspan fill="#57606a">UNIQUE(shop_id, external_id)</tspan> · conversations <tspan fill="#57606a">follow_ups ≤ 1</tspan></text>
+    <text x="225" y="335">work_orders <tspan fill="#57606a">UNIQUE(shop_id, conversation_id)</tspan> · work_order_lines <tspan fill="#57606a">Σ = estimate</tspan></text>
+    <text x="225" y="354">outbound_messages <tspan fill="#57606a">(outbox, dedupe key)</tspan> · events <tspan fill="#57606a">(timeline)</tspan></text>
+    <text x="225" y="373">llm_calls · shop_spend <tspan fill="#57606a">reserve worst case → settle actual</tspan></text>
+  </g>
+  <line x1="225" y1="386" x2="755" y2="386" stroke="#9fd5a9"/>
+  <g font-size="11.5">
+    <text x="225" y="404" fill="#24292f">jobs <tspan fill="#57606a">ids only, tenant-blind, no RLS</tspan> · shops <tspan fill="#57606a">reference data</tspan></text>
+    <text x="225" y="421" fill="#0f5323">every PK/FK is (shop_id, …): a row cannot reference another shop's row</text>
+  </g>
+
+  <!-- arrows: callers -> API -->
+  <g stroke="#57606a" fill="none" marker-end="url(#a)">
+    <path d="M166,66 H208"/>
+    <path d="M166,114 H208"/>
+    <path d="M166,188 H208"/>
+  </g>
+  <!-- API -> DB, DB <-> worker -->
+  <g stroke="#57606a" fill="none" marker-end="url(#a)">
+    <path d="M300,236 V268"/>
+    <path d="M560,268 V238"/>
+    <path d="M720,238 V268"/>
+  </g>
+  <g fill="#57606a" font-size="11">
+    <text x="306" y="257">one tx: message + conversation + ack + job</text>
+    <text x="566" y="257">claim · SKIP LOCKED</text>
+    <text x="726" y="257">one tx: result + job done</text>
+  </g>
+  <!-- outbox -> customer -->
+  <path d="M210,380 H168" stroke="#57606a" stroke-dasharray="4 3" fill="none" marker-end="url(#a)"/>
+  <text x="18" y="418" font-size="11" fill="#57606a">ack · question · summary · quote</text>
+  <text x="18" y="433" font-size="11" fill="#57606a">(SMTP delivery not built)</text>
+</svg>

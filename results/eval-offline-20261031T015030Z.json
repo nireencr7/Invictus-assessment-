@@ -1,0 +1,7333 @@
+{
+ "baseline": {
+  "scenario": "baseline",
+  "provider": "offline",
+  "model": "claude-opus-5-5",
+  "simulated_spend": true,
+  "rows": [
+   {
+    "first_id": "m-1001",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1
+    },
+    "estimate_cents": 6500,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1
+    }
+   },
+   {
+    "first_id": "m-1002",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 1500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1003",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "cancel_requested",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1004",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_PADS": 1
+    },
+    "estimate_cents": 3500,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "high",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_PADS": 1
+    }
+   },
+   {
+    "first_id": "m-1005",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_ADJUST": 1,
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 4300,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 1,
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1006",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "WHEEL_TRUE": 1
+    },
+    "estimate_cents": 3000,
+    "window": [
+     "2026-09-28",
+     "2026-10-04"
+    ],
+    "urgency": "low",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "WHEEL_TRUE": 1
+    }
+   },
+   {
+    "first_id": "m-1007",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_FULL": 1
+    },
+    "estimate_cents": 18500,
+    "window": [
+     "2026-10-01",
+     "2026-10-31"
+    ],
+    "urgency": "low",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_FULL": 1
+    }
+   },
+   {
+    "first_id": "m-1008",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "EBIKE_DIAG": 1
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "EBIKE_DIAG": 1
+    }
+   },
+   {
+    "first_id": "m-1009",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": "wrong_shop",
+    "codes": {
+     "TIRE_REPLACE": 2
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-27",
+     "2026-09-27"
+    ],
+    "urgency": "normal",
+    "review": [
+     "customer_confirmed_shop_after_wrong_shop_question"
+    ],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_follow_up": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TIRE_REPLACE": 2
+    }
+   },
+   {
+    "first_id": "m-1010",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "CHAIN_REPLACE": 1
+    },
+    "estimate_cents": 4500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "CHAIN_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1011",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_BLEED": 1
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-22",
+     "2026-09-23"
+    ],
+    "urgency": "high",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_BLEED": 1
+    }
+   },
+   {
+    "first_id": "m-1012",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GENERAL_INSPECT": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GENERAL_INSPECT": 1
+    }
+   },
+   {
+    "first_id": "m-1013",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 1500,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1015",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1
+    },
+    "estimate_cents": 6500,
+    "window": [
+     "2026-09-28",
+     "2026-09-28"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1
+    }
+   },
+   {
+    "first_id": "m-1016",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1017",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_ADJUST": 2
+    },
+    "estimate_cents": 3600,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 2
+    }
+   },
+   {
+    "first_id": "m-1018",
+    "shop_id": "rb-downtown",
+    "state": "answered",
+    "outcome": "price_quoted",
+    "follow_up": null,
+    "codes": {},
+    "estimate_cents": null,
+    "window": null,
+    "urgency": null,
+    "review": [],
+    "wo_status": null,
+    "calls": 1,
+    "state_reason": "price_quote",
+    "quoted": [
+     "TUNE_FULL"
+    ],
+    "golden_outcome": "price_quoted",
+    "ok_outcome": true
+   },
+   {
+    "first_id": "m-1019",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "WHEEL_TRUE": 1
+    },
+    "estimate_cents": 3000,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "WHEEL_TRUE": 1
+    }
+   },
+   {
+    "first_id": "m-1020",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GENERAL_INSPECT": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-26",
+     "2026-09-27"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GENERAL_INSPECT": 1
+    }
+   },
+   {
+    "first_id": "m-1021",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TIRE_REPLACE": 1
+    },
+    "estimate_cents": 2000,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [
+     "wheel_not_specified_estimate_assumes_one"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TIRE_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1022",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "EBIKE_DIAG": 1
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "EBIKE_DIAG": 1
+    }
+   },
+   {
+    "first_id": "m-1023",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1,
+     "WHEEL_TRUE": 1
+    },
+    "estimate_cents": 9500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1,
+     "WHEEL_TRUE": 1
+    }
+   },
+   {
+    "first_id": "m-1024",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "CHAIN_REPLACE": 1
+    },
+    "estimate_cents": 4500,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [
+     "possible_prompt_injection"
+    ],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "CHAIN_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1025",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GENERAL_INSPECT": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-28",
+     "2026-09-28"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GENERAL_INSPECT": 1
+    }
+   },
+   {
+    "first_id": "m-1026",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1027",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": "missing_date",
+    "codes": {
+     "BRAKE_ADJUST": 2
+    },
+    "estimate_cents": 3600,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_follow_up": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 2
+    }
+   },
+   {
+    "first_id": "m-1028",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1029",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_PADS": 2,
+     "BRAKE_BLEED": 2
+    },
+    "estimate_cents": 15000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_PADS": 2,
+     "BRAKE_BLEED": 2
+    }
+   },
+   {
+    "first_id": "m-1030",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 1500,
+    "window": [
+     "2026-09-22",
+     "2026-09-22"
+    ],
+    "urgency": "high",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1031",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "WHEEL_TRUE": 2
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-29",
+     "2026-09-29"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "WHEEL_TRUE": 2
+    }
+   },
+   {
+    "first_id": "m-1032",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1
+    },
+    "estimate_cents": 6500,
+    "window": [
+     "2026-09-23",
+     "2026-10-06"
+    ],
+    "urgency": "low",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1
+    }
+   },
+   {
+    "first_id": "m-1033",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_ADJUST": 2,
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 6100,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "high",
+    "review": [
+     "customer_language_es"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 2,
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1034",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "CHAIN_REPLACE": 1
+    },
+    "estimate_cents": 4500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "CHAIN_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1035",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TIRE_REPLACE": 2
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TIRE_REPLACE": 2
+    }
+   },
+   {
+    "first_id": "m-1036",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "EBIKE_DIAG": 1
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "EBIKE_DIAG": 1
+    }
+   },
+   {
+    "first_id": "m-1037",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_BLEED": 1
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_BLEED": 1
+    }
+   },
+   {
+    "first_id": "m-1038",
+    "shop_id": "rb-lakeshore",
+    "state": "cancellation_requested",
+    "outcome": "cancellation_requested",
+    "follow_up": null,
+    "codes": {},
+    "estimate_cents": null,
+    "window": null,
+    "urgency": null,
+    "review": [],
+    "wo_status": null,
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "cancellation_requested",
+    "ok_outcome": true
+   },
+   {
+    "first_id": "m-1039",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_FULL": 1,
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 20000,
+    "window": [
+     "2026-09-28",
+     "2026-09-28"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_FULL": 1,
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1040",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 2
+    },
+    "estimate_cents": 13000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 2
+    }
+   }
+  ],
+  "events": {
+   "received": 41,
+   "duplicate_delivery": 1,
+   "llm_call": 44,
+   "work_order_created": 37,
+   "follow_up_asked": 2,
+   "validation_failed": 3,
+   "price_quoted": 1,
+   "cancellation_requested": 1
+  },
+  "outbound": {
+   "ack": 39,
+   "summary": 37,
+   "follow_up": 2,
+   "price_quote": 1,
+   "cancellation_ack": 1
+  },
+  "messages_received": 40,
+  "replies": 2,
+  "duplicates": 1,
+  "conversations": 39,
+  "work_orders": 37,
+  "work_orders_open": 36,
+  "cancel_requested": 1,
+  "calls": 44,
+  "calls_by_status": {
+   "ok": 41,
+   "invalid_output": 3
+  },
+  "input_tokens": 97896,
+  "output_tokens": 18042,
+  "cost_usd": "0.752424",
+  "jobs": {
+   "done": 41
+  },
+  "retries": 0,
+  "spend": [
+   {
+    "shop_id": "rb-lakeshore",
+    "cap_usd": "5.0000",
+    "spent_usd": "0.223228",
+    "reserved_usd": "0.000000",
+    "exhausted_at": null
+   },
+   {
+    "shop_id": "rb-northside",
+    "cap_usd": "5.0000",
+    "spent_usd": "0.223248",
+    "reserved_usd": "0.000000",
+    "exhausted_at": null
+   },
+   {
+    "shop_id": "rb-downtown",
+    "cap_usd": "5.0000",
+    "spent_usd": "0.305948",
+    "reserved_usd": "0.000000",
+    "exhausted_at": null
+   }
+  ],
+  "notes": [
+   "HTTP responses to the 40 posts: {200: 1, 202: 39}",
+   "Simulated customer replies sent to: m-1009, m-1027"
+  ],
+  "seconds": 0.3,
+  "customer_views": {
+   "m-1001": {
+    "status": "Your request is with the workshop team.",
+    "messages": [
+     {
+      "kind": "ack",
+      "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
+      "created_at": "2026-10-31T07:20:23.140781+05:30"
+     },
+     {
+      "kind": "summary",
+      "body": "Hi Priya, thanks for contacting Riverbend Cycles Downtown. Here's what we've noted:\n\u2022 Basic tune-up \u2014 $65.00\nEstimated total: $65.00.\nRequested: Thu 24 Sep 2026, morning.\nA team member will confirm your appointment shortly.",
+      "created_at": "2026-10-31T07:20:23.251091+05:30"
+     }
+    ]
+   },
+   "m-1027": {
+    "status": "Your request is with the workshop team.",
+    "messages": [
+     {
+      "kind": "ack",
+      "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
+      "created_at": "2026-10-31T07:20:23.210518+05:30"
+     },
+     {
+      "kind": "follow_up",
+      "body": "When would you like to bring the bike in?\n\n(Just reply to this message \u2014 we'll pick up where we left off.)",
+      "created_at": "2026-10-31T07:20:23.387096+05:30"
+     },
+     {
+      "kind": "summary",
+      "body": "Thanks for contacting Riverbend Cycles Downtown. Here's what we've noted:\n\u2022 Brake adjustment (per wheel) \u00d7 2 \u2014 $36.00\nEstimated total: $36.00.\nRequested: Thu 24 Sep 2026, afternoon.\nA team member will confirm your appointment shortly.",
+      "created_at": "2026-10-31T07:20:23.468295+05:30"
+     }
+    ]
+   },
+   "m-1018": {
+    "status": "We've answered your question.",
+    "messages": [
+     {
+      "kind": "ack",
+      "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
+      "created_at": "2026-10-31T07:20:23.189736+05:30"
+     },
+     {
+      "kind": "price_quote",
+      "body": "Thanks for asking! Current prices at Riverbend Cycles Downtown:\n\u2022 Full overhaul \u2014 $185.00 (about 180 minutes)\nReply to this message with a day that suits you if you'd like to book.",
+      "created_at": "2026-10-31T07:20:23.341610+05:30"
+     }
+    ]
+   },
+   "m-1009": {
+    "status": "Your request is with the workshop team.",
+    "messages": [
+     {
+      "kind": "ack",
+      "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
+      "created_at": "2026-10-31T07:20:23.168094+05:30"
+     },
+     {
+      "kind": "follow_up",
+      "body": "Your message reached Riverbend Cycles Downtown, but it mentions Riverbend Cycles Lakeshore. Would you like Riverbend Cycles Downtown to handle this request? Reply 'yes' to continue here, or let us know if you'd rather contact Riverbend Cycles Lakeshore directly.\n\n(Just reply to this message \u2014 we'll pick up where we left off.)",
+      "created_at": "2026-10-31T07:20:23.299463+05:30"
+     },
+     {
+      "kind": "summary",
+      "body": "Hi Jo, thanks for contacting Riverbend Cycles Downtown. Here's what we've noted:\n\u2022 Tire replacement (per wheel, labor only) \u00d7 2 \u2014 $40.00\nEstimated total: $40.00.\nRequested: Sun 27 Sep 2026.\nA team member will confirm your appointment shortly.",
+      "created_at": "2026-10-31T07:20:23.463321+05:30"
+     }
+    ]
+   }
+  }
+ },
+ "chaos": {
+  "scenario": "chaos",
+  "provider": "offline+faults",
+  "model": "claude-opus-5-5",
+  "simulated_spend": true,
+  "rows": [
+   {
+    "first_id": "m-1001",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1
+    },
+    "estimate_cents": 6500,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1
+    }
+   },
+   {
+    "first_id": "m-1002",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 1500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1003",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1004",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_PADS": 1
+    },
+    "estimate_cents": 3500,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "high",
+    "review": [],
+    "wo_status": "open",
+    "calls": 4,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_PADS": 1
+    }
+   },
+   {
+    "first_id": "m-1005",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_ADJUST": 1,
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 4300,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 1,
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1006",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "WHEEL_TRUE": 1
+    },
+    "estimate_cents": 3000,
+    "window": [
+     "2026-09-28",
+     "2026-10-04"
+    ],
+    "urgency": "low",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "WHEEL_TRUE": 1
+    }
+   },
+   {
+    "first_id": "m-1007",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_FULL": 1
+    },
+    "estimate_cents": 18500,
+    "window": [
+     "2026-10-01",
+     "2026-10-31"
+    ],
+    "urgency": "low",
+    "review": [],
+    "wo_status": "open",
+    "calls": 3,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_FULL": 1
+    }
+   },
+   {
+    "first_id": "m-1008",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "EBIKE_DIAG": 1
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "EBIKE_DIAG": 1
+    }
+   },
+   {
+    "first_id": "m-1009",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": "wrong_shop",
+    "codes": {
+     "TIRE_REPLACE": 2
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-27",
+     "2026-09-27"
+    ],
+    "urgency": "normal",
+    "review": [
+     "customer_confirmed_shop_after_wrong_shop_question"
+    ],
+    "wo_status": "open",
+    "calls": 4,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_follow_up": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TIRE_REPLACE": 2
+    }
+   },
+   {
+    "first_id": "m-1010",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "CHAIN_REPLACE": 1
+    },
+    "estimate_cents": 4500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "CHAIN_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1011",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_BLEED": 1
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-22",
+     "2026-09-23"
+    ],
+    "urgency": "high",
+    "review": [],
+    "wo_status": "open",
+    "calls": 3,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_BLEED": 1
+    }
+   },
+   {
+    "first_id": "m-1012",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GENERAL_INSPECT": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GENERAL_INSPECT": 1
+    }
+   },
+   {
+    "first_id": "m-1013",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 1500,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 3,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1015",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1
+    },
+    "estimate_cents": 6500,
+    "window": [
+     "2026-09-28",
+     "2026-09-28"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1
+    }
+   },
+   {
+    "first_id": "m-1016",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 5,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1017",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_ADJUST": 2
+    },
+    "estimate_cents": 3600,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 2
+    }
+   },
+   {
+    "first_id": "m-1018",
+    "shop_id": "rb-downtown",
+    "state": "answered",
+    "outcome": "price_quoted",
+    "follow_up": null,
+    "codes": {},
+    "estimate_cents": null,
+    "window": null,
+    "urgency": null,
+    "review": [],
+    "wo_status": null,
+    "calls": 1,
+    "state_reason": "price_quote",
+    "quoted": [
+     "TUNE_FULL"
+    ],
+    "golden_outcome": "price_quoted",
+    "ok_outcome": true
+   },
+   {
+    "first_id": "m-1019",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "WHEEL_TRUE": 1
+    },
+    "estimate_cents": 3000,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "WHEEL_TRUE": 1
+    }
+   },
+   {
+    "first_id": "m-1020",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GENERAL_INSPECT": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-26",
+     "2026-09-27"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GENERAL_INSPECT": 1
+    }
+   },
+   {
+    "first_id": "m-1021",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TIRE_REPLACE": 1
+    },
+    "estimate_cents": 2000,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [
+     "wheel_not_specified_estimate_assumes_one"
+    ],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TIRE_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1022",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "EBIKE_DIAG": 1
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "EBIKE_DIAG": 1
+    }
+   },
+   {
+    "first_id": "m-1023",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1,
+     "WHEEL_TRUE": 1
+    },
+    "estimate_cents": 9500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1,
+     "WHEEL_TRUE": 1
+    }
+   },
+   {
+    "first_id": "m-1024",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "CHAIN_REPLACE": 1
+    },
+    "estimate_cents": 4500,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [
+     "possible_prompt_injection"
+    ],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "CHAIN_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1025",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GENERAL_INSPECT": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-28",
+     "2026-09-28"
+    ],
+    "urgency": "normal",
+    "review": [
+     "estimate_provisional_until_inspection"
+    ],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GENERAL_INSPECT": 1
+    }
+   },
+   {
+    "first_id": "m-1026",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1027",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": "missing_date",
+    "codes": {
+     "BRAKE_ADJUST": 2
+    },
+    "estimate_cents": 3600,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_follow_up": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 2
+    }
+   },
+   {
+    "first_id": "m-1028",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 2500,
+    "window": [
+     "2026-09-24",
+     "2026-09-24"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1029",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_PADS": 2,
+     "BRAKE_BLEED": 2
+    },
+    "estimate_cents": 15000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_PADS": 2,
+     "BRAKE_BLEED": 2
+    }
+   },
+   {
+    "first_id": "m-1030",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 1500,
+    "window": [
+     "2026-09-22",
+     "2026-09-22"
+    ],
+    "urgency": "high",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1031",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "WHEEL_TRUE": 2
+    },
+    "estimate_cents": 6000,
+    "window": [
+     "2026-09-29",
+     "2026-09-29"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "WHEEL_TRUE": 2
+    }
+   },
+   {
+    "first_id": "m-1032",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 1
+    },
+    "estimate_cents": 6500,
+    "window": [
+     "2026-09-23",
+     "2026-10-06"
+    ],
+    "urgency": "low",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 1
+    }
+   },
+   {
+    "first_id": "m-1033",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_ADJUST": 2,
+     "GEAR_ADJUST": 1
+    },
+    "estimate_cents": 6100,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "high",
+    "review": [
+     "customer_language_es"
+    ],
+    "wo_status": "open",
+    "calls": 5,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_ADJUST": 2,
+     "GEAR_ADJUST": 1
+    }
+   },
+   {
+    "first_id": "m-1034",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "CHAIN_REPLACE": 1
+    },
+    "estimate_cents": 4500,
+    "window": [
+     "2026-09-23",
+     "2026-09-23"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "CHAIN_REPLACE": 1
+    }
+   },
+   {
+    "first_id": "m-1035",
+    "shop_id": "rb-lakeshore",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TIRE_REPLACE": 2
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-25",
+     "2026-09-25"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TIRE_REPLACE": 2
+    }
+   },
+   {
+    "first_id": "m-1036",
+    "shop_id": "rb-downtown",
+    "state": "needs_staff",
+    "outcome": "ai_unavailable",
+    "follow_up": null,
+    "codes": {},
+    "estimate_cents": null,
+    "window": null,
+    "urgency": null,
+    "review": [],
+    "wo_status": null,
+    "calls": 9,
+    "state_reason": "ai_unavailable",
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": false,
+    "ok_services": false,
+    "ok_quantities": null,
+    "ok_estimate": null,
+    "ok_window": false,
+    "golden_codes": {
+     "EBIKE_DIAG": 1
+    }
+   },
+   {
+    "first_id": "m-1037",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "BRAKE_BLEED": 1
+    },
+    "estimate_cents": 4000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 3,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "BRAKE_BLEED": 1
+    }
+   },
+   {
+    "first_id": "m-1038",
+    "shop_id": "rb-lakeshore",
+    "state": "needs_staff",
+    "outcome": "cancellation_needs_match",
+    "follow_up": null,
+    "codes": {},
+    "estimate_cents": null,
+    "window": null,
+    "urgency": null,
+    "review": [],
+    "wo_status": null,
+    "calls": 2,
+    "state_reason": "cancellation_needs_match",
+    "quoted": null,
+    "golden_outcome": "cancellation_requested",
+    "ok_outcome": false
+   },
+   {
+    "first_id": "m-1039",
+    "shop_id": "rb-downtown",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_FULL": 1,
+     "FLAT_FIX": 1
+    },
+    "estimate_cents": 20000,
+    "window": [
+     "2026-09-28",
+     "2026-09-28"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 2,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_FULL": 1,
+     "FLAT_FIX": 1
+    }
+   },
+   {
+    "first_id": "m-1040",
+    "shop_id": "rb-northside",
+    "state": "work_order_created",
+    "outcome": "work_order_created",
+    "follow_up": null,
+    "codes": {
+     "TUNE_BASIC": 2
+    },
+    "estimate_cents": 13000,
+    "window": [
+     "2026-09-26",
+     "2026-09-26"
+    ],
+    "urgency": "normal",
+    "review": [],
+    "wo_status": "open",
+    "calls": 1,
+    "state_reason": null,
+    "quoted": null,
+    "golden_outcome": "work_order_created",
+    "ok_outcome": true,
+    "ok_services": true,
+    "ok_quantities": true,
+    "ok_estimate": true,
+    "ok_window": true,
+    "golden_codes": {
+     "TUNE_BASIC": 2
+    }
+   }
+  ],
+  "events": {
+   "received": 41,
+   "duplicate_delivery": 1,
+   "llm_call": 51,
+   "work_order_created": 36,
+   "validation_failed": 11,
+   "llm_transient_error": 29,
+   "follow_up_asked": 2,
+   "price_quoted": 1,
+   "escalated": 2
+  },
+  "outbound": {
+   "ack": 39,
+   "summary": 36,
+   "follow_up": 2,
+   "price_quote": 1
+  },
+  "messages_received": 40,
+  "replies": 2,
+  "duplicates": 1,
+  "conversations": 39,
+  "work_orders": 36,
+  "work_orders_open": 36,
+  "cancel_requested": 0,
+  "calls": 80,
+  "calls_by_status": {
+   "ok": 40,
+   "invalid_output": 11,
+   "transient_error": 29
+  },
+  "input_tokens": 113997,
+  "output_tokens": 20511,
+  "cost_usd": "0.866208",
+  "jobs": {
+   "done": 40,
+   "dead": 1
+  },
+  "retries": 28,
+  "spend": [
+   {
+    "shop_id": "rb-lakeshore",
+    "cap_usd": "5.0000",
+    "spent_usd": "0.240516",
+    "reserved_usd": "0.000000",
+    "exhausted_at": null
+   },
+   {
+    "shop_id": "rb-northside",
+    "cap_usd": "5.0000",
+    "spent_usd": "0.274932",
+    "reserved_usd": "0.000000",
+    "exhausted_at": null
+   },
+   {
+    "shop_id": "rb-downtown",
+    "cap_usd": "5.0000",
+    "spent_usd": "0.350760",
+    "reserved_usd": "0.000000",
+    "exhausted_at": null
+   }
+  ],
+  "notes": [
+   "HTTP responses to the 40 posts: {200: 1, 202: 39}",
+   "Simulated customer replies sent to: m-1009, m-1027"
+  ],
+  "seconds": 1.9,
+  "injected": {
+   "outage": 0,
+   "flaky": 29,
+   "garbage": 6
+  }
+ },
+ "budget": {
+  "at_cap": {
+   "scenario": "budget",
+   "provider": "offline",
+   "model": "claude-opus-5-5",
+   "simulated_spend": true,
+   "rows": [
+    {
+     "first_id": "m-1001",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1002",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1003",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "cancel_requested",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1004",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_PADS": 1
+     },
+     "estimate_cents": 3500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_PADS": 1
+     }
+    },
+    {
+     "first_id": "m-1005",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 4300,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1006",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 3000,
+     "window": [
+      "2026-09-28",
+      "2026-10-04"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1007",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_FULL": 1
+     },
+     "estimate_cents": 18500,
+     "window": [
+      "2026-10-01",
+      "2026-10-31"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_FULL": 1
+     }
+    },
+    {
+     "first_id": "m-1008",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1009",
+     "shop_id": "rb-downtown",
+     "state": "awaiting_customer",
+     "outcome": "follow_up_asked",
+     "follow_up": "wrong_shop",
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "wrong_shop",
+     "quoted": null,
+     "golden_outcome": "follow_up_asked",
+     "ok_outcome": true,
+     "ok_follow_up": true
+    },
+    {
+     "first_id": "m-1010",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1011",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_BLEED": 1
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-22",
+      "2026-09-23"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1012",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1013",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1015",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1016",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1017",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 2
+     },
+     "estimate_cents": 3600,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2
+     }
+    },
+    {
+     "first_id": "m-1018",
+     "shop_id": "rb-downtown",
+     "state": "answered",
+     "outcome": "price_quoted",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "price_quote",
+     "quoted": [
+      "TUNE_FULL"
+     ],
+     "golden_outcome": "price_quoted",
+     "ok_outcome": true
+    },
+    {
+     "first_id": "m-1019",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 3000,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1020",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-27"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1021",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TIRE_REPLACE": 1
+     },
+     "estimate_cents": 2000,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [
+      "wheel_not_specified_estimate_assumes_one"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1022",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1023",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 9500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1024",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [
+      "possible_prompt_injection"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1025",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1026",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1027",
+     "shop_id": "rb-downtown",
+     "state": "awaiting_customer",
+     "outcome": "follow_up_asked",
+     "follow_up": "missing_date",
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "missing_date",
+     "quoted": null,
+     "golden_outcome": "follow_up_asked",
+     "ok_outcome": true,
+     "ok_follow_up": true
+    },
+    {
+     "first_id": "m-1028",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1029",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     },
+     "estimate_cents": 15000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     }
+    },
+    {
+     "first_id": "m-1030",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-22",
+      "2026-09-22"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1031",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "WHEEL_TRUE": 2
+     }
+    },
+    {
+     "first_id": "m-1032",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-23",
+      "2026-10-06"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1033",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 6100,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "high",
+     "review": [
+      "customer_language_es"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1034",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1035",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TIRE_REPLACE": 2
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 2
+     }
+    },
+    {
+     "first_id": "m-1036",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1037",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1038",
+     "shop_id": "rb-lakeshore",
+     "state": "cancellation_requested",
+     "outcome": "cancellation_requested",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "cancellation_requested",
+     "ok_outcome": true
+    },
+    {
+     "first_id": "m-1039",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 20000,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1040",
+     "shop_id": "rb-northside",
+     "state": "processing",
+     "outcome": "held_budget",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "held_budget",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_BASIC": 2
+     }
+    }
+   ],
+   "events": {
+    "budget_cap_changed": 1,
+    "received": 39,
+    "duplicate_delivery": 1,
+    "llm_call": 35,
+    "work_order_created": 28,
+    "follow_up_asked": 2,
+    "validation_failed": 3,
+    "budget_warning": 1,
+    "price_quoted": 1,
+    "budget_exhausted": 1,
+    "held_budget": 7,
+    "cancellation_requested": 1
+   },
+   "outbound": {
+    "ack": 39,
+    "summary": 28,
+    "follow_up": 2,
+    "price_quote": 1,
+    "cancellation_ack": 1
+   },
+   "messages_received": 40,
+   "replies": 0,
+   "duplicates": 1,
+   "conversations": 39,
+   "work_orders": 28,
+   "work_orders_open": 27,
+   "cancel_requested": 1,
+   "calls": 35,
+   "calls_by_status": {
+    "ok": 32,
+    "invalid_output": 3
+   },
+   "input_tokens": 77892,
+   "output_tokens": 14310,
+   "cost_usd": "0.597768",
+   "jobs": {
+    "done": 32,
+    "parked": 7
+   },
+   "retries": 0,
+   "spend": [
+    {
+     "shop_id": "rb-northside",
+     "cap_usd": "0.2000",
+     "spent_usd": "0.103316",
+     "reserved_usd": "0.000000",
+     "exhausted_at": "2026-10-31 07:20:26.153394+05:30"
+    },
+    {
+     "shop_id": "rb-lakeshore",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.223228",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-downtown",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.271224",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    }
+   ],
+   "notes": [
+    "HTTP responses to the 40 posts: {200: 1, 202: 39}"
+   ],
+   "seconds": 0.4
+  },
+  "after_raise": {
+   "scenario": "budget",
+   "provider": "offline",
+   "model": "claude-opus-5-5",
+   "simulated_spend": true,
+   "rows": [
+    {
+     "first_id": "m-1001",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1002",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1003",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "cancel_requested",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1004",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_PADS": 1
+     },
+     "estimate_cents": 3500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_PADS": 1
+     }
+    },
+    {
+     "first_id": "m-1005",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 4300,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1006",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 3000,
+     "window": [
+      "2026-09-28",
+      "2026-10-04"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1007",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_FULL": 1
+     },
+     "estimate_cents": 18500,
+     "window": [
+      "2026-10-01",
+      "2026-10-31"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_FULL": 1
+     }
+    },
+    {
+     "first_id": "m-1008",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1009",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": "wrong_shop",
+     "codes": {
+      "TIRE_REPLACE": 2
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-27",
+      "2026-09-27"
+     ],
+     "urgency": "normal",
+     "review": [
+      "customer_confirmed_shop_after_wrong_shop_question"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_follow_up": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 2
+     }
+    },
+    {
+     "first_id": "m-1010",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1011",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_BLEED": 1
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-22",
+      "2026-09-23"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1012",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1013",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1015",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1016",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1017",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 2
+     },
+     "estimate_cents": 3600,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2
+     }
+    },
+    {
+     "first_id": "m-1018",
+     "shop_id": "rb-downtown",
+     "state": "answered",
+     "outcome": "price_quoted",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "price_quote",
+     "quoted": [
+      "TUNE_FULL"
+     ],
+     "golden_outcome": "price_quoted",
+     "ok_outcome": true
+    },
+    {
+     "first_id": "m-1019",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 3000,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1020",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-27"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1021",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TIRE_REPLACE": 1
+     },
+     "estimate_cents": 2000,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [
+      "wheel_not_specified_estimate_assumes_one"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1022",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1023",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 9500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1024",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [
+      "possible_prompt_injection"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1025",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1026",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1027",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": "missing_date",
+     "codes": {
+      "BRAKE_ADJUST": 2
+     },
+     "estimate_cents": 3600,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_follow_up": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2
+     }
+    },
+    {
+     "first_id": "m-1028",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1029",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     },
+     "estimate_cents": 15000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     }
+    },
+    {
+     "first_id": "m-1030",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-22",
+      "2026-09-22"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1031",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 2
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-29",
+      "2026-09-29"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 2
+     }
+    },
+    {
+     "first_id": "m-1032",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-23",
+      "2026-10-06"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1033",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 6100,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "high",
+     "review": [
+      "customer_language_es"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1034",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1035",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TIRE_REPLACE": 2
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 2
+     }
+    },
+    {
+     "first_id": "m-1036",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1037",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_BLEED": 1
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1038",
+     "shop_id": "rb-lakeshore",
+     "state": "cancellation_requested",
+     "outcome": "cancellation_requested",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "cancellation_requested",
+     "ok_outcome": true
+    },
+    {
+     "first_id": "m-1039",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 20000,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1040",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 2
+     },
+     "estimate_cents": 13000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 2
+     }
+    }
+   ],
+   "events": {
+    "budget_cap_changed": 2,
+    "received": 41,
+    "duplicate_delivery": 1,
+    "llm_call": 44,
+    "work_order_created": 37,
+    "follow_up_asked": 2,
+    "validation_failed": 3,
+    "budget_warning": 1,
+    "price_quoted": 1,
+    "budget_exhausted": 1,
+    "held_budget": 7,
+    "cancellation_requested": 1
+   },
+   "outbound": {
+    "ack": 39,
+    "summary": 37,
+    "follow_up": 2,
+    "price_quote": 1,
+    "cancellation_ack": 1
+   },
+   "messages_received": 40,
+   "replies": 2,
+   "duplicates": 1,
+   "conversations": 39,
+   "work_orders": 37,
+   "work_orders_open": 36,
+   "cancel_requested": 1,
+   "calls": 44,
+   "calls_by_status": {
+    "ok": 41,
+    "invalid_output": 3
+   },
+   "input_tokens": 97896,
+   "output_tokens": 18042,
+   "cost_usd": "0.752424",
+   "jobs": {
+    "done": 41
+   },
+   "retries": 0,
+   "spend": [
+    {
+     "shop_id": "rb-lakeshore",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.223228",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-northside",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.223248",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-downtown",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.305948",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    }
+   ],
+   "notes": [
+    "HTTP responses to the 40 posts: {200: 1, 202: 39}"
+   ],
+   "seconds": 0.5
+  },
+  "spend_at_cap": {
+   "shop_id": "rb-northside",
+   "month": "2026-10-01",
+   "cap_usd": "0.2000",
+   "spent_usd": "0.103316",
+   "reserved_usd": "0.000000",
+   "remaining_usd": "0.096684",
+   "state": "exhausted",
+   "calls": 6,
+   "input_tokens": 13234,
+   "output_tokens": 2519
+  },
+  "held": 7,
+  "released": 7,
+  "held_examples": [
+   "m-1040",
+   "m-1037",
+   "m-1034",
+   "m-1031",
+   "m-1028",
+   "m-1025",
+   "m-1022"
+  ]
+ },
+ "outage": {
+  "during": {
+   "scenario": "outage",
+   "provider": "offline+faults",
+   "model": "claude-opus-5-5",
+   "simulated_spend": true,
+   "rows": [
+    {
+     "first_id": "m-1001",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1002",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1003",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1004",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_PADS": 1
+     }
+    },
+    {
+     "first_id": "m-1005",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1006",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1007",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_FULL": 1
+     }
+    },
+    {
+     "first_id": "m-1008",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1009",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "follow_up_asked",
+     "ok_outcome": false,
+     "ok_follow_up": false
+    },
+    {
+     "first_id": "m-1010",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1011",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1012",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1013",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1015",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1016",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1017",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2
+     }
+    },
+    {
+     "first_id": "m-1018",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "price_quoted",
+     "ok_outcome": false
+    },
+    {
+     "first_id": "m-1019",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1020",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1021",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TIRE_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1022",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1023",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1024",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1025",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1026",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1027",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "follow_up_asked",
+     "ok_outcome": false,
+     "ok_follow_up": false
+    },
+    {
+     "first_id": "m-1028",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1029",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     }
+    },
+    {
+     "first_id": "m-1030",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1031",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "WHEEL_TRUE": 2
+     }
+    },
+    {
+     "first_id": "m-1032",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1033",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1034",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1035",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TIRE_REPLACE": 2
+     }
+    },
+    {
+     "first_id": "m-1036",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1037",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1038",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "cancellation_requested",
+     "ok_outcome": false
+    },
+    {
+     "first_id": "m-1039",
+     "shop_id": "rb-downtown",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1040",
+     "shop_id": "rb-northside",
+     "state": "needs_staff",
+     "outcome": "ai_unavailable",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 0,
+     "state_reason": "ai_unavailable",
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": false,
+     "ok_services": false,
+     "ok_quantities": null,
+     "ok_estimate": null,
+     "ok_window": false,
+     "golden_codes": {
+      "TUNE_BASIC": 2
+     }
+    }
+   ],
+   "events": {
+    "received": 39,
+    "duplicate_delivery": 1,
+    "llm_transient_error": 11,
+    "escalated": 39
+   },
+   "outbound": {
+    "ack": 39
+   },
+   "messages_received": 40,
+   "replies": 0,
+   "duplicates": 1,
+   "conversations": 39,
+   "work_orders": 0,
+   "work_orders_open": 0,
+   "cancel_requested": 0,
+   "calls": 11,
+   "calls_by_status": {
+    "transient_error": 11
+   },
+   "input_tokens": 0,
+   "output_tokens": 0,
+   "cost_usd": "0",
+   "jobs": {
+    "dead": 39
+   },
+   "retries": 11,
+   "spend": [
+    {
+     "shop_id": "rb-northside",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.000000",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-lakeshore",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.000000",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-downtown",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.000000",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    }
+   ],
+   "notes": [
+    "HTTP responses to the 40 posts: {200: 1, 202: 39}"
+   ],
+   "seconds": 3.1,
+   "customer_views": {
+    "m-1001": {
+     "status": "A team member is reviewing your request personally.",
+     "messages": [
+      {
+       "kind": "ack",
+       "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
+       "created_at": "2026-10-31T07:20:26.535618+05:30"
+      }
+     ]
+    }
+   },
+   "downtown_inbox_needs_action": 14
+  },
+  "after_recovery": {
+   "scenario": "outage",
+   "provider": "offline+faults",
+   "model": "claude-opus-5-5",
+   "simulated_spend": true,
+   "rows": [
+    {
+     "first_id": "m-1001",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1002",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1003",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1004",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_PADS": 1
+     },
+     "estimate_cents": 3500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_PADS": 1
+     }
+    },
+    {
+     "first_id": "m-1005",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 4300,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 1,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1006",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 3000,
+     "window": [
+      "2026-09-28",
+      "2026-10-04"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1007",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_FULL": 1
+     },
+     "estimate_cents": 18500,
+     "window": [
+      "2026-10-01",
+      "2026-10-31"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_FULL": 1
+     }
+    },
+    {
+     "first_id": "m-1008",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1009",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": "wrong_shop",
+     "codes": {
+      "TIRE_REPLACE": 2
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-27",
+      "2026-09-27"
+     ],
+     "urgency": "normal",
+     "review": [
+      "customer_confirmed_shop_after_wrong_shop_question"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_follow_up": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 2
+     }
+    },
+    {
+     "first_id": "m-1010",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1011",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_BLEED": 1
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-22",
+      "2026-09-23"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1012",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1013",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 3,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1015",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1016",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1017",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 2
+     },
+     "estimate_cents": 3600,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2
+     }
+    },
+    {
+     "first_id": "m-1018",
+     "shop_id": "rb-downtown",
+     "state": "answered",
+     "outcome": "price_quoted",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "price_quote",
+     "quoted": [
+      "TUNE_FULL"
+     ],
+     "golden_outcome": "price_quoted",
+     "ok_outcome": true
+    },
+    {
+     "first_id": "m-1019",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 3000,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1020",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-26",
+      "2026-09-27"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1021",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TIRE_REPLACE": 1
+     },
+     "estimate_cents": 2000,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [
+      "wheel_not_specified_estimate_assumes_one"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1022",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1023",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     },
+     "estimate_cents": 9500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1,
+      "WHEEL_TRUE": 1
+     }
+    },
+    {
+     "first_id": "m-1024",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [
+      "possible_prompt_injection"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1025",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GENERAL_INSPECT": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GENERAL_INSPECT": 1
+     }
+    },
+    {
+     "first_id": "m-1026",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1027",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": "missing_date",
+     "codes": {
+      "BRAKE_ADJUST": 2
+     },
+     "estimate_cents": 3600,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_follow_up": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2
+     }
+    },
+    {
+     "first_id": "m-1028",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 2500,
+     "window": [
+      "2026-09-24",
+      "2026-09-24"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1029",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     },
+     "estimate_cents": 15000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_PADS": 2,
+      "BRAKE_BLEED": 2
+     }
+    },
+    {
+     "first_id": "m-1030",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 1500,
+     "window": [
+      "2026-09-22",
+      "2026-09-22"
+     ],
+     "urgency": "high",
+     "review": [],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1031",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "WHEEL_TRUE": 2
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-29",
+      "2026-09-29"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "WHEEL_TRUE": 2
+     }
+    },
+    {
+     "first_id": "m-1032",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 1
+     },
+     "estimate_cents": 6500,
+     "window": [
+      "2026-09-23",
+      "2026-10-06"
+     ],
+     "urgency": "low",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 1
+     }
+    },
+    {
+     "first_id": "m-1033",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     },
+     "estimate_cents": 6100,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "high",
+     "review": [
+      "customer_language_es"
+     ],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_ADJUST": 2,
+      "GEAR_ADJUST": 1
+     }
+    },
+    {
+     "first_id": "m-1034",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "CHAIN_REPLACE": 1
+     },
+     "estimate_cents": 4500,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "CHAIN_REPLACE": 1
+     }
+    },
+    {
+     "first_id": "m-1035",
+     "shop_id": "rb-lakeshore",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TIRE_REPLACE": 2
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-25",
+      "2026-09-25"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TIRE_REPLACE": 2
+     }
+    },
+    {
+     "first_id": "m-1036",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "EBIKE_DIAG": 1
+     },
+     "estimate_cents": 6000,
+     "window": [
+      "2026-09-23",
+      "2026-09-23"
+     ],
+     "urgency": "normal",
+     "review": [
+      "estimate_provisional_until_inspection"
+     ],
+     "wo_status": "open",
+     "calls": 2,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "EBIKE_DIAG": 1
+     }
+    },
+    {
+     "first_id": "m-1037",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "BRAKE_BLEED": 1
+     },
+     "estimate_cents": 4000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "BRAKE_BLEED": 1
+     }
+    },
+    {
+     "first_id": "m-1038",
+     "shop_id": "rb-lakeshore",
+     "state": "needs_staff",
+     "outcome": "cancellation_needs_match",
+     "follow_up": null,
+     "codes": {},
+     "estimate_cents": null,
+     "window": null,
+     "urgency": null,
+     "review": [],
+     "wo_status": null,
+     "calls": 1,
+     "state_reason": "cancellation_needs_match",
+     "quoted": null,
+     "golden_outcome": "cancellation_requested",
+     "ok_outcome": false
+    },
+    {
+     "first_id": "m-1039",
+     "shop_id": "rb-downtown",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     },
+     "estimate_cents": 20000,
+     "window": [
+      "2026-09-28",
+      "2026-09-28"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_FULL": 1,
+      "FLAT_FIX": 1
+     }
+    },
+    {
+     "first_id": "m-1040",
+     "shop_id": "rb-northside",
+     "state": "work_order_created",
+     "outcome": "work_order_created",
+     "follow_up": null,
+     "codes": {
+      "TUNE_BASIC": 2
+     },
+     "estimate_cents": 13000,
+     "window": [
+      "2026-09-26",
+      "2026-09-26"
+     ],
+     "urgency": "normal",
+     "review": [],
+     "wo_status": "open",
+     "calls": 1,
+     "state_reason": null,
+     "quoted": null,
+     "golden_outcome": "work_order_created",
+     "ok_outcome": true,
+     "ok_services": true,
+     "ok_quantities": true,
+     "ok_estimate": true,
+     "ok_window": true,
+     "golden_codes": {
+      "TUNE_BASIC": 2
+     }
+    }
+   ],
+   "events": {
+    "received": 41,
+    "duplicate_delivery": 1,
+    "llm_transient_error": 11,
+    "escalated": 40,
+    "llm_call": 44,
+    "validation_failed": 3,
+    "work_order_created": 37,
+    "follow_up_asked": 2,
+    "price_quoted": 1
+   },
+   "outbound": {
+    "ack": 39,
+    "summary": 37,
+    "follow_up": 2,
+    "price_quote": 1
+   },
+   "messages_received": 40,
+   "replies": 2,
+   "duplicates": 1,
+   "conversations": 39,
+   "work_orders": 37,
+   "work_orders_open": 37,
+   "cancel_requested": 0,
+   "calls": 55,
+   "calls_by_status": {
+    "transient_error": 11,
+    "invalid_output": 3,
+    "ok": 41
+   },
+   "input_tokens": 97896,
+   "output_tokens": 18042,
+   "cost_usd": "0.752424",
+   "jobs": {
+    "done": 41
+   },
+   "retries": 0,
+   "spend": [
+    {
+     "shop_id": "rb-northside",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.223248",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-lakeshore",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.223228",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    },
+    {
+     "shop_id": "rb-downtown",
+     "cap_usd": "5.0000",
+     "spent_usd": "0.305948",
+     "reserved_usd": "0.000000",
+     "exhausted_at": null
+    }
+   ],
+   "notes": [
+    "HTTP responses to the 40 posts: {200: 1, 202: 39}"
+   ],
+   "seconds": 3.5
+  },
+  "retried": 39
+ }
+}

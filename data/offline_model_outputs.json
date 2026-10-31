@@ -1,0 +1,1982 @@
+{
+ "_note": "Hand-written stand-in outputs for offline runs. NOT model output. Built by scripts/build_offline_fixtures.py. Keys are '<first message_id>#<customer turn>'; each value lists outputs for successive attempts (first call, repair call).",
+ "outputs": {
+  "m-1001#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Priya",
+    "bike_type": "road",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a tune-up before a charity ride",
+      "evidence": "my road bike needs a tune-up"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_BASIC",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "needs a tune-up",
+      "reason": "Customer asks for a tune-up."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "thursday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "morning",
+     "time_24h": "",
+     "phrase": "Thursday morning"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Charity ride on October 4; bike must be ready before then."
+   }
+  ],
+  "m-1002#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "kids",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Flat front tire",
+      "evidence": "Flat front tire on my kid's bike"
+     }
+    ],
+    "services": [
+     {
+      "code": "FLAT_FIX",
+      "wheel": "front",
+      "bikes": 1,
+      "evidence": "Flat front tire",
+      "reason": "Front tire is flat."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "tomorrow",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "afternoon",
+     "time_24h": "16:00",
+     "phrase": "tomorrow after school, around 4"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1003#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Marcus",
+    "bike_type": "hybrid",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Chain falls off when shifting to the small chainring",
+      "evidence": "keeps falling off when I shift to the small ring"
+     }
+    ],
+    "services": [
+     {
+      "code": "GEAR_ADJUST",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "The chain on my hybrid keeps falling off when I shift to the small ring",
+      "reason": "Dropped chain on a shift is a derailleur limit/adjustment problem."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Free Saturday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1004#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "mountain",
+    "bike_count": 1,
+    "brake_type": "hydraulic_disc",
+    "reported_issues": [
+     {
+      "summary": "Rear brake pads worn to the metal, grinding",
+      "evidence": "Rear brake pads are worn to the metal, grinding noise"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_PADS",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "Rear brake pads are worn to the metal",
+      "reason": "Worn-out rear pads."
+     }
+    ],
+    "urgency": "high",
+    "urgency_reason": "Pads worn to metal: braking is compromised.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Friday OK?"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1005#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Rear brake squeals",
+      "evidence": "My rear brake squeals"
+     },
+     {
+      "summary": "Gears skip on hills",
+      "evidence": "the gears skip on hills"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_ADJUST",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "My rear brake squeals",
+      "reason": "Squeal without wear mentioned: adjust/clean."
+     },
+     {
+      "code": "GEAR_ADJUST",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "the gears skip on hills",
+      "reason": "Skipping under load: indexing adjustment."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Saturday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1006#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "commuter",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Rear wheel wobbles after a pothole",
+      "evidence": "Back wheel wobbles side to side"
+     }
+    ],
+    "services": [
+     {
+      "code": "WHEEL_TRUE",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "Back wheel wobbles side to side",
+      "reason": "Wheel out of true after impact."
+     }
+    ],
+    "urgency": "low",
+    "urgency_reason": "Customer is flexible on timing.",
+    "requested_date": {
+     "kind": "next_week",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Any day next week"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1007#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Dana",
+    "bike_type": "touring",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a full overhaul",
+      "evidence": "I'd like the full overhaul"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_FULL",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "I'd like the full overhaul",
+      "reason": "Customer explicitly asks for a full overhaul."
+     }
+    ],
+    "urgency": "low",
+    "urgency_reason": "'No rush'.",
+    "requested_date": {
+     "kind": "month",
+     "weekday": "none",
+     "month": 10,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "sometime in October"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "1987 steel touring bike."
+   }
+  ],
+  "m-1008#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "e-bike",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Display error E07 and motor cuts out",
+      "evidence": "E-bike display shows error E07 and the motor cuts out"
+     }
+    ],
+    "services": [
+     {
+      "code": "EBIKE_DIAG",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "E-bike display shows error E07 and the motor cuts out",
+      "reason": "Electrical fault on an e-bike."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "thursday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Thursday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1009#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Jo",
+    "bike_type": "gravel",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants both tires replaced",
+      "evidence": "replace both tires on my gravel bike"
+     }
+    ],
+    "services": [
+     {
+      "code": "TIRE_REPLACE",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "replace both tires",
+      "reason": "Customer asks for both tires to be replaced."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "sunday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Sunday works"
+    },
+    "other_shop_mentioned": "rb-lakeshore",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Greeted 'Lakeshore team' and mentions a previous visit; that visit is not visible from this shop."
+   }
+  ],
+  "m-1009#2": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Jo",
+    "bike_type": "gravel",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants both tires replaced",
+      "evidence": "replace both tires on my gravel bike"
+     }
+    ],
+    "services": [
+     {
+      "code": "TIRE_REPLACE",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "replace both tires",
+      "reason": "Customer asks for both tires to be replaced."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "sunday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Sunday works"
+    },
+    "other_shop_mentioned": "rb-lakeshore",
+    "shop_confirmation": "confirmed_this_shop",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Greeted 'Lakeshore team' and mentions a previous visit; that visit is not visible from this shop."
+   }
+  ],
+  "m-1010#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "road",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Chain is rusty, wants a new one",
+      "evidence": "Need new chain, old one is rusty"
+     }
+    ],
+    "services": [
+     {
+      "code": "CHAIN_REPLACE",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Need new chain",
+      "reason": "Rusty chain to replace."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "wednesday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Wednesday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1011#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "hydraulic_disc",
+    "reported_issues": [
+     {
+      "summary": "Front brake lever pulls almost to the bar",
+      "evidence": "Front brake lever goes almost to the handlebar before it stops"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_BLEED",
+      "wheel": "front",
+      "bikes": 1,
+      "evidence": "Front brake lever goes almost to the handlebar before it stops",
+      "reason": "Lever travel to the bar on hydraulic brakes means air in the system."
+     }
+    ],
+    "urgency": "high",
+    "urgency_reason": "Front brake barely works; daily commuter; asked ASAP.",
+    "requested_date": {
+     "kind": "asap",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "ASAP please"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1012#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Ken",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Used bike needs a pre-ride check",
+      "evidence": "want someone to look it over"
+     }
+    ],
+    "services": [
+     {
+      "code": "GENERAL_INSPECT",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "want someone to look it over before I ride it much",
+      "reason": "Pre-purchase style inspection."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "morning",
+     "time_24h": "",
+     "phrase": "Saturday morning?"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1013#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Two rear flats in one week; tire may be the cause",
+      "evidence": "Two flats in one week on the rear"
+     }
+    ],
+    "services": [
+     {
+      "code": "FLAT_FIX",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "Two flats in one week on the rear",
+      "reason": "Repeated rear flat."
+     },
+     {
+      "code": "TIRE_REPLACE",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "the tire is worn out",
+      "reason": "Tire is worn."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "afternoon",
+     "time_24h": "",
+     "phrase": "Friday afternoon"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Customer suspects the tire itself; check casing and offer a tire replacement if worn."
+   },
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Two rear flats in one week; tire may be the cause",
+      "evidence": "Two flats in one week on the rear"
+     }
+    ],
+    "services": [
+     {
+      "code": "FLAT_FIX",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "Two flats in one week on the rear",
+      "reason": "Repeated rear flat."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "afternoon",
+     "time_24h": "",
+     "phrase": "Friday afternoon"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Customer suspects the tire itself; check casing and offer a tire replacement if worn."
+   }
+  ],
+  "m-1015#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "folding",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a basic tune-up",
+      "evidence": "Basic tune-up please"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_BASIC",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Basic tune-up please",
+      "reason": "Requested explicitly."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "monday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Monday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1016#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Won't shift into the two largest cogs",
+      "evidence": "Gears won't shift into the two biggest cogs"
+     }
+    ],
+    "services": [
+     {
+      "code": "GEAR_ADJUST",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Gears won't shift into the two biggest cogs",
+      "reason": "Indexing/limit adjustment."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "tomorrow",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Tomorrow if possible"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1017#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Aisha",
+    "bike_type": "city",
+    "bike_count": 1,
+    "brake_type": "rim",
+    "reported_issues": [
+     {
+      "summary": "Both brakes feel soft",
+      "evidence": "Both brakes need adjusting, they feel soft"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_ADJUST",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "Both brakes need adjusting",
+      "reason": "Soft rim brakes need adjusting."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "thursday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "10:00",
+     "phrase": "Thursday at 10?"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1018#1": [
+   {
+    "intent": "price_inquiry",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [],
+    "services": [
+     {
+      "code": "TUNE_FULL",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "How much do you charge for a full overhaul",
+      "reason": "Asked for the overhaul price."
+     }
+    ],
+    "urgency": "low",
+    "urgency_reason": "Price comparison only.",
+    "requested_date": {
+     "kind": "unspecified",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": ""
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Comparing shops; no booking requested."
+   }
+  ],
+  "m-1019#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "road",
+    "bike_count": 1,
+    "brake_type": "rim",
+    "reported_issues": [
+     {
+      "summary": "Front wheel rubs the brake pad once per rotation",
+      "evidence": "Front wheel rubs the brake pad every rotation"
+     }
+    ],
+    "services": [
+     {
+      "code": "WHEEL_TRUE",
+      "wheel": "front",
+      "bikes": 1,
+      "evidence": "Front wheel rubs the brake pad every rotation",
+      "reason": "Rubbing once per rotation means the rim is out of true."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Friday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1020#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Clicking noise, source unknown",
+      "evidence": "making a clicking noise somewhere"
+     }
+    ],
+    "services": [
+     {
+      "code": "GENERAL_INSPECT",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "making a clicking noise somewhere. Not sure where",
+      "reason": "Unlocated noise needs an inspection."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "this_weekend",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Weekend?"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1021#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Leo",
+    "bike_type": "gravel",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Tubeless tire no longer holds air",
+      "evidence": "Tubeless tire on my gravel bike won't hold air anymore"
+     }
+    ],
+    "services": [
+     {
+      "code": "TIRE_REPLACE",
+      "wheel": "unspecified",
+      "bikes": 1,
+      "evidence": "Can you replace it",
+      "reason": "Customer wants the tire replaced."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "thursday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Thursday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Tubeless tire: the tire itself is not in the catalog (labor only). Wheel not stated."
+   }
+  ],
+  "m-1022#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "e-bike",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Battery range dropped from 50 km to 10 km",
+      "evidence": "E-bike battery drains in 10 km, used to do 50"
+     }
+    ],
+    "services": [
+     {
+      "code": "EBIKE_DIAG",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "E-bike battery drains in 10 km",
+      "reason": "Battery/electrical diagnosis."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Saturday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1023#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Sam",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a basic tune-up",
+      "evidence": "can you do a basic tune-up"
+     },
+     {
+      "summary": "Rear wheel needs truing",
+      "evidence": "true the back wheel"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_BASIC",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "a basic tune-up",
+      "reason": "Requested."
+     },
+     {
+      "code": "WHEEL_TRUE",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "true the back wheel",
+      "reason": "Requested for the rear wheel."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "wednesday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "afternoon",
+     "time_24h": "",
+     "phrase": "Wednesday afternoon"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1024#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants the chain replaced",
+      "evidence": "Chain replacement please"
+     }
+    ],
+    "services": [
+     {
+      "code": "CHAIN_REPLACE",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Chain replacement please",
+      "reason": "Requested."
+     }
+    ],
+    "urgency": "high",
+    "urgency_reason": "Customer note says to mark urgent.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Friday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": true,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Message contains text addressed to the assistant asking for zero prices and urgency; ignored.",
+    "discount_price": 0
+   },
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants the chain replaced",
+      "evidence": "Chain replacement please"
+     }
+    ],
+    "services": [
+     {
+      "code": "CHAIN_REPLACE",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Chain replacement please",
+      "reason": "Requested."
+     }
+    ],
+    "urgency": "high",
+    "urgency_reason": "Customer note says to mark urgent.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Friday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": true,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Message contains text addressed to the assistant asking for zero prices and urgency; ignored."
+   }
+  ],
+  "m-1025#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Bike unused for three years; brakes, tires and chain look rough",
+      "evidence": "Brakes, tires, chain all look rough"
+     }
+    ],
+    "services": [
+     {
+      "code": "GENERAL_INSPECT",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Whatever it needs",
+      "reason": "Unknown scope after long storage: inspect first."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "monday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Monday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Stored three years; likely needs brakes, tires and chain. Quote after inspection."
+   }
+  ],
+  "m-1026#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a gear adjustment",
+      "evidence": "Gear adjustment"
+     }
+    ],
+    "services": [
+     {
+      "code": "GEAR_ADJUST",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Gear adjustment",
+      "reason": "Requested."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "tomorrow",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "morning",
+     "time_24h": "09:00",
+     "phrase": "Tomorrow 9am"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1027#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Brakes squeal",
+      "evidence": "Brakes squeal"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_ADJUST",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "Brakes squeal",
+      "reason": "Squealing brakes: adjust and clean."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "unspecified",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": ""
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": true,
+     "reason": "missing_date",
+     "question": "When would you like to bring the bike in?"
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1027#2": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "road",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Brakes squeal",
+      "evidence": "Brakes squeal"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_ADJUST",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "Brakes squeal",
+      "reason": "Squealing brakes: adjust and clean."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "thursday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "afternoon",
+     "time_24h": "",
+     "phrase": "Thursday afternoon"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1028#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Nora",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Bent rear derailleur, shifting badly",
+      "evidence": "Rear derailleur got bent when the bike fell over"
+     }
+    ],
+    "services": [
+     {
+      "code": "GEAR_ADJUST",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Rear derailleur got bent",
+      "reason": "Bent derailleur: realign/adjust (hanger may need parts)."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "thursday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Thursday?"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Derailleur or hanger may need replacing; parts not in catalog."
+   }
+  ],
+  "m-1029#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Ravi",
+    "bike_type": "mountain",
+    "bike_count": 1,
+    "brake_type": "hydraulic_disc",
+    "reported_issues": [
+     {
+      "summary": "New pads on both wheels",
+      "evidence": "New pads on both wheels"
+     },
+     {
+      "summary": "Bleed both brakes",
+      "evidence": "bleed both brakes"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_PADS",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "New pads on both wheels",
+      "reason": "Requested."
+     },
+     {
+      "code": "BRAKE_BLEED",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "bleed both brakes",
+      "reason": "Requested."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Saturday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1030#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Front flat",
+      "evidence": "Front flat"
+     }
+    ],
+    "services": [
+     {
+      "code": "FLAT_FIX",
+      "wheel": "front",
+      "bikes": 1,
+      "evidence": "Front flat",
+      "reason": "Flat front tire."
+     }
+    ],
+    "urgency": "high",
+    "urgency_reason": "Asked for today.",
+    "requested_date": {
+     "kind": "today",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Today if you can"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1031#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "road",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Both wheels need truing",
+      "evidence": "Wheel truing, front and rear"
+     }
+    ],
+    "services": [
+     {
+      "code": "WHEEL_TRUE",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "Wheel truing, front and rear",
+      "reason": "Requested for both wheels."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "next_weekday",
+     "weekday": "tuesday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Next Tuesday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1032#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Beth",
+    "bike_type": "cargo",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a basic tune-up before winter",
+      "evidence": "basic tune-up on my cargo bike"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_BASIC",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "basic tune-up",
+      "reason": "Requested."
+     }
+    ],
+    "urgency": "low",
+    "urgency_reason": "Flexible: any weekday, before winter.",
+    "requested_date": {
+     "kind": "any_weekday",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Any weekday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1033#1": [
+   {
+    "intent": "repair_request",
+    "language": "es",
+    "customer_name": "Carlos",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Brakes don't stop well",
+      "evidence": "los frenos de mi bicicleta no frenan bien"
+     },
+     {
+      "summary": "Chain is noisy",
+      "evidence": "la cadena hace ruido"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_ADJUST",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "los frenos de mi bicicleta no frenan bien",
+      "reason": "Weak braking on both brakes."
+     },
+     {
+      "code": "GEAR_ADJUST",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "la cadena hace ruido",
+      "reason": "Noisy chain is usually indexing; check wear."
+     }
+    ],
+    "urgency": "high",
+    "urgency_reason": "Brakes are not stopping well (safety).",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "el viernes"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Customer wrote in Spanish. Check chain wear while adjusting gears."
+   }
+  ],
+  "m-1034#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Chain skips under load at ~5000 km",
+      "evidence": "Chain skips under load, it's about 5000 km old"
+     }
+    ],
+    "services": [
+     {
+      "code": "CHAIN_REPLACE",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Chain skips under load, it's about 5000 km old",
+      "reason": "Worn chain at 5000 km."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "wednesday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Wednesday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1035#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "commuter",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Replace both tires; customer supplies tires",
+      "evidence": "Replace both tires, I have the new tires already"
+     }
+    ],
+    "services": [
+     {
+      "code": "TIRE_REPLACE",
+      "wheel": "both",
+      "bikes": 1,
+      "evidence": "Replace both tires",
+      "reason": "Labor only; customer has the tires."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "friday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Friday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Customer brings their own tires."
+   }
+  ],
+  "m-1036#1": [
+   "{\"intent\": \"repair_request\", \"language\": \"en\", \"customer_name\": \"Omar\", \"bike_type\": \"e-bike\", \"bike_count\": 1, \"brake_type\": \"unknown\", \"reported_issues\": [{\"summary\": \"E-bike won",
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Omar",
+    "bike_type": "e-bike",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "E-bike won't power on after washing",
+      "evidence": "E-bike won't turn on at all after I washed it"
+     }
+    ],
+    "services": [
+     {
+      "code": "EBIKE_DIAG",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "E-bike won't turn on at all after I washed it",
+      "reason": "Likely water ingress; electrical diagnosis."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "tomorrow",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Tomorrow please"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1037#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "hydraulic_disc",
+    "reported_issues": [
+     {
+      "summary": "Rear hydraulic brake bleed",
+      "evidence": "Hydraulic brake bleed, rear only"
+     }
+    ],
+    "services": [
+     {
+      "code": "BRAKE_BLEED",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "Hydraulic brake bleed, rear only",
+      "reason": "Requested."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "morning",
+     "time_24h": "11:00",
+     "phrase": "Saturday 11am"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1038#1": [
+   {
+    "intent": "cancellation",
+    "language": "en",
+    "customer_name": "Marcus",
+    "bike_type": "unknown",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [],
+    "services": [],
+    "urgency": "normal",
+    "urgency_reason": "Cancellation.",
+    "requested_date": {
+     "kind": "unspecified",
+     "weekday": "none",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": ""
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Wants to cancel this morning's chain appointment; fixed it himself."
+   }
+  ],
+  "m-1039#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "",
+    "bike_type": "mountain",
+    "bike_count": 1,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Wants a full overhaul",
+      "evidence": "Full overhaul on my mountain bike"
+     },
+     {
+      "summary": "Rear flat",
+      "evidence": "it has a flat on the rear"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_FULL",
+      "wheel": "not_applicable",
+      "bikes": 1,
+      "evidence": "Full overhaul",
+      "reason": "Requested."
+     },
+     {
+      "code": "FLAT_FIX",
+      "wheel": "rear",
+      "bikes": 1,
+      "evidence": "it has a flat on the rear",
+      "reason": "Rear flat."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "next_weekday",
+     "weekday": "monday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Next Monday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": ""
+   }
+  ],
+  "m-1040#1": [
+   {
+    "intent": "repair_request",
+    "language": "en",
+    "customer_name": "Greta",
+    "bike_type": "kids",
+    "bike_count": 2,
+    "brake_type": "unknown",
+    "reported_issues": [
+     {
+      "summary": "Basic tune-up for two bikes",
+      "evidence": "Basic tune-up for my daughter's bike and mine, two bikes"
+     }
+    ],
+    "services": [
+     {
+      "code": "TUNE_BASIC",
+      "wheel": "not_applicable",
+      "bikes": 2,
+      "evidence": "Basic tune-up for my daughter's bike and mine, two bikes",
+      "reason": "Two bikes, one tune-up each."
+     }
+    ],
+    "urgency": "normal",
+    "urgency_reason": "No safety issue or time pressure stated.",
+    "requested_date": {
+     "kind": "weekday",
+     "weekday": "saturday",
+     "month": 0,
+     "day": 0,
+     "time_of_day": "any",
+     "time_24h": "",
+     "phrase": "Saturday"
+    },
+    "other_shop_mentioned": "none",
+    "shop_confirmation": "not_applicable",
+    "suspected_prompt_injection": false,
+    "follow_up": {
+     "needed": false,
+     "reason": "none",
+     "question": ""
+    },
+    "notes_for_staff": "Two bikes: a child's bike and an adult bike."
+   }
+  ]
+ }
+}
