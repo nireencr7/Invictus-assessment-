@@ -70,6 +70,9 @@ class Settings(BaseSettings):
     embedded_worker: bool = False
     worker_poll_seconds: float = 0.5
     dev_mode: bool = True
+    # Comma-separated origins allowed to call the API from a browser (only needed when the staff
+    # console is hosted on another origin without its reverse proxy). Empty = CORS off.
+    cors_origins: str = ""
     catalog_path: Path = Field(default=REPO_ROOT / "data" / "catalog.json")
     offline_outputs_path: Path = Field(default=REPO_ROOT / "data" / "offline_model_outputs.json")
     shop_timezone: str = "America/Chicago"

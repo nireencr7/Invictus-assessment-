@@ -187,3 +187,52 @@ resource "google_cloud_run_v2_job" "migrate" {
 
   depends_on = [google_secret_manager_secret_iam_member.readers]
 }
+
+# --- Staff console: a separate static app (nginx + React build), deployed and rolled back on its own.
+# It reaches the API only through its own /v1 reverse proxy, so the browser sees one origin and the
+# API needs no CORS. It holds no secrets and needs no IAM roles.
+
+resource "google_service_account" "console" {
+  account_id   = "riverbend-console"
+  display_name = "Riverbend staff console (static files + proxy; no permissions)"
+}
+
+resource "google_cloud_run_v2_service" "console" {
+  name     = "riverbend-console"
+  location = var.region
+  ingress  = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    service_account = google_service_account.console.email
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 3
+    }
+    containers {
+      image = var.console_image
+      resources {
+        limits = { cpu = "1", memory = "256Mi" }
+      }
+      env {
+        name  = "API_UPSTREAM"
+        value = google_cloud_run_v2_service.api.uri
+      }
+      env {
+        name  = "CONSOLE_MODE"
+        value = "live"
+      }
+      startup_probe {
+        http_get { path = "/console-healthz" }
+      }
+    }
+  }
+}
+
+# Public like the API: sign-in is the staff token. Put Identity-Aware Proxy in front of this service
+# (and of the API's staff routes) before real staff use it — see docs/NOT_BUILT.md.
+resource "google_cloud_run_v2_service_iam_member" "console_public" {
+  name     = google_cloud_run_v2_service.console.name
+  location = var.region
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}

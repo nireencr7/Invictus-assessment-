@@ -62,6 +62,8 @@ def main(argv: list[str] | None = None) -> int:
     ev = sub.add_parser("eval", help="run the 40 sample messages and write docs/RESULTS.md")
     ev.add_argument("--scenarios", default="baseline,chaos,budget,outage")
     ev.add_argument("--out", default="docs/RESULTS.md")
+    snap = sub.add_parser("snapshot", help="export a read-only dataset for the staff console's snapshot mode")
+    snap.add_argument("--out", default="ui/public/demo-snapshot.json")
     args = parser.parse_args(argv)
 
     settings = get_settings()
@@ -97,6 +99,15 @@ def main(argv: list[str] | None = None) -> int:
             _serve_health(args.health_port)
         worker.run_forever()
         services.close()
+        return 0
+    if args.cmd == "snapshot":
+        from pathlib import Path
+
+        from riverbend.snapshot import export_snapshot
+
+        snap = export_snapshot(settings, Path(args.out))
+        counts = {k: v["workOrders"]["count"] for k, v in snap["byShop"].items()}
+        print(f"wrote {args.out}: work orders per shop {counts}")
         return 0
     if args.cmd == "eval":
         from riverbend.evaluation import run_eval

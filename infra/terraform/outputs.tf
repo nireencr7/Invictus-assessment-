@@ -14,3 +14,7 @@ output "staff_token_secret" {
   value       = google_secret_manager_secret.s["riverbend-staff-tokens"].secret_id
   description = "Read with: gcloud secrets versions access latest --secret=riverbend-staff-tokens"
 }
+
+output "console_url" {
+  value = google_cloud_run_v2_service.console.uri
+}

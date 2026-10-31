@@ -48,3 +48,8 @@ variable "alert_email" {
   description = "Where budget / escalation / outage alerts go."
   type        = string
 }
+
+variable "console_image" {
+  description = "Staff console image, e.g. us-central1-docker.pkg.dev/<project>/riverbend/console:<git-sha>. Set by CI."
+  type        = string
+}

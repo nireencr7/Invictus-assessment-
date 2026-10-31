@@ -54,3 +54,12 @@ We don't confirm that another shop's resource exists.
 
 ### D14. Applied migrations are immutable
 `run_migrations` records a checksum per file and refuses to run if an applied file changes. This came from a real incident during the build (see [AI_JUDGEMENT.md](AI_JUDGEMENT.md)).
+
+### D15. The staff console is a separate app behind its own proxy
+**Chosen:** a static React build in its own nginx container and Cloud Run service. nginx proxies `/v1` to the API, so the browser talks to one origin. `config.json` is written from env at start-up (`CONSOLE_MODE=live|snapshot|auto`). A snapshot mode serves a read-only export of a real run.
+**Why:** the console ships and rolls back without touching the API; no CORS; no API URL baked into the bundle; the demo works with no backend.
+**Costs:** a second deployable, and a second image to keep patched.
+**Not chosen:** serving it from the FastAPI process (couples releases), or a CDN bucket (would need CORS and a build-time API URL).
+
+### D16. The processing deadline restarts when processing restarts
+**Chosen:** the SLA hand-off ("give the message to staff if the AI hasn't finished in N minutes") is measured from `jobs.sla_started_at`, which resets when staff press Retry AI or a cap release requeues the message. It used to be measured from the message's arrival, so a retried message went straight back to staff after one transient failure. Found by using the console; fixed in migration `003` with a regression test.

@@ -29,10 +29,10 @@ def test_new_migration_is_applied(db_urls, tmp_path):
     (copy / "999_extra.sql").write_text("CREATE TABLE extra_thing (id int);")
     assert run_migrations(db_urls.admin, APP_PASSWORD, copy) == ["999_extra"]
     with psycopg.connect(db_urls.admin) as conn:
-        assert (
-            conn.execute("SELECT count(*) FROM schema_migrations WHERE checksum IS NOT NULL").fetchone()[0]
-            == 3
-        )
+        applied = conn.execute(
+            "SELECT count(*) FROM schema_migrations WHERE checksum IS NOT NULL"
+        ).fetchone()[0]
+        assert applied == len(list(MIGRATIONS_DIR.glob("*.sql"))) + 1
 
 
 def test_databases_migrated_before_checksums_adopt_a_baseline(db_urls, tmp_path):

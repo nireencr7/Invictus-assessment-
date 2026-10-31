@@ -1,4 +1,6 @@
-# `make up` (or `docker compose up --build`) -> dashboard at http://localhost:8000
+# `make up` (or `docker compose up --build`):
+#   staff console  http://localhost:3000   (separate app: nginx serving the React build, proxying /v1 to the API)
+#   API + dev page http://localhost:8000
 # Model provider defaults to the offline stand-in; put LLM_PROVIDER=anthropic and
 # ANTHROPIC_API_KEY in .env to use Claude.
 x-app: &app
@@ -50,3 +52,14 @@ services:
     deploy: { replicas: 2 }
     depends_on:
       migrate: { condition: service_completed_successfully }
+
+  # The staff console: a separately built and deployed app. It talks to the API only through
+  # its own nginx proxy, exactly as it does on Cloud Run.
+  ui:
+    build: ./ui
+    environment:
+      API_UPSTREAM: http://api:8080
+      CONSOLE_MODE: auto
+    ports: ["3000:8080"]
+    depends_on:
+      api: { condition: service_healthy }

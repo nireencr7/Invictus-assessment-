@@ -90,3 +90,39 @@ def test_customer_view_is_scoped_by_token_and_shop(client, admin):
 def test_health(client):
     assert client.get("/healthz").json() == {"ok": True}
     assert client.get("/readyz").json()["ok"] is True
+
+
+def test_me_identifies_the_tokens_shop(client):
+    assert client.get("/v1/me", headers=LAKE).json() == {
+        "shop_id": "rb-lakeshore",
+        "shop_name": "Riverbend Cycles Lakeshore",
+        "role": "staff",
+    }
+    assert client.get("/v1/me", headers={"Authorization": "Bearer nope"}).status_code == 401
+
+
+def test_model_calls_and_activity_feeds_are_scoped_to_the_shop(client):
+    post(client, "rb-lakeshore", "m-1010", "Need new chain, old one is rusty. Road bike. Wednesday.")
+    client.services.worker().drain()
+    calls = client.get("/v1/shops/rb-lakeshore/llm-calls", headers=LAKE).json()["items"]
+    assert [(c["external_id"], c["status"], c["purpose"]) for c in calls] == [("m-1010", "ok", "extract")]
+    assert calls[0]["cost_usd"] == "0.016000"
+    types = [e["type"] for e in client.get("/v1/shops/rb-lakeshore/activity", headers=LAKE).json()["items"]]
+    assert {"received", "llm_call", "work_order_created"} <= set(types)
+    down = {"Authorization": "Bearer dev-downtown-token"}
+    assert client.get("/v1/shops/rb-downtown/llm-calls", headers=down).json()["items"] == []
+    assert client.get("/v1/shops/rb-lakeshore/activity", headers=down).status_code == 404
+
+
+def test_cors_is_off_by_default_and_opt_in(make_services):
+    s = make_services(provider=FakeProvider(default=lambda r: offline_output("m-1010#1")))
+    origin = {"Origin": "https://console.example", "Access-Control-Request-Method": "GET"}
+    with TestClient(create_app(s.settings, s)) as c:
+        assert "access-control-allow-origin" not in c.options("/v1/me", headers=origin).headers
+    s2 = make_services(
+        provider=FakeProvider(default=lambda r: offline_output("m-1010#1")),
+        cors_origins="https://console.example",
+    )
+    with TestClient(create_app(s2.settings, s2)) as c:
+        r = c.options("/v1/me", headers={**origin, "Access-Control-Request-Headers": "authorization"})
+        assert r.headers["access-control-allow-origin"] == "https://console.example"

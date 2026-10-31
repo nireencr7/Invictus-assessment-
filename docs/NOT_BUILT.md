@@ -9,7 +9,7 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 | **A live-model results table** | `docs/RESULTS.md` comes from the offline stand-in; `make eval-live` regenerates it against Claude | No API key was available while building. The harness, golden labels and scoring are ready; only the run is missing. |
 | **Sending email / web replies** | Every customer message is written to `outbound_messages` (an outbox with dedupe keys) and visible via the customer view | Delivery is plumbing (SendGrid / Gmail API + bounce handling), not architecture |
 | **Parsing raw email** | Intake assumes the gateway gives `message_id`, body, channel and a reply token (from `Reply-To: reply+<token>@…`) | Gateway's job |
-| **Real staff identity** | One bearer token per shop, mapped to that shop | IAP / Identity Platform is the production answer; the tenant check is already in one place |
+| **Real staff identity** | One bearer token per shop, mapped to that shop; the console signs in with it and keeps it in the tab only | IAP / Identity Platform is the production answer; the tenant check is already in one place |
 | **Customer identity / CRM** | Conversations threaded by reply token; cancellations matched by name inside one shop, last 14 days, exactly-one-match-or-staff | Needs an email/phone identity the samples don't carry |
 | **Scheduling** | A resolved requested *window* (earliest/latest, time of day) on each order | No calendar or capacity model in the brief |
 | **Parts and inventory** | Parts not in the catalog (tubeless tire m-1021, derailleur hanger m-1028) go to `notes_for_staff` | The catalog is services only |
@@ -19,6 +19,7 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 | **Data retention** | Message text and rejected model output (`llm_calls.raw_output`) are kept indefinitely, under RLS | Needs a policy decision from Riverbend |
 | **Content-level dedupe** | Dedupe is by `message_id` | The same text under a new id from the same sender is a second request — or a resend. That needs sender identity to tell apart. |
 | **Prompt-cache tuning, Batches API** | `cache_control` is set; cache hits are not verified. Budget-held backlog could go through Batches at 50% cost. | Needs live traffic to measure |
+| **Browser tests for the console** | Unit tests on its data layer; checked by hand in live and snapshot modes, at desktop and phone widths, light and dark | Playwright against `make up` is the next step |
 | **Load tests; applying the Terraform** | Concurrency tests (8 duplicate posts, 30 racing reservations, lease stealing); HCL that parses | No cloud credits; volume is tiny |
 | **Structured logs / tracing** | Plain logs + an `events` timeline per conversation + log-based alerts | OpenTelemetry is the next step for ops |
 

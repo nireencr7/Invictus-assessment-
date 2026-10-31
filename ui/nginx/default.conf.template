@@ -1,0 +1,33 @@
+# Staff console: static files + a reverse proxy to the API, so the browser talks to one origin
+# (no CORS, tokens never leave it). Rendered by the nginx image's envsubst at start-up.
+server {
+    listen ${PORT};
+    server_name _;
+    root /usr/share/nginx/html;
+    server_tokens off;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'" always;
+
+    location = /console-healthz { access_log off; return 200 "ok"; }
+
+    # The API, same origin. On Cloud Run API_UPSTREAM is the API service's https URL.
+    location /v1/ {
+        proxy_pass ${API_UPSTREAM};
+        proxy_ssl_server_name on;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 30s;
+    }
+    location = /readyz {
+        proxy_pass ${API_UPSTREAM};
+        proxy_ssl_server_name on;
+    }
+
+    location /assets/ { expires 1y; try_files $uri =404; }      # content-hashed by Vite
+    location = /config.json { expires -1; }                     # written at start-up
+    location = /demo-snapshot.json { expires 5m; }
+    location / { expires -1; try_files $uri $uri/ /index.html; }
+}

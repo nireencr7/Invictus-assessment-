@@ -116,7 +116,8 @@ class Pipeline:
                 dead=False,
             )
 
-        age = self.clock() - msg["created_at"]
+        # Measured from the start of this processing cycle (a staff retry or a budget release restarts it).
+        age = self.clock() - job.sla_started_at
         if job.last_error and age > timedelta(seconds=self.settings.processing_sla_seconds):
             return self._escalate(
                 job,

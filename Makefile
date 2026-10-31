@@ -1,12 +1,13 @@
 # One-command local runs:
-#   make up    — Docker: Postgres + migrations + API + 2 workers   -> http://localhost:8000
-#   make dev   — no Docker: local Postgres binaries + API with an embedded worker -> http://localhost:8000
-.PHONY: up down dev test lint fmt eval eval-live fixtures clean help
+#   make up       — Docker: Postgres + migrations + API + 2 workers + staff console -> http://localhost:3000
+#   make dev      — no Docker: local Postgres binaries + API with an embedded worker -> http://localhost:8000
+#   make console  — the staff console in dev mode (run alongside `make dev`)        -> http://localhost:5173
+.PHONY: up down dev console console-test snapshot test lint fmt eval eval-live fixtures clean help
 
 help:
 	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-10s %s\n", $$1, $$2}'
 
-up: ## Run everything in Docker (Postgres, migrations, API, 2 workers)
+up: ## Run everything in Docker (Postgres, migrations, API, 2 workers, staff console on :3000)
 	docker compose up --build
 
 down: ## Stop Docker services and delete their data
@@ -17,6 +18,17 @@ dev: ## Run locally without Docker (needs Postgres binaries); API + embedded wor
 	scripts/devdb.sh start
 	uv run python -m riverbend migrate
 	EMBEDDED_WORKER=true uv run python -m riverbend api --port 8000
+
+console: ## Run the staff console (React) against the local API; open http://localhost:5173
+	cd ui && npm install --no-audit --no-fund && npm run dev
+
+console-test: ## Type-check, unit-test and build the staff console
+	cd ui && npm ci --no-audit --no-fund && npm run typecheck && npm test && npm run build
+
+snapshot: ## Regenerate the console's read-only demo dataset from a real (offline) run
+	scripts/devdb.sh start
+	uv run python -m riverbend migrate
+	LOG_LEVEL=WARNING uv run python -m riverbend snapshot
 
 test: ## Run the test suite (starts a throwaway Postgres if TEST_DATABASE_ADMIN_URL is unset)
 	uv run pytest

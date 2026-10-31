@@ -6,6 +6,7 @@ or turned into garbage. Expected behaviour:
 - invalid output is never saved; one repair attempt, then staff.
 """
 
+import time
 from decimal import Decimal
 
 from fastapi.testclient import TestClient
@@ -182,3 +183,35 @@ def test_worker_crash_is_retried_then_dead_lettered(make_services, admin):
     assert s.budget.sweep_orphans(older_than_seconds=0) >= 1
     spend = admin.execute("SELECT spent_usd, reserved_usd FROM shop_spend").fetchone()
     assert spend["reserved_usd"] == Decimal(0) and spend["spent_usd"] > 0
+
+
+def test_staff_retry_restarts_the_sla_clock(make_services, admin):
+    """Found via the staff console: pressing Retry AI on an old message used to re-escalate it after
+    one transient failure, because the SLA was measured from the message's arrival."""
+    state_ = {"healthy": False, "fail_next": 0}
+
+    def provider(req):
+        if not state_["healthy"]:
+            return TransientProviderError("down")
+        if state_["fail_next"]:
+            state_["fail_next"] -= 1
+            return TransientProviderError("still flapping")
+        return OK
+
+    s = make_services(provider=FakeProvider(default=provider), processing_sla_seconds=0.3, max_attempts=50)
+    res = post_message(s, "rb-lakeshore", "m-1", BODY)
+    s.worker().drain()
+    assert state(admin)["state_reason"] == "ai_unavailable"
+    time.sleep(0.4)  # the message is now older than the SLA
+
+    state_.update(
+        healthy=True, fail_next=1
+    )  # provider is back, but the first call after the retry still fails
+    with TestClient(create_app(s.settings, s)) as client:
+        r = client.post(
+            f"/v1/shops/rb-lakeshore/conversations/{res.conversation_id}/retry",
+            headers={"Authorization": "Bearer dev-lakeshore-token"},
+        )
+        assert r.status_code == 200
+    s.worker().drain()
+    assert wo_count(admin) == 1

@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Literal
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 
@@ -80,6 +81,15 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
     app = FastAPI(title="Riverbend work orders", version="0.1.0", lifespan=lifespan)
     staff_tokens = settings.staff_token_map()
     ingest_keys = settings.ingest_key_map()
+    # The staff console normally reaches the API through its own reverse proxy (same origin).
+    # CORS is only for a console hosted on a different origin, and is off unless configured.
+    if settings.cors_origins.strip():
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
+            allow_methods=["GET", "POST", "PUT"],
+            allow_headers=["Authorization", "Content-Type", "X-Ingest-Key"],
+        )
 
     def svc(request: Request) -> Services:
         return request.app.state.svc
@@ -288,6 +298,59 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
                 (conversation_id,),
             )
         return {"requeued": True}
+
+    @app.get("/v1/me")
+    def me(request: Request, authorization: str | None = Header(default=None)):
+        """Which shop does this staff token belong to? Lets a console sign in with just a token."""
+        token = authorization.removeprefix("Bearer ").strip() if authorization else None
+        shop_id = _match(token, staff_tokens)
+        if shop_id is None:
+            raise HTTPException(401, "missing or invalid staff token", headers={"WWW-Authenticate": "Bearer"})
+        shop = svc(request).catalog.shops[shop_id]
+        return {"shop_id": shop.id, "shop_name": shop.name, "role": "staff"}
+
+    @app.get("/v1/shops/{shop_id}/llm-calls")
+    def llm_calls(limit: int = 100, shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):
+        """Recent model calls for this shop, including failed and rejected ones."""
+        with s.db.tenant_tx(shop_id) as conn:
+            rows = conn.execute(
+                """SELECT c.id, c.purpose, c.status, c.provider, c.model, c.reserved_usd, c.cost_usd,
+                          c.input_tokens, c.output_tokens, c.latency_ms, c.error, c.created_at,
+                          m.external_id, m.conversation_id
+                   FROM llm_calls c JOIN inbound_messages m ON m.id = c.message_id
+                   ORDER BY c.id DESC LIMIT %s""",
+                (max(1, min(limit, 500)),),
+            ).fetchall()
+        return {
+            "shop_id": shop_id,
+            "items": [
+                {
+                    **r,
+                    "conversation_id": str(r["conversation_id"]),
+                    "reserved_usd": str(r["reserved_usd"]),
+                    "cost_usd": None if r["cost_usd"] is None else str(r["cost_usd"]),
+                }
+                for r in rows
+            ],
+        }
+
+    @app.get("/v1/shops/{shop_id}/activity")
+    def activity(limit: int = 60, shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):
+        """The shop's recent timeline: received, asked, created, escalated, held, ..."""
+        with s.db.tenant_tx(shop_id) as conn:
+            rows = conn.execute(
+                """SELECT e.id, e.type, e.detail, e.created_at, e.conversation_id, m.external_id
+                   FROM events e LEFT JOIN inbound_messages m ON m.id = e.message_id
+                   ORDER BY e.id DESC LIMIT %s""",
+                (max(1, min(limit, 500)),),
+            ).fetchall()
+        return {
+            "shop_id": shop_id,
+            "items": [
+                {**r, "conversation_id": None if r["conversation_id"] is None else str(r["conversation_id"])}
+                for r in rows
+            ],
+        }
 
     @app.get("/v1/shops/{shop_id}/spend")
     def spend(shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):

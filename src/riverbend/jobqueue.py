@@ -15,6 +15,7 @@ from __future__ import annotations
 import random
 import uuid
 from dataclasses import dataclass
+from datetime import datetime
 
 from riverbend.db import Database
 
@@ -31,6 +32,7 @@ class Job:
     attempts: int
     lease_token: uuid.UUID
     last_error: str | None
+    sla_started_at: datetime
 
 
 def enqueue(conn, shop_id: str, message_id) -> None:
@@ -53,7 +55,7 @@ def claim(db: Database, lease_seconds: float) -> Job | None:
                    ORDER BY run_after, id
                    FOR UPDATE SKIP LOCKED
                    LIMIT 1)
-               RETURNING id, shop_id, message_id, attempts, lease_token, last_error""",
+               RETURNING id, shop_id, message_id, attempts, lease_token, last_error, sla_started_at""",
             {"t": token, "lease": lease_seconds},
         ).fetchone()
     return Job(**row) if row else None
@@ -98,6 +100,7 @@ def unpark(db: Database, shop_id: str, reason: str) -> int:
     with db.system_tx() as conn:
         rows = conn.execute(
             """UPDATE jobs SET status = 'queued', park_reason = NULL, last_error = NULL, run_after = now(),
+                      sla_started_at = now(),
                       updated_at = now()
                WHERE shop_id = %s AND status = 'parked' AND park_reason = %s RETURNING id""",
             (shop_id, reason),
@@ -108,7 +111,8 @@ def unpark(db: Database, shop_id: str, reason: str) -> int:
 def requeue(conn, shop_id: str, message_id) -> bool:
     """Staff 'try the AI again' on a dead-lettered message."""
     row = conn.execute(
-        """UPDATE jobs SET status = 'queued', attempts = 0, last_error = NULL, run_after = now(), updated_at = now()
+        """UPDATE jobs SET status = 'queued', attempts = 0, last_error = NULL, run_after = now(),
+                  sla_started_at = now(), updated_at = now()
            WHERE shop_id = %s AND message_id = %s AND status IN ('dead', 'parked') RETURNING id""",
         (shop_id, message_id),
     ).fetchone()

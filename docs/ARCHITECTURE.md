@@ -9,6 +9,7 @@
 | Module | Owns | Must not |
 |---|---|---|
 | `api`, `intake` | auth, HTTP validation, idempotent accept | call the model; touch a second tenant |
+| `ui/` (separate app) | the staff console: read views + staff actions, via its own `/v1` proxy | hold secrets; compute prices or dates |
 | `jobqueue`, `worker` | claim (SKIP LOCKED + lease), retry, park, dead-letter | know any business rule |
 | `pipeline` | orchestrating one message | price, compute dates or make policy itself |
 | `llm/` port + adapters | provider calls, error classification, breaker, fault injection | leak SDK types; retry (SDK retries are **off**) |

@@ -12,6 +12,7 @@ The LLM reads; **code prices, dates and decides**:
 | The brief asks for | Here |
 |---|---|
 | Code, tests, one-command local run | this repo · **`make up`** (Docker) or **`make dev`** (no Docker) · `make test` |
+| A UI to see it all | the **staff console** in [`ui/`](ui): a separate React app with its own container and Cloud Run service |
 | Architecture note, 2 pages max | [**`docs/ARCHITECTURE.pdf`**](docs/ARCHITECTURE.pdf) (source: [`ARCHITECTURE.md`](docs/ARCHITECTURE.md)) |
 | Deployment path to GCP, IaC + plan | [`docs/DEPLOYMENT_GCP.md`](docs/DEPLOYMENT_GCP.md) · [`infra/terraform/`](infra/terraform) · [`deploy/cloudbuild.yaml`](deploy/cloudbuild.yaml) |
 | Results table for the 40 samples | [`docs/RESULTS.md`](docs/RESULTS.md) (+ chaos, spend-cap and outage runs) |
@@ -23,21 +24,48 @@ The LLM reads; **code prices, dates and decides**:
 ## Run it
 
 ```bash
-make up      # Docker: Postgres 16 + migrations + API + 2 workers  ->  http://localhost:8000
+make up      # Docker: Postgres 16 + migrations + API + 2 workers + staff console  ->  http://localhost:3000
 ```
 
-No Docker? If Postgres binaries are installed (`initdb`, `pg_ctl`), use `make dev`. It starts a throwaway local Postgres plus the API with an embedded worker.
+No Docker? If Postgres binaries are installed (`initdb`, `pg_ctl`), run these two in separate terminals:
 
-Then open **http://localhost:8000**:
-
-1. **Load the 40 brief samples.** All 40 are posted, including the duplicate. Switch between shops; each sees only its own orders.
-2. **Click any row** to see the conversation, every model call with its cost, and the timeline.
-3. **Break the model provider → Outage** (`make dev` only), then send a message. It is acknowledged instantly, retried with backoff, then handed to staff with a **Retry AI** button.
-4. **Set this shop's cap to 0.10** and send messages: they're *held*, not lost. Raise the cap to release them.
+```bash
+make dev        # throwaway local Postgres + API with an embedded worker on :8000
+make console    # the staff console on http://localhost:5173 (proxies /v1 to :8000)
+```
 
 The provider defaults to an **offline stand-in**: hand-written outputs, $0, deterministic, clearly labelled as not a model. To use Claude, put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY=…` in `.env`. Never commit it; `.env` is git-ignored.
 
-Verified on Linux with Postgres 16: `make dev`, `make test` and `make eval`. The Docker path is built in CI; it wasn't run on the build machine (no Docker there).
+Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. The Docker path is built in CI; it wasn't run on the build machine (no Docker there).
+
+## The staff console
+
+A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its own nginx container and deployed as its own Cloud Run service. It reaches the API only through its own `/v1` reverse proxy, so the browser sees one origin and the API needs no CORS.
+
+- **Overview** of all shops: open orders, estimate totals, what needs a person, each shop's spend against its cap.
+- **Work orders**, with filters (needs review, high urgency, cancel requested) and search.
+- **Inbox**: handed to staff, held at the cap, waiting on the customer, answered.
+- **Conversation drawer**:
+  - the priced work-order ticket, with the customer's own words as evidence;
+  - the full thread, and what the customer currently sees;
+  - every model call with its cost, and the timeline;
+  - actions: **Retry AI**, mark completed, cancel.
+- **Activity** timeline.
+- **Spend & model calls**: the cap meter, setting the cap, and every call, including rejected and failed ones.
+- **Eval results**, checked against the golden labels.
+
+Sign in with a staff token (each token opens one shop only), or press **Use local dev credentials**.
+
+**Snapshot mode.** The console also ships a read-only dataset exported from a real run (`make snapshot`), so it can be hosted with no backend at all (`CONSOLE_MODE=snapshot`). `CONSOLE_MODE=auto` falls back to the snapshot when the API doesn't answer.
+
+**Using it caught a real bug.** Pressing *Retry AI* on an hour-old escalated message sent it straight back to staff after one transient failure. The processing deadline was measured from the message's arrival, not from the retry. It is fixed in migration `003`, with a regression test.
+
+### Things to try
+
+1. In the API's dev page (http://localhost:8000), press **Load the 40 brief samples**. In the console, switch shops: each sees only its own orders.
+2. **Click any row** to open the conversation drawer.
+3. On the dev page, **Break the model provider → Outage** (`make dev` only), then send a message from the console's Inbox. It is acknowledged instantly, retried with backoff, then handed to staff. Press **Retry AI** once the provider is healthy.
+4. In **Spend**, set a shop's cap to 0.10 and send messages. They're *held*, not lost; raise the cap to release them.
 
 ### Or use the API directly
 
@@ -56,7 +84,7 @@ curl -s -o /dev/null -w '%{http_code}\n' localhost:8000/v1/shops/rb-northside/wo
   -H 'Authorization: Bearer dev-lakeshore-token'
 ```
 
-Other routes: `/v1/shops/{shop}/inbox`, `/conversations/{id}`, `/conversations/{id}/retry`, `/spend`, `/work-orders/{id}/status`; `/v1/customer/{shop}/{reply_token}` (what the customer sees); `PUT /v1/admin/shops/{shop}/budget`. OpenAPI is at `/docs`.
+Other routes: `/v1/me`, `/v1/shops/{shop}/inbox`, `/activity`, `/llm-calls`, `/conversations/{id}`, `/conversations/{id}/retry`, `/spend`, `/work-orders/{id}/status`; `/v1/customer/{shop}/{reply_token}` (what the customer sees); `PUT /v1/admin/shops/{shop}/budget`. OpenAPI is at `/docs`.
 
 ## Results, in one table
 
@@ -97,6 +125,7 @@ src/riverbend/
 migrations/                schema + row-level security (immutable once applied; checksum-guarded)
 tests/                     tests against real Postgres
 data/                      catalog, the 40 samples, golden labels, offline outputs, simulated replies
+ui/                        the staff console: React app, nginx container, demo snapshot
 infra/terraform/, deploy/  GCP
 ```
 

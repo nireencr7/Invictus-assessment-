@@ -1,8 +1,9 @@
 # Tests: what is covered, and why those parts
 
 ```bash
-make test        # 112 tests, ~60 s; starts a throwaway Postgres from local binaries
-                 # or uses TEST_DATABASE_ADMIN_URL (CI uses a postgres:16 service)
+make test          # 116 backend tests, ~60 s; starts a throwaway Postgres from local binaries
+                   # or uses TEST_DATABASE_ADMIN_URL (CI uses a postgres:16 service)
+make console-test  # staff console: type-check, 10 unit tests, production build
 ```
 
 Tests run against **real Postgres**, never a mock. The riskiest behaviour in this system *is* database behaviour: RLS, unique constraints, `SKIP LOCKED`, conditional `UPDATE`s, a deferred trigger. A fake would only pretend to have it. The decision paid off during the build: a trigger bug that would have passed any mock was caught on the first real run.
@@ -17,16 +18,16 @@ Each test gets its own database, cloned from a migrated template in ~50 ms. Tena
 | **Duplicate work orders** | Async + at-least-once delivery makes this the default failure | `test_idempotency.py` (7): duplicate before and after processing; same id with a different body → 409; ids scoped per shop; **8 concurrent deliveries** → one message, one job, one order; **lease stolen mid-call by a second worker** → one order, the loser rolls back; re-delivered job → no-op, no second model call. |
 | **Wrong price** | A broken promise to a customer | `test_pricing.py` (12): integer cents; per-wheel × wheels × bikes; float drift; a catalog unit change fails loudly at startup. `test_validation.py`: no money fields anywhere in the schema; an extra `discount_price` / `unit_price` from the model is rejected. `test_policy.py`: the injection sample still quotes $45.00. |
 | **Bad model output saved** | "Never saved as a work order" | `test_validation.py` (18): coercion refused; unknown codes; **ungrounded evidence**; bleed on rim brakes; wheel/unit mismatch; overhaul + tune-up together; truncated JSON; impossible dates; every offline fixture valid and every planted bad one invalid. `test_failures.py`: repair-then-succeed; invalid twice → staff, raw output kept, no order; an invented upsell stripped end to end. |
-| **Provider outage loses or stalls requests** | Required by the brief, and the most common production failure | `test_failures.py` (10): transient → retry → success; persistent outage → staff, job dead-lettered, customer sees only the ack, **Retry AI** recovers; breaker defers without burning attempts; timeout booked at worst-case cost; permanent error → no retry; refusal → staff; a crash in our own code → retried, dead-lettered, reservation swept. |
+| **Provider outage loses or stalls requests** | Required by the brief, and the most common production failure | `test_failures.py` (11): transient → retry → success; **Retry AI on an old message restarts the deadline** (found via the console); persistent outage → staff, job dead-lettered, customer sees only the ack, **Retry AI** recovers; breaker defers without burning attempts; timeout booked at worst-case cost; permanent error → no retry; refusal → staff; a crash in our own code → retried, dead-lettered, reservation swept. |
 | **Overspending the cap** | Real money; concurrency makes it subtle | `test_budget.py` (5): **30 threads racing** for reservations never exceed the cap; settle books actual tokens; at cap → held, no call, other shops unaffected, alert event, inbox shows it, raising the cap releases it; warning at 80%; the admin endpoint needs the admin token. |
 | **Follow-up loops or lost context** | A customer-facing annoyance, and a correctness issue | `test_conversations.py` (7): ask → reply → resume with the full thread in the prompt; the database refuses a second question; still missing after the reply → flagged order, not a second question; redirect; cancellation matching; a reply on a closed conversation → staff, no model call. |
 | **Wrong date** | "Thursday" booked on the wrong Thursday | `test_dates.py` (21): every timing phrase in the 40 samples, plus edge cases (same weekday, past dates, current month). |
 | **Code overriding the model, correctly** | Policy is where model suggestions become decisions | `test_policy.py` (12): unnecessary questions overruled; urgency capped under injection, even when only the code-side detector fires; wrong-shop ask/confirm/redirect/unclear; quotes; cancellations; provisional estimates. |
 | **Migration drift** | Happened during the build (see the Loom script) | `test_migrations.py` (4): idempotent; an edited applied migration refuses to run; databases from before the guard adopt a baseline; new migrations apply with a checksum. |
-| **Whole-system regression** | — | `test_samples_e2e.py` (2): all 40 samples through HTTP + worker, checked against the golden labels; the chaos run loses nothing and duplicates nothing. `test_api.py` (4): intake auth and validation, the list contract, the customer view's tenant scoping. |
+| **Whole-system regression** | — | `test_samples_e2e.py` (2): all 40 samples through HTTP + worker, checked against the golden labels; the chaos run loses nothing and duplicates nothing. `test_api.py` (7): intake auth and validation, the list contract, the customer view's tenant scoping; `/v1/me`; the model-call and activity feeds stay inside one shop; CORS off unless configured. **Console** (`ui/src/**/*.test.ts`, 10): the snapshot keeps each shop's data to itself, never contains a reply token, and every estimate equals the sum of its lines; money and label formatting. |
 
 ## Not tested, knowingly
 
 - **The live model's accuracy.** That's what `make eval-live` and the golden labels are for. It's an evaluation, not a unit test.
 - **The Anthropic/Vertex adapter against the real API.** It is thin and its error mapping is explicit, but it is unexercised without a key.
-- **The dashboard JS.** Checked by hand in a browser. **Terraform:** syntax only. **Docker image:** built in CI, not locally.
+- **The console in a real browser.** Checked by hand, in live and snapshot modes, at desktop and phone widths, light and dark; there are no automated browser tests (Playwright would be next). **Terraform:** syntax only. **Docker image:** built in CI, not locally.

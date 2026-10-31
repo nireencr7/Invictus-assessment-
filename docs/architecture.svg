@@ -16,7 +16,8 @@
   <g fill="#24292f" text-anchor="middle">
     <text x="91" y="70">Email gateway</text>
     <text x="91" y="118">Web form backend</text>
-    <text x="91" y="192">Shop staff</text>
+    <text x="91" y="186">Staff console</text>
+    <text x="91" y="200" font-size="10.5" fill="#57606a">own Cloud Run · proxies /v1</text>
     <text x="91" y="384">Customer</text>
   </g>
 
