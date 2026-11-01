@@ -28,6 +28,26 @@ describe("snapshot source", () => {
     await expect(source.workOrders("rb-elsewhere", "all")).rejects.toThrow("Not found");
   });
 
+  it("has demo customers, each with a history from their own shop only", async () => {
+    const down = await source.customers("rb-downtown");
+    expect(down.customers.map((c) => c.email)).toContain("jamie.lee@example.com");
+    for (const shop of source.shops()) {
+      for (const c of (await source.customers(shop.id)).customers) {
+        const h = await source.customer(shop.id, c.id);
+        const ids = new Set(Object.keys(snapshot.byShop[shop.id].conversations));
+        expect(h.conversations.every((cv) => ids.has(cv.id))).toBe(true);
+        expect(h.timeline.length).toBeGreaterThan(0);
+      }
+    }
+    expect(await source.features()).toEqual({ testMessages: false });
+  });
+
+  it("reads snapshots exported before customers existed", async () => {
+    const old = structuredClone(snapshot);
+    delete old.byShop["rb-downtown"].customers;
+    expect((await new SnapshotSource(old).customers("rb-downtown")).customers).toEqual([]);
+  });
+
   it("never exports a customer's reply token", () => {
     expect(JSON.stringify(snapshot)).not.toContain("reply_token");
   });

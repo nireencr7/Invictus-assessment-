@@ -117,7 +117,7 @@ def ensure_app_role(conn: psycopg.Connection, app_password: str) -> None:
     conn.execute("GRANT UPDATE (monthly_llm_cap_usd) ON shops TO riverbend_app")
     conn.execute(
         "GRANT SELECT, INSERT, UPDATE ON conversations, inbound_messages, work_orders, jobs, "
-        "llm_calls, shop_spend TO riverbend_app"
+        "llm_calls, shop_spend, customers TO riverbend_app"
     )
     # Append-only from the app's point of view.
     conn.execute("GRANT SELECT, INSERT ON outbound_messages, work_order_lines, events TO riverbend_app")

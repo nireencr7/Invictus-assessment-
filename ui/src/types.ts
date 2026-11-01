@@ -122,6 +122,9 @@ export interface ConversationDetail {
     customer_name: string | null;
     created_at: string;
     updated_at: string;
+    /** Set when the message came from an email address (see Customers). */
+    customer_id?: string | null;
+    sender?: string | null;
   };
   inbound: { external_id: string; body: string; received_at: string; status: string; outcome: string | null; created_at: string }[];
   outbound: { kind: string; body: string; created_at: string }[];
@@ -138,6 +141,66 @@ export interface ConversationDetail {
     created_at: string;
   }[];
   customerView?: { status: string; messages: { kind: string; body: string; created_at: string }[] };
+}
+
+export interface Customer {
+  id: string;
+  email: string;
+  name: string | null;
+  first_seen_at: string;
+  last_activity: string;
+  conversations: number;
+  awaiting_reply: number;
+  needs_staff: number;
+  open_orders: number;
+  open_estimate: string;
+}
+
+export interface CustomerList {
+  shop_id: string;
+  count: number;
+  conversations_without_email: number;
+  customers: Customer[];
+}
+
+export type TimelineEntry =
+  | { kind: "customer_message"; at: string; conversation_id: string; external_id: string; channel: string; body: string; status: string }
+  | { kind: "shop_message"; at: string; conversation_id: string; message_kind: string; body: string }
+  | { kind: "event"; at: string; conversation_id: string | null; type: string; detail: Record<string, unknown>; external_id: string | null };
+
+export interface CustomerHistory {
+  customer: Customer;
+  model_calls: number;
+  model_cost_usd: string;
+  conversations: {
+    id: string;
+    channel: string;
+    state: string;
+    state_reason: string | null;
+    follow_ups_asked: number;
+    customer_name: string | null;
+    first_message: string | null;
+    created_at: string;
+    updated_at: string;
+    work_order: null | { id: string; status: WorkOrderStatus; estimate: string };
+  }[];
+  timeline: TimelineEntry[];
+}
+
+export interface TestMessage {
+  customer_email: string;
+  customer_name?: string;
+  body: string;
+  channel: "email" | "web";
+  /** Conversation id to reply in; omit for a new request. */
+  reply_to?: string;
+}
+
+export interface TestMessageResult {
+  external_id: string;
+  conversation_id: string;
+  customer_id: string | null;
+  reply: boolean;
 }
 
 export interface EvalRow {
@@ -211,6 +274,9 @@ export interface ShopData {
   llmCalls: { shop_id: string; items: LlmCall[] };
   activity: { shop_id: string; items: ActivityItem[] };
   conversations: Record<string, ConversationDetail>;
+  /** Absent in snapshots exported before customers existed. */
+  customers?: CustomerList;
+  customerHistory?: Record<string, CustomerHistory>;
 }
 
 export interface Snapshot {

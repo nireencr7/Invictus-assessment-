@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Chip, Empty, ErrorNote, Loading } from "../components/ui";
 import { reasonLabel, when } from "../lib/format";
 import { useResource } from "../lib/useResource";
@@ -14,11 +13,16 @@ const GROUPS: { title: string; hint: string; test: (i: InboxItem) => boolean }[]
 
 export function Inbox({ ctx }: { ctx: Ctx }) {
   const res = useResource(() => ctx.source.inbox(ctx.shopId), `inbox:${ctx.shopId}`, ctx.poll);
-  const send = ctx.source.actions?.sendMessage;
+  const features = useResource(() => ctx.source.features(ctx.shopId), `features:${ctx.shopId}`);
 
   return (
     <>
-      {send ? <Composer ctx={ctx} send={send} onSent={res.reload} /> : null}
+      {features.data?.testMessages ? (
+        <div className="banner info row" style={{ justifyContent: "space-between" }}>
+          <span>Want to try the workflow? Send a message as a customer and watch it arrive here.</span>
+          <button className="btn" onClick={() => ctx.go("customers")}>Send a test message</button>
+        </div>
+      ) : null}
       {res.error && !res.data ? <ErrorNote error={res.error} /> : null}
       {!res.data ? (
         res.error ? null : <Loading />
@@ -58,48 +62,5 @@ function Row({ ctx, item: i }: { ctx: Ctx; item: InboxItem }) {
         {i.customer_name ? <>·<span>{i.customer_name}</span></> : null}·<span>{when(i.updated_at)}</span>
       </div>
     </div>
-  );
-}
-
-function Composer({ ctx, send, onSent }: {
-  ctx: Ctx;
-  send: NonNullable<NonNullable<Ctx["source"]["actions"]>["sendMessage"]>;
-  onSent: () => void;
-}) {
-  const [body, setBody] = useState("");
-  const [channel, setChannel] = useState<"email" | "web">("email");
-  const [busy, setBusy] = useState(false);
-  return (
-    <form className="card pad" style={{ display: "grid", gap: 10 }}
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!body.trim()) return;
-            setBusy(true);
-            try {
-              const r = await send(ctx.shopId, body.trim(), channel);
-              ctx.toast(r.duplicate ? "Duplicate: ignored" : "Accepted (202). Processing in the background.");
-              setBody("");
-              onSent();
-            } catch (err) {
-              ctx.toast(`Rejected: ${err instanceof Error ? err.message : String(err)}`);
-            } finally {
-              setBusy(false);
-            }
-          }}>
-      <div className="section-head">
-        <h2>Simulate an inbound message</h2>
-        <span className="muted" style={{ fontSize: 13 }}>Posts to {ctx.shopName(ctx.shopId)} as the email gateway would (dev only)</span>
-      </div>
-      <textarea id="composer-body" className="input" value={body} onChange={(e) => setBody(e.target.value)}
-                placeholder="My rear brake squeals and the gears skip on hills, can I bring it Saturday?" />
-      <div className="row">
-        <select id="composer-channel" className="input" style={{ width: "auto" }} value={channel}
-                onChange={(e) => setChannel(e.target.value as "email" | "web")}>
-          <option value="email">email</option>
-          <option value="web">web form</option>
-        </select>
-        <button className="btn primary" disabled={busy || !body.trim()}>Send to {ctx.shopName(ctx.shopId).replace("Riverbend Cycles ", "")}</button>
-      </div>
-    </form>
   );
 }

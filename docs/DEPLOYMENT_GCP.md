@@ -87,6 +87,17 @@ open "$(terraform output -raw console_url)"          # sign in by pasting the ri
 
 After that, every merge to `main` runs `deploy/cloudbuild.yaml`: tests (against a throwaway Postgres) → build both images → push → **migrate** → roll the worker, then the API, then the console. Infrastructure changes go through `terraform plan` in review. The pipeline only ships images.
 
+## How an email reaches the API
+
+The API doesn't read a mailbox. Something in front of it has to receive the email and post it, and that gateway isn't built here (see [NOT_BUILT.md](NOT_BUILT.md)). The usual shape:
+
+1. **Each shop gets an inbound address**, e.g. `downtown@mail.riverbendcycles.example`. Its MX records point at an inbound-email service: SendGrid Inbound Parse, Mailgun Routes, Postmark Inbound or Amazon SES. Gmail or Google Workspace also works, with a watch that pushes to Pub/Sub.
+2. **The service receives the email, parses it, and calls a webhook**, a small "email gateway" on Cloud Run. The gateway checks the webhook's signature, picks the shop from the `To` address, and takes the reply token from a `reply+<token>@` address if there is one.
+3. **The gateway posts to the API** at `POST /v1/shops/{shop}/inbound-messages`, sending the `X-Ingest-Key` header and `message_id` (the email's Message-ID, so a redelivery is a duplicate, not a second request), `sender` (the From address), `channel`, `received_at`, `body` and the `reply_token`.
+4. **The API stores the message, acknowledges it and queues it** in one transaction, then answers `202`. The worker does the AI part. Replies to the customer wait in the outbox (`outbound_messages`) for a sender to deliver them.
+
+Until a gateway exists, there are two ways in: `scripts/load_samples.py` (posts with the ingest key, exactly like a gateway), and **Send a message as a customer** in the console (staff token, own shop only, switched on with `test_messages = true` in `terraform.tfvars`). The demo deployment has it on.
+
 ## Configuration flow
 
 `src/riverbend/config.py` is the only reader of configuration. It is a typed `Settings` class, and secrets are `SecretStr` so they never appear in logs or tracebacks.

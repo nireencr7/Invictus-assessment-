@@ -1,4 +1,4 @@
-import type { ConversationDetail, Snapshot, WorkOrderList } from "../types";
+import type { ConversationDetail, CustomerHistory, CustomerList, Snapshot, WorkOrderList } from "../types";
 import { SourceError, type DataSource } from "./source";
 
 const OPEN = new Set(["open", "cancel_requested"]);
@@ -53,6 +53,20 @@ export class SnapshotSource implements DataSource {
     const c = this.shop(shop).conversations[id];
     if (!c) throw new SourceError("Not found", 404);
     return c;
+  }
+
+  async customers(shop: string): Promise<CustomerList> {
+    return this.shop(shop).customers ?? { shop_id: shop, count: 0, conversations_without_email: 0, customers: [] };
+  }
+
+  async customer(shop: string, id: string): Promise<CustomerHistory> {
+    const c = this.shop(shop).customerHistory?.[id];
+    if (!c) throw new SourceError("Not found", 404);
+    return c;
+  }
+
+  async features() {
+    return { testMessages: false };
   }
 
   async evalSummary() {

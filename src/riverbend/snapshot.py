@@ -6,7 +6,10 @@ stand-in provider), captured through the same endpoints the console calls live:
 1. the 40 brief samples, with a customer reply to m-1027's follow-up question
    (m-1009's wrong-shop question is left unanswered, so it waits in the inbox);
 2. one extra message sent to Downtown while the provider is down (-> handed to staff);
-3. one extra message sent to Northside after its cap is lowered (-> held at the cap).
+3. one extra message sent to Northside after its cap is lowered (-> held at the cap);
+4. two demo customers with email addresses, sent through the staff test tool, so the Customers
+   view has someone to show: Jamie (a follow-up answered, then a price question) and Priya
+   (a follow-up still waiting).
 
     uv run python -m riverbend snapshot            # writes ui/public/demo-snapshot.json
 """
@@ -40,6 +43,30 @@ DEMO_CAP = {
     "message_id": "demo-cap-1",
     "body": "My headset creaks when I brake hard. Thursday works. Sven",
 }
+
+
+DEMO_CUSTOMERS = [
+    ("rb-downtown", "jamie.lee@example.com", "Jamie Lee",
+     "My front tyre keeps going flat and the gears slip. Can you fix it?", "Saturday morning works for me."),
+    ("rb-downtown", "jamie.lee@example.com", "Jamie Lee", "How much do you charge to true a wheel?", None),
+    ("rb-lakeshore", "priya.shah@example.com", "Priya Shah", "Hi, can I book my bike in for next week?", None),
+]  # fmt: skip
+
+
+def _demo_customers(sc: Scenario) -> None:
+    worker = sc.services.worker()
+    for shop, email, name, body, reply in DEMO_CUSTOMERS:
+        h = _headers(sc.settings, shop)
+        first = {"customer_email": email, "customer_name": name, "body": body}
+        r = sc.client.post(f"/v1/shops/{shop}/test-messages", headers=h, json=first)
+        assert r.status_code == 202, r.text
+        worker.drain(max_wait_seconds=120)
+        if reply:
+            answer = {"customer_email": email, "body": reply, "reply_to": r.json()["conversation_id"]}
+            assert (
+                sc.client.post(f"/v1/shops/{shop}/test-messages", headers=h, json=answer).status_code == 202
+            )
+            worker.drain(max_wait_seconds=120)
 
 
 def _post(sc: Scenario, shop: str, message_id: str, body: str, reply_token: str | None = None) -> dict:
@@ -81,7 +108,11 @@ def _export_shop(sc: Scenario, shop_id: str) -> dict:
         "llmCalls": get(f"/v1/shops/{shop_id}/llm-calls?limit=500"),
         "activity": get(f"/v1/shops/{shop_id}/activity?limit=500"),
         "conversations": {},
+        "customers": get(f"/v1/shops/{shop_id}/customers"),
+        "customerHistory": {},
     }
+    for c in out["customers"]["customers"]:
+        out["customerHistory"][c["id"]] = get(f"/v1/shops/{shop_id}/customers/{c['id']}")
     with sc.admin() as conn:
         convs = conn.execute(
             "SELECT id::text AS id, reply_token FROM conversations WHERE shop_id = %s", (shop_id,)
@@ -140,7 +171,7 @@ def export_snapshot(settings: Settings, out_path: Path) -> dict:
         settings,
         "snapshot",
         {"processing_sla_seconds": 1.0, "max_attempts": 3, "breaker_failure_threshold": 2,
-         "breaker_cooldown_seconds": 0.2},
+         "breaker_cooldown_seconds": 0.2, "test_messages": True},
     )  # fmt: skip
     try:
         worker = sc.services.worker()
@@ -166,6 +197,8 @@ def export_snapshot(settings: Settings, out_path: Path) -> dict:
         _post(sc, DEMO_CAP["shop"], DEMO_CAP["message_id"], DEMO_CAP["body"])
         worker.drain(max_wait_seconds=120)
 
+        _demo_customers(sc)
+
         collected = _collect(sc)
         snapshot = {
             "generatedAt": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -174,8 +207,9 @@ def export_snapshot(settings: Settings, out_path: Path) -> dict:
             "simulatedSpend": collected["simulated_spend"],
             "note": (
                 "The 40 brief samples processed by the offline stand-in (hand-written outputs, not a model), "
-                "plus two extra messages: one sent during a simulated provider outage, one after Northside's "
-                "cap was lowered. Every record is a real API response from that run."
+                "plus two extra messages (one sent during a simulated provider outage, one after Northside's "
+                "cap was lowered) and two demo customers sent through the staff test tool. "
+                "Every record is a real API response from that run."
             ),
             "shops": [{"id": s.id, "name": s.name} for s in sc.services.catalog.shops.values()],
             "byShop": {shop_id: _export_shop(sc, shop_id) for shop_id in sc.services.catalog.shops},

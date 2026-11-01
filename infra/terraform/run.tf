@@ -6,6 +6,7 @@ locals {
     VERTEX_REGION           = var.vertex_region
     DEFAULT_MONTHLY_CAP_USD = var.default_monthly_cap_usd
     DEV_MODE                = "false"
+    TEST_MESSAGES           = tostring(var.test_messages)
     LOG_LEVEL               = "INFO"
   }
 }

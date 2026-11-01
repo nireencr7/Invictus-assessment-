@@ -72,6 +72,12 @@ variable "db_max_connections" {
   default     = 100
 }
 
+variable "test_messages" {
+  description = "Let signed-in staff send messages as a customer of their own shop from the console, to try the workflow. On for a demo, off for real shops."
+  type        = bool
+  default     = false
+}
+
 variable "deletion_protection" {
   description = "Protect Cloud SQL and Cloud Run from deletion. false for a demo, so `terraform destroy` tears everything down."
   type        = bool

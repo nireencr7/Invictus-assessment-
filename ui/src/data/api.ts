@@ -1,4 +1,16 @@
-import type { ActivityItem, ConversationDetail, EvalSummary, Inbox, LlmCall, Shop, Spend, WorkOrderList } from "../types";
+import type {
+  ActivityItem,
+  ConversationDetail,
+  CustomerHistory,
+  CustomerList,
+  EvalSummary,
+  Inbox,
+  LlmCall,
+  Shop,
+  Spend,
+  TestMessageResult,
+  WorkOrderList,
+} from "../types";
 import { SourceError, type Actions, type DataSource } from "./source";
 
 /** What a signed-in session holds. Lives in sessionStorage, so it ends with the tab. */
@@ -7,7 +19,6 @@ export interface Session {
   /** One staff token per shop; each token only ever unlocks its own shop. */
   shops: { id: string; name: string; token: string }[];
   adminToken?: string;
-  ingestKey?: string;
 }
 
 const KEY = "riverbend.session";
@@ -39,8 +50,14 @@ async function call<T>(base: string, path: string, init: RequestInit = {}): Prom
   }
   const body = await r.json().catch(() => ({}));
   if (!r.ok) {
-    const detail = typeof body?.detail === "string" ? body.detail : `HTTP ${r.status}`;
-    throw new SourceError(detail, r.status);
+    // FastAPI sends a string for errors it raises, and a list of field problems for invalid input.
+    const detail =
+      typeof body?.detail === "string"
+        ? body.detail
+        : Array.isArray(body?.detail)
+          ? body.detail.map((d: { msg?: string }) => (d.msg ?? "").replace(/^Value error, /, "")).filter(Boolean).join("; ")
+          : "";
+    throw new SourceError(detail || `HTTP ${r.status}`, r.status);
   }
   return body as T;
 }
@@ -58,14 +75,12 @@ export async function devSession(apiBase: string): Promise<Session> {
   const cfg = await call<{
     shops: Shop[];
     staff_tokens: Record<string, string>;
-    ingest_key: string | null;
     admin_token: string;
   }>(apiBase, "/v1/dev/config");
   return {
     apiBase,
     shops: cfg.shops.map((s) => ({ ...s, token: cfg.staff_tokens[s.id] })),
     adminToken: cfg.admin_token,
-    ingestKey: cfg.ingest_key ?? undefined,
   };
 }
 
@@ -81,6 +96,7 @@ export async function apiReachable(apiBase: string): Promise<boolean> {
 export class ApiSource implements DataSource {
   readonly kind = "live" as const;
   readonly actions: Actions;
+  private readonly featureCache = new Map<string, Promise<{ testMessages: boolean }>>();
 
   constructor(
     readonly session: Session,
@@ -108,22 +124,12 @@ export class ApiSource implements DataSource {
             return { released: r.released_held_messages };
           }
         : undefined,
-      sendMessage: s.ingestKey
-        ? async (shop, body, channel, replyToken) => {
-            const payload: Record<string, string> = {
-              message_id: `console-${crypto.randomUUID().slice(0, 8)}`,
-              channel,
-              received_at: new Date().toISOString(),
-              body,
-            };
-            if (replyToken) payload.reply_token = replyToken;
-            return call<{ duplicate: boolean }>(s.apiBase, `/v1/shops/${shop}/inbound-messages`, {
-              method: "POST",
-              headers: { "X-Ingest-Key": s.ingestKey!, "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-          }
-        : undefined,
+      sendAsCustomer: (shop, message) =>
+        call<TestMessageResult>(s.apiBase, `/v1/shops/${shop}/test-messages`, {
+          method: "POST",
+          headers: { ...this.staff(shop), "Content-Type": "application/json" },
+          body: JSON.stringify(message),
+        }),
     };
   }
 
@@ -163,6 +169,27 @@ export class ApiSource implements DataSource {
 
   conversation(shop: string, id: string) {
     return this.get<ConversationDetail>(shop, `/v1/shops/${shop}/conversations/${id}`);
+  }
+
+  customers(shop: string) {
+    return this.get<CustomerList>(shop, `/v1/shops/${shop}/customers`);
+  }
+
+  customer(shop: string, id: string) {
+    return this.get<CustomerHistory>(shop, `/v1/shops/${shop}/customers/${encodeURIComponent(id)}`);
+  }
+
+  /** Asked once per shop per session: the deployment's switches don't change while you work. */
+  features(shop: string) {
+    let f = this.featureCache.get(shop);
+    if (!f) {
+      f = this.get<{ features?: { test_messages?: boolean } }>(shop, "/v1/me").then((me) => ({
+        testMessages: me.features?.test_messages === true,
+      }));
+      f.catch(() => this.featureCache.delete(shop));
+      this.featureCache.set(shop, f);
+    }
+    return f;
   }
 
   /** Eval results are a build artefact, not live data: read them from the bundled snapshot. */

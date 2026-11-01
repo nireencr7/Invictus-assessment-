@@ -9,6 +9,7 @@ import { Activity } from "./views/Activity";
 import { Connect } from "./views/Connect";
 import type { Ctx, View } from "./views/context";
 import { Conversation } from "./views/Conversation";
+import { Customers } from "./views/Customers";
 import { Inbox } from "./views/Inbox";
 import { Orders } from "./views/Orders";
 import { Overview } from "./views/Overview";
@@ -25,6 +26,7 @@ const VIEWS: { id: View; label: string; title: string; scoped: boolean }[] = [
   { id: "overview", label: "Overview", title: "All shops", scoped: false },
   { id: "orders", label: "Work orders", title: "Work orders", scoped: true },
   { id: "inbox", label: "Inbox", title: "Inbox", scoped: true },
+  { id: "customers", label: "Customers", title: "Customers", scoped: true },
   { id: "activity", label: "Activity", title: "Activity", scoped: true },
   { id: "spend", label: "Spend & model calls", title: "Spend & model calls", scoped: true },
   { id: "results", label: "Eval results", title: "The 40 sample messages", scoped: false },
@@ -108,6 +110,7 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
     return shops.find((s) => s.id === saved)?.id ?? shops[0]?.id ?? "";
   });
   const [open, setOpen] = useState<{ shop: string; id: string } | null>(null);
+  const [customer, setCustomer] = useState<{ shop: string; id: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
@@ -130,6 +133,11 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
     // To switch it back on, uncomment the next line (useResource pauses it while the tab is hidden).
     // poll: source.kind === "live" ? 15_000 : undefined,
     openConversation: (shop, id) => setOpen({ shop, id }),
+    openCustomer: (shop, id) => {
+      setOpen(null);
+      setCustomer({ shop, id });
+      ctx.go("customers", shop);
+    },
     go: (v, shop) => {
       if (shop) {
         setShopId(shop);
@@ -206,6 +214,10 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
           {view === "overview" && <Overview ctx={ctx} />}
           {view === "orders" && <Orders ctx={ctx} />}
           {view === "inbox" && <Inbox ctx={ctx} />}
+          {view === "customers" && (
+            <Customers ctx={ctx} selected={customer?.shop === shopId ? customer.id : null}
+                       onSelect={(id) => setCustomer(id ? { shop: shopId, id } : null)} />
+          )}
           {view === "activity" && <Activity ctx={ctx} />}
           {view === "spend" && <Spend ctx={ctx} />}
           {view === "results" && <Results ctx={ctx} />}

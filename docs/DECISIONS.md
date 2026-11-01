@@ -63,3 +63,10 @@ We don't confirm that another shop's resource exists.
 
 ### D16. The processing deadline restarts when processing restarts
 **Chosen:** the SLA hand-off ("give the message to staff if the AI hasn't finished in N minutes") is measured from `jobs.sla_started_at`, which resets when staff press Retry AI or a cap release requeues the message. It used to be measured from the message's arrival, so a retried message went straight back to staff after one transient failure. Found by using the console; fixed in migration `003` with a regression test.
+
+### D17. Customers are an email address within one shop
+**Chosen:** a `customers` table keyed by `(shop_id, email)`, filled in by intake from the sender address, with row-level security like every other tenant table. The same address writing to two shops is two customers. Staff can send a message *as* a customer from the console (`POST /v1/shops/{shop}/test-messages`, staff token, own shop only), which goes through the normal intake path and is labelled a test on the timeline. It is off in production unless `TEST_MESSAGES=true`.
+**Why:** staff asked for one place to see everything that happened with a customer, and a way to try the workflow without an email gateway. A per-shop key keeps "staff never see another shop's customers" true by construction.
+**Costs:** one person with two addresses is two customers until merging exists. Messages with no sender (the brief's samples, most web forms) have no customer.
+**Not chosen:** a cross-shop customer record (it would leak which other shops a person uses), or giving the browser the ingest key (it can post for every shop).
+

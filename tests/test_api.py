@@ -97,6 +97,7 @@ def test_me_identifies_the_tokens_shop(client):
         "shop_id": "rb-lakeshore",
         "shop_name": "Riverbend Cycles Lakeshore",
         "role": "staff",
+        "features": {"test_messages": True},  # dev mode; see test_customers for production
     }
     assert client.get("/v1/me", headers={"Authorization": "Bearer nope"}).status_code == 401
 

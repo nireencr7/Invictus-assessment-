@@ -1,6 +1,6 @@
 import type { DataSource } from "../data/source";
 
-export type View = "overview" | "orders" | "inbox" | "activity" | "spend" | "results";
+export type View = "overview" | "orders" | "inbox" | "customers" | "activity" | "spend" | "results";
 
 export interface Ctx {
   source: DataSource;
@@ -10,6 +10,8 @@ export interface Ctx {
    *  which never changes, and for now for live data too (staff press Refresh instead). */
   poll?: number;
   openConversation: (shopId: string, conversationId: string) => void;
+  /** Jump to the Customers view with this customer's history open. */
+  openCustomer: (shopId: string, customerId: string) => void;
   go: (view: View, shopId?: string) => void;
   toast: (message: string) => void;
 }

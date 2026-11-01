@@ -3,3 +3,4 @@ region        = "us-central1"
 image         = "us-central1-docker.pkg.dev/riverbend-prod/riverbend/app:REPLACE_WITH_GIT_SHA"
 console_image = "us-central1-docker.pkg.dev/riverbend-prod/riverbend/console:REPLACE_WITH_GIT_SHA"
 alert_email   = "oncall@riverbendcycles.example"
+# test_messages = true   # demo only: staff can send messages as a customer from the console

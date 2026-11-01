@@ -45,6 +45,8 @@ A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its 
 - **Overview** of all shops: open orders, estimate totals, what needs a person, each shop's spend against its cap.
 - **Work orders**, with filters (needs review, high urgency, cancel requested) and search.
 - **Inbox**: handed to staff, held at the cap, waiting on the customer, answered.
+- **Customers**: everyone who wrote from an email address, per shop, with their whole history in one place: every message both ways, every model call, question, hand-off and status change.
+- **Send a message as a customer** (test tool, on the Customers page): enter an email address, write a message or pick an example (clear request, no day given, vague, price question, cancellation, prompt injection), and send it. It takes the same path as a real email. When the AI asks its one question, reply as that customer from the same page and watch the work order appear. On in dev mode; on GCP it's the `test_messages` Terraform switch.
 - **Conversation drawer**:
   - the priced work-order ticket, with the customer's own words as evidence;
   - the full thread, and what the customer currently sees;
@@ -53,6 +55,8 @@ A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its 
 - **Activity** timeline.
 - **Spend & model calls**: the cap meter, setting the cap, and every call, including rejected and failed ones.
 - **Eval results**, checked against the golden labels.
+
+The three shops are **Riverbend Cycles Downtown** (`rb-downtown`), **Northside** (`rb-northside`) and **Lakeshore** (`rb-lakeshore`).
 
 Sign in with a staff token (each token opens one shop only), or press **Use local dev credentials**. On the GCP deployment, paste the `riverbend-staff-tokens` secret exactly as `gcloud` prints it to open all three shops.
 

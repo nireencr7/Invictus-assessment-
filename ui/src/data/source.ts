@@ -1,6 +1,8 @@
 import type {
   ActivityItem,
   ConversationDetail,
+  CustomerHistory,
+  CustomerList,
   EvalSummary,
   Inbox,
   LlmCall,
@@ -8,6 +10,8 @@ import type {
   Spend,
   WorkOrderList,
   WorkOrderStatus,
+  TestMessage,
+  TestMessageResult,
 } from "../types";
 
 /**
@@ -25,6 +29,10 @@ export interface DataSource {
   llmCalls(shop: string): Promise<LlmCall[]>;
   activity(shop: string): Promise<ActivityItem[]>;
   conversation(shop: string, id: string): Promise<ConversationDetail>;
+  customers(shop: string): Promise<CustomerList>;
+  customer(shop: string, id: string): Promise<CustomerHistory>;
+  /** What this deployment lets staff do beyond reading (e.g. send test messages). */
+  features(shop: string): Promise<{ testMessages: boolean }>;
   evalSummary(): Promise<EvalSummary | null>;
   actions: Actions | null;
 }
@@ -34,8 +42,8 @@ export interface Actions {
   setWorkOrderStatus(shop: string, id: string, status: Exclude<WorkOrderStatus, "cancel_requested">): Promise<void>;
   /** Present only with an admin token. */
   setCap?: (shop: string, usd: string) => Promise<{ released: number }>;
-  /** Present only with an ingest key (local development). */
-  sendMessage?: (shop: string, body: string, channel: "email" | "web", replyToken?: string) => Promise<{ duplicate: boolean }>;
+  /** Staff test tool: send a message as a customer of this shop. Only works where features().testMessages. */
+  sendAsCustomer(shop: string, message: TestMessage): Promise<TestMessageResult>;
 }
 
 export class SourceError extends Error {

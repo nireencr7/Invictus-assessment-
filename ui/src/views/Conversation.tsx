@@ -86,6 +86,12 @@ export function Conversation({ ctx, shopId, conversationId, onClose }: {
                 <Chip>{d.conversation.follow_ups_asked}/1 follow-up used</Chip>
               </div>
             ) : null}
+            {d?.conversation.customer_id ? (
+              <div className="row" style={{ fontSize: 13 }}>
+                <span className="muted mono">{d.conversation.sender}</span>
+                <button className="btn small" onClick={() => ctx.openCustomer(shopId, d.conversation.customer_id!)}>Customer history</button>
+              </div>
+            ) : null}
           </div>
           <button ref={closeRef} className="btn" onClick={onClose}>Close</button>
         </div>

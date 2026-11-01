@@ -215,3 +215,15 @@ table.data td.right, table.data th.right { text-align: right; }
 
 .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 9px 14px;
          border-radius: 8px; font-size: 13.5px; z-index: 30; box-shadow: var(--shadow); }
+
+/* ---------- customers ---------- */
+.customers { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 1100px) { .customers { grid-template-columns: minmax(0, 1fr); } }
+.item.selected { background: var(--accent-soft); }
+.btn.small { padding: 4px 9px; font-size: 12.5px; }
+.compose { display: grid; gap: 10px; }
+.compose.inset { margin: 0 18px; padding: 14px; border: 1px dashed var(--rule); border-radius: 10px; background: var(--sunk); }
+.compose-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.customer-panel { display: flex; flex-direction: column; gap: 14px; padding-top: 16px; }
+.customer-panel > header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 0 18px; }
+.customer-panel h3 { font-size: 15px; padding: 0 18px; }

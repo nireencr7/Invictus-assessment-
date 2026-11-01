@@ -5,6 +5,9 @@ Three kinds of caller, three credentials:
 - shop staff                             -> Bearer token bound to exactly one shop
 - the customer                           -> the unguessable reply token in their link
 
+Staff can also send a message as a customer of their own shop (the console's test tool), which
+goes through the same intake as the gateway; it's off in production unless TEST_MESSAGES=true.
+
 A staff token for shop A asking about shop B gets 404, not 403: we don't confirm that
 another tenant's resources exist. The API process never calls the model.
 """
@@ -15,7 +18,9 @@ import hmac
 import json
 import logging
 import threading
+import uuid
 from contextlib import asynccontextmanager
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Literal
@@ -23,13 +28,13 @@ from typing import Literal
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from riverbend import jobqueue
 from riverbend.catalog import format_money
 from riverbend.config import REPO_ROOT, Settings, get_settings
 from riverbend.extraction.dates import DateWindow
-from riverbend.intake import InboundPayload, ingest
+from riverbend.intake import InboundPayload, ingest, parse_sender
 from riverbend.llm.resilience import FaultInjectingProvider, FaultPlan
 from riverbend.services import Services, build_services
 
@@ -47,6 +52,41 @@ class CapChange(BaseModel):
 
 class FaultChange(BaseModel):
     spec: str = Field(default="", max_length=100)
+
+
+class TestMessage(BaseModel):
+    """A message staff send as a customer of their own shop, to try the workflow end to end."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    customer_email: str = Field(max_length=254)
+    customer_name: str | None = Field(default=None, max_length=100)
+    body: str = Field(min_length=1, max_length=10000)
+    channel: Literal["email", "web"] = "email"
+    reply_to: str | None = Field(
+        default=None, max_length=64, description="Conversation id to reply in; omit for a new request."
+    )
+
+    @field_validator("customer_email")
+    @classmethod
+    def _email(cls, v: str) -> str:
+        email, _ = parse_sender(v)
+        if email is None or "<" in v:
+            raise ValueError("customer_email must be a plain email address, like jamie.lee@example.com")
+        return email
+
+    @field_validator("customer_name")
+    @classmethod
+    def _name(cls, v: str | None) -> str | None:
+        v = (v or "").replace('"', "").replace("\\", "").replace("<", "").replace(">", "").strip()
+        return v or None
+
+    @field_validator("body")
+    @classmethod
+    def _not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("body must not be blank")
+        return v.strip()
 
 
 def _match(token: str | None, candidates: dict) -> str | None:
@@ -200,14 +240,19 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
     ):
         with s.db.tenant_tx(shop_id) as conn:
             row = conn.execute(
-                "UPDATE work_orders SET status = %s, updated_at = now() WHERE id::text = %s RETURNING id",
+                "UPDATE work_orders SET status = %s, updated_at = now() WHERE id::text = %s "
+                "RETURNING id, conversation_id",
                 (change.status, work_order_id),
             ).fetchone()
             if row is None:
                 raise HTTPException(404, "not found")
             conn.execute(
-                "INSERT INTO events (shop_id, type, detail) VALUES (%s, 'work_order_status', %s)",
-                (shop_id, _jsonb({"work_order_id": work_order_id, "status": change.status})),
+                "INSERT INTO events (shop_id, conversation_id, type, detail) VALUES (%s, %s, 'work_order_status', %s)",
+                (
+                    shop_id,
+                    row["conversation_id"],
+                    _jsonb({"work_order_id": work_order_id, "status": change.status}),
+                ),
             )
         return {"id": work_order_id, "status": change.status}
 
@@ -307,7 +352,191 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         if shop_id is None:
             raise HTTPException(401, "missing or invalid staff token", headers={"WWW-Authenticate": "Bearer"})
         shop = svc(request).catalog.shops[shop_id]
-        return {"shop_id": shop.id, "shop_name": shop.name, "role": "staff"}
+        return {
+            "shop_id": shop.id,
+            "shop_name": shop.name,
+            "role": "staff",
+            "features": {"test_messages": settings.test_messages_enabled},
+        }
+
+    # ------------------------------------------------------------------ customers
+    @app.get("/v1/shops/{shop_id}/customers")
+    def list_customers(shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):
+        """Everyone who has written to this shop from an email address, most recently active first."""
+        with s.db.tenant_tx(shop_id) as conn:
+            rows = conn.execute(
+                _CUSTOMER_SUMMARY + " GROUP BY cu.shop_id, cu.id ORDER BY last_activity DESC"
+            ).fetchall()
+            anonymous = conn.execute(
+                "SELECT count(*) AS n FROM conversations WHERE customer_id IS NULL"
+            ).fetchone()["n"]
+        return {
+            "shop_id": shop_id,
+            "count": len(rows),
+            "conversations_without_email": anonymous,
+            "customers": [_customer_json(r) for r in rows],
+        }
+
+    @app.get("/v1/shops/{shop_id}/customers/{customer_id}")
+    def customer_history(customer_id: str, shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):
+        """One customer's whole history at this shop: every conversation, every message both ways,
+        and every system event (model calls, rejections, questions, hand-offs, status changes)."""
+        with s.db.tenant_tx(shop_id) as conn:
+            cu = conn.execute(
+                _CUSTOMER_SUMMARY + " WHERE cu.id::text = %s GROUP BY cu.shop_id, cu.id", (customer_id,)
+            ).fetchone()
+            if cu is None:
+                raise HTTPException(404, "not found")
+            convs = conn.execute(
+                """SELECT c.id, c.channel, c.state, c.state_reason, c.follow_ups_asked, c.customer_name,
+                          c.created_at, c.updated_at, w.id AS work_order_id, w.status AS work_order_status,
+                          w.estimate_cents, w.currency,
+                          (SELECT body FROM inbound_messages im WHERE im.conversation_id = c.id
+                           ORDER BY im.created_at LIMIT 1) AS first_message
+                   FROM conversations c LEFT JOIN work_orders w ON w.conversation_id = c.id
+                   WHERE c.customer_id = %s ORDER BY c.created_at""",
+                (cu["id"],),
+            ).fetchall()
+            ids = [c["id"] for c in convs]
+            work_orders = [str(c["work_order_id"]) for c in convs if c["work_order_id"]]
+            inbound = conn.execute(
+                "SELECT conversation_id, external_id, channel, body, status, created_at FROM inbound_messages "
+                "WHERE conversation_id = ANY(%s) ORDER BY created_at",
+                (ids,),
+            ).fetchall()
+            outbound = conn.execute(
+                "SELECT conversation_id, kind, body, created_at FROM outbound_messages "
+                "WHERE conversation_id = ANY(%s) ORDER BY created_at",
+                (ids,),
+            ).fetchall()
+            events = conn.execute(
+                """SELECT e.conversation_id, e.type, e.detail, e.created_at, m.external_id
+                   FROM events e LEFT JOIN inbound_messages m ON m.id = e.message_id
+                   WHERE e.conversation_id = ANY(%s)
+                      OR (e.conversation_id IS NULL AND e.detail->>'work_order_id' = ANY(%s))
+                   ORDER BY e.id""",
+                (ids, work_orders),
+            ).fetchall()
+            cost = conn.execute(
+                "SELECT COALESCE(sum(cost_usd), 0) AS usd, count(*) AS calls FROM llm_calls WHERE message_id IN "
+                "(SELECT id FROM inbound_messages WHERE conversation_id = ANY(%s))",
+                (ids,),
+            ).fetchone()
+
+        def conv_id(v) -> str | None:
+            return None if v is None else str(v)
+
+        # Same-transaction rows share a timestamp; the customer's message comes first, then what
+        # the system did about it, then what we sent back.
+        rank = {"customer_message": 0, "event": 1, "shop_message": 2}
+        timeline = sorted(
+            [
+                *(
+                    {
+                        "kind": "customer_message",
+                        "at": m["created_at"],
+                        "conversation_id": conv_id(m["conversation_id"]),
+                        "external_id": m["external_id"],
+                        "channel": m["channel"],
+                        "body": m["body"],
+                        "status": m["status"],
+                    }
+                    for m in inbound
+                ),
+                *(
+                    {
+                        "kind": "shop_message",
+                        "at": o["created_at"],
+                        "conversation_id": conv_id(o["conversation_id"]),
+                        "message_kind": o["kind"],
+                        "body": o["body"],
+                    }
+                    for o in outbound
+                ),
+                *(
+                    {
+                        "kind": "event",
+                        "at": e["created_at"],
+                        "conversation_id": conv_id(e["conversation_id"]),
+                        "type": e["type"],
+                        "detail": e["detail"],
+                        "external_id": e["external_id"],
+                    }
+                    for e in events
+                ),
+            ],
+            key=lambda x: (x["at"], rank[x["kind"]]),
+        )
+        return {
+            "customer": _customer_json(cu),
+            "model_calls": cost["calls"],
+            "model_cost_usd": str(cost["usd"]),
+            "conversations": [
+                {
+                    "id": str(c["id"]),
+                    "channel": c["channel"],
+                    "state": c["state"],
+                    "state_reason": c["state_reason"],
+                    "follow_ups_asked": c["follow_ups_asked"],
+                    "customer_name": c["customer_name"],
+                    "first_message": c["first_message"],
+                    "created_at": c["created_at"],
+                    "updated_at": c["updated_at"],
+                    "work_order": None
+                    if c["work_order_id"] is None
+                    else {
+                        "id": str(c["work_order_id"]),
+                        "status": c["work_order_status"],
+                        "estimate": format_money(c["estimate_cents"], c["currency"]),
+                    },
+                }
+                for c in convs
+            ],
+            "timeline": timeline,
+        }
+
+    @app.post("/v1/shops/{shop_id}/test-messages")
+    def send_test_message(msg: TestMessage, shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):
+        """Staff test tool: send a message as a customer of this shop. It takes exactly the path a real
+        email takes (stored, acknowledged, queued for the AI); the timeline labels it a test.
+        Off in production unless TEST_MESSAGES=true."""
+        if not settings.test_messages_enabled:
+            raise HTTPException(404, "not found")
+        reply_token = None
+        if msg.reply_to:
+            with s.db.tenant_tx(shop_id) as conn:
+                row = conn.execute(
+                    "SELECT reply_token FROM conversations WHERE id::text = %s", (msg.reply_to,)
+                ).fetchone()
+            if row is None:
+                raise HTTPException(404, "not found")
+            reply_token = row["reply_token"]
+        payload = InboundPayload(
+            message_id=f"test-{uuid.uuid4().hex[:12]}",
+            channel=msg.channel,
+            received_at=datetime.now(UTC),
+            body=msg.body,
+            sender=f'"{msg.customer_name}" <{msg.customer_email}>'
+            if msg.customer_name
+            else msg.customer_email,
+            reply_token=reply_token,
+        )
+        result = ingest(s.db, shop_id, payload, via="staff test")
+        with s.db.tenant_tx(shop_id) as conn:
+            row = conn.execute(
+                "SELECT customer_id FROM conversations WHERE id = %s", (result.conversation_id,)
+            ).fetchone()
+        return JSONResponse(
+            {
+                "message_id": result.message_id,
+                "external_id": payload.message_id,
+                "conversation_id": result.conversation_id,
+                "customer_id": None if row["customer_id"] is None else str(row["customer_id"]),
+                "reply": reply_token is not None,
+                "detail": result.detail,
+            },
+            status_code=result.status_code,
+        )
 
     @app.get("/v1/shops/{shop_id}/llm-calls")
     def llm_calls(limit: int = 100, shop_id: str = Depends(staff_shop), s: Services = Depends(svc)):
@@ -447,6 +676,41 @@ def _jsonb(v):
     from psycopg.types.json import Jsonb
 
     return Jsonb(v)
+
+
+# One row per customer with their conversation and work-order counts. Callers add WHERE/GROUP BY.
+# Joins need no shop_id: row-level security already limits every table to the current shop.
+_CUSTOMER_SUMMARY = """
+    SELECT cu.id, cu.email, cu.display_name, cu.first_seen_at,
+           (SELECT c2.customer_name FROM conversations c2
+             WHERE c2.customer_id = cu.id AND c2.customer_name IS NOT NULL
+             ORDER BY c2.updated_at DESC LIMIT 1) AS extracted_name,
+           count(c.id) AS conversations,
+           count(c.id) FILTER (WHERE c.state = 'awaiting_customer') AS awaiting_reply,
+           count(c.id) FILTER (WHERE c.state = 'needs_staff') AS needs_staff,
+           count(w.id) FILTER (WHERE w.status IN ('open', 'cancel_requested')) AS open_orders,
+           COALESCE(sum(w.estimate_cents) FILTER (WHERE w.status = 'open'), 0) AS open_estimate_cents,
+           COALESCE(max(c.updated_at), cu.last_seen_at) AS last_activity
+    FROM customers cu
+    LEFT JOIN conversations c ON c.customer_id = cu.id
+    LEFT JOIN work_orders w ON w.conversation_id = c.id
+"""
+
+
+def _customer_json(r: dict) -> dict:
+    return {
+        "id": str(r["id"]),
+        "email": r["email"],
+        # What they call themselves in their From header, else what the model read in their message.
+        "name": r["display_name"] or r["extracted_name"],
+        "first_seen_at": r["first_seen_at"],
+        "last_activity": r["last_activity"],
+        "conversations": r["conversations"],
+        "awaiting_reply": r["awaiting_reply"],
+        "needs_staff": r["needs_staff"],
+        "open_orders": r["open_orders"],
+        "open_estimate": format_money(int(r["open_estimate_cents"])),
+    }
 
 
 def _work_order_json(o: dict, lines: list[dict]) -> dict:

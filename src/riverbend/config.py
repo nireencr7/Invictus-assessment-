@@ -70,6 +70,9 @@ class Settings(BaseSettings):
     embedded_worker: bool = False
     worker_poll_seconds: float = 0.5
     dev_mode: bool = True
+    # Lets signed-in staff send a message *as a customer* of their own shop from the console, to
+    # try the workflow end to end. Always on in dev mode; off in production unless switched on.
+    test_messages: bool = False
     # Comma-separated origins allowed to call the API from a browser (only needed when the staff
     # console is hosted on another origin without its reverse proxy). Empty = CORS off.
     cors_origins: str = ""
@@ -84,6 +87,10 @@ class Settings(BaseSettings):
         if not 256 <= v <= 16000:
             raise ValueError("llm_max_tokens must be between 256 and 16000")
         return v
+
+    @property
+    def test_messages_enabled(self) -> bool:
+        return self.test_messages or self.dev_mode
 
     def ingest_key_map(self) -> dict[str, set[str]]:
         return {k: set(v) for k, v in json.loads(self.ingest_keys.get_secret_value()).items()}
