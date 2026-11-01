@@ -41,7 +41,7 @@ def test_transient_failure_retries_then_succeeds(make_services, admin):
     assert statuses == ["transient_error", "transient_error", "ok"]
 
 
-def test_persistent_outage_hands_to_staff_and_customer_keeps_ack(make_services, admin):
+def test_persistent_outage_hands_to_staff_and_tells_the_customer(make_services, admin):
     p = FakeProvider(default=lambda r: TransientProviderError("down"))
     s = make_services(provider=p, max_attempts=3)
     res = post_message(s, "rb-lakeshore", "m-1", BODY)
@@ -55,7 +55,7 @@ def test_persistent_outage_hands_to_staff_and_customer_keeps_ack(make_services, 
         token = reply_token(admin, res.conversation_id)
         view = client.get(f"/v1/customer/rb-lakeshore/{token}").json()
         assert view["status"] == "A team member is reviewing your request personally."
-        assert [m["kind"] for m in view["messages"]] == ["ack"]
+        assert [m["kind"] for m in view["messages"]] == ["ack", "handoff"]
         inbox = client.get(
             "/v1/shops/rb-lakeshore/inbox", headers={"Authorization": "Bearer dev-lakeshore-token"}
         ).json()

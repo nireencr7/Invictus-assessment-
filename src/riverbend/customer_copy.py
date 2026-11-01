@@ -58,6 +58,13 @@ def follow_up(question: str) -> str:
     return f"{question}\n\n(Just reply to this message — we'll pick up where we left off.)"
 
 
+def handoff(shop_name: str) -> str:
+    return (
+        f"Thanks for your message. We've passed it to the team at {shop_name}, "
+        "and a member of staff will reply to you personally."
+    )
+
+
 def cancellation_ack(shop_name: str) -> str:
     return f"Thanks for letting us know. We've passed your cancellation to the team at {shop_name}."
 

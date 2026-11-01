@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Chip, ErrorNote, Loading, Ticket } from "../components/ui";
-import { callTone, eventLabel, eventTone, human, reasonLabel, tokens, usd, when } from "../lib/format";
-import { useResource } from "../lib/useResource";
+import { callTone, eventLabel, eventTone, human, messageKindLabel, reasonLabel, tokens, usd, when } from "../lib/format";
+import { refreshAll, useResource } from "../lib/useResource";
+import type { StaffReplyResult } from "../types";
 import { describe } from "./Activity";
 import type { Ctx } from "./context";
 
@@ -65,7 +66,7 @@ export function Conversation({ ctx, shopId, conversationId, onClose }: {
   const thread = d
     ? [
         ...d.inbound.map((m) => ({ at: m.created_at, side: "customer" as const, who: `Customer · ${m.external_id}`, body: m.body })),
-        ...d.outbound.map((m) => ({ at: m.created_at, side: "shop" as const, who: `Sent to customer · ${human(m.kind)}`, body: m.body })),
+        ...d.outbound.map((m) => ({ at: m.created_at, side: "shop" as const, who: `Sent to customer · ${messageKindLabel(m.kind)}`, body: m.body })),
       ].sort((a, b) => a.at.localeCompare(b.at))
     : [];
 
@@ -102,11 +103,16 @@ export function Conversation({ ctx, shopId, conversationId, onClose }: {
             <>
               {actions && (d.conversation.state === "needs_staff" && AI_REASONS.has(d.conversation.state_reason ?? "")) ? (
                 <div className="banner info row" style={{ justifyContent: "space-between" }}>
-                  <span>The AI couldn't finish this one. The customer has been acknowledged.</span>
+                  <span>The AI couldn't finish this one. The customer has been told a person will reply: retry the AI, or answer them below.</span>
                   <button className="btn primary" disabled={busy}
                           onClick={() => act("Re-queued for the AI", () => actions.retryAi(shopId, conversationId))}>
                     Retry AI
                   </button>
+                </div>
+              ) : actions && d.conversation.state === "needs_staff" ? (
+                <div className="banner info">
+                  <b>Waiting for a person.</b> The customer has been told a member of staff will reply.
+                  Answer them below; that takes this conversation off the Needs a person list.
                 </div>
               ) : null}
 
@@ -149,6 +155,21 @@ export function Conversation({ ctx, shopId, conversationId, onClose }: {
                 ))}
               </div>
 
+              {actions ? (
+                <StaffReplyBox
+                  key={conversationId}
+                  needsPerson={d.conversation.state === "needs_staff"}
+                  onSend={(body, clientId) => actions.replyToCustomer(shopId, conversationId, body, clientId)}
+                  onSent={(r) => {
+                    ctx.toast(
+                      r.duplicate ? "That reply was already sent."
+                        : r.resolved ? "Reply sent. Taken off the Needs a person list." : "Reply sent.",
+                    );
+                    void refreshAll(); // the inbox and its count behind the drawer change too
+                  }}
+                />
+              ) : null}
+
               <h4>Model calls</h4>
               {d.llm_calls.length === 0 ? <div className="muted" style={{ fontSize: 13 }}>None.</div> : (
                 <div className="calls">
@@ -178,5 +199,45 @@ export function Conversation({ ctx, shopId, conversationId, onClose }: {
         </div>
       </aside>
     </>
+  );
+}
+
+function StaffReplyBox({ needsPerson, onSend, onSent }: {
+  needsPerson: boolean;
+  onSend: (body: string, clientId: string) => Promise<StaffReplyResult>;
+  onSent: (r: StaffReplyResult) => void;
+}) {
+  const [body, setBody] = useState("");
+  // One id per reply: if a send is retried after a network error, the API keeps only one copy.
+  const [clientId, setClientId] = useState(() => crypto.randomUUID());
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <form className="compose" onSubmit={async (e) => {
+      e.preventDefault();
+      setBusy(true);
+      setError(null);
+      try {
+        const r = await onSend(body.trim(), clientId);
+        setBody("");
+        setClientId(crypto.randomUUID());
+        onSent(r);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setBusy(false);
+      }
+    }}>
+      <label className="field">
+        Reply to the customer
+        <textarea id="staff-reply" className="input" value={body} onChange={(e) => setBody(e.target.value)}
+                  placeholder={needsPerson ? "Write your answer to the customer…" : "Write to the customer…"} />
+      </label>
+      {error ? <div className="banner bad">{error}</div> : null}
+      <div className="row">
+        <button className="btn primary" disabled={busy || !body.trim()}>{busy ? "Sending…" : "Send reply"}</button>
+        <span className="muted" style={{ fontSize: 12.5 }}>Goes out through the outbox, like every message to a customer.</span>
+      </div>
+    </form>
   );
 }

@@ -70,3 +70,8 @@ We don't confirm that another shop's resource exists.
 **Costs:** one person with two addresses is two customers until merging exists. Messages with no sender (the brief's samples, most web forms) have no customer.
 **Not chosen:** a cross-shop customer record (it would leak which other shops a person uses), or giving the browser the ingest key (it can post for every shop).
 
+### D18. A hand-off always tells the customer, and staff answer in the same thread
+**Chosen:** every hand-off to staff sends the customer a short `handoff` note ("a member of staff will reply to you personally"), once per hand-off rather than once per message while they wait. Staff reply from the conversation panel (`POST …/conversations/{id}/reply`). The reply is a `staff_reply` in the same outbox, with an idempotency key from the console, and it hands the conversation back: to *work order created* if it has one, otherwise *answered*.
+**Why:** testing the console showed the gap. A customer who asked "is it negotiable?" after their order was made got silence, and staff had no way to answer from the console. Once an order exists, questions about it stay with people: the model is not asked, so it can never negotiate a price or change a confirmed order.
+**Costs:** delivery is still the outbox (no SMTP yet), and staff replies are signed by the shop, not by a named person, until real staff identity exists.
+

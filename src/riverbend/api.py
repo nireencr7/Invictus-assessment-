@@ -54,6 +54,21 @@ class FaultChange(BaseModel):
     spec: str = Field(default="", max_length=100)
 
 
+class StaffReply(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    body: str = Field(min_length=1, max_length=5000)
+    # Set by the console per reply, so a double-click or a retried request sends one message, not two.
+    client_id: str | None = Field(default=None, min_length=8, max_length=64, pattern=r"^[A-Za-z0-9-]+$")
+
+    @field_validator("body")
+    @classmethod
+    def _not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("body must not be blank")
+        return v.strip()
+
+
 class TestMessage(BaseModel):
     """A message staff send as a customer of their own shop, to try the workflow end to end."""
 
@@ -343,6 +358,52 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
                 (conversation_id,),
             )
         return {"requeued": True}
+
+    @app.post("/v1/shops/{shop_id}/conversations/{conversation_id}/reply")
+    def staff_reply(
+        conversation_id: str,
+        reply: StaffReply,
+        shop_id: str = Depends(staff_shop),
+        s: Services = Depends(svc),
+    ):
+        """Staff answer the customer. The reply goes out through the outbox like every other message
+        to a customer. If the conversation was waiting for a person, this hands it back: to "work
+        order created" when it has a work order, otherwise to "answered"."""
+        with s.db.tenant_tx(shop_id) as conn:
+            conv = conn.execute(
+                """SELECT c.id, c.state,
+                          EXISTS (SELECT 1 FROM work_orders w WHERE w.conversation_id = c.id) AS has_order
+                   FROM conversations c WHERE c.id::text = %s FOR UPDATE OF c""",
+                (conversation_id,),
+            ).fetchone()
+            if conv is None:
+                raise HTTPException(404, "not found")
+            sent = conn.execute(
+                """INSERT INTO outbound_messages (shop_id, conversation_id, kind, body, dedupe_key)
+                   VALUES (current_setting('app.current_shop'), %s, 'staff_reply', %s, %s)
+                   ON CONFLICT (shop_id, dedupe_key) DO NOTHING RETURNING id""",
+                (conv["id"], reply.body, f"staff:{reply.client_id or uuid.uuid4()}"),
+            ).fetchone()
+            if sent is None:
+                return {"sent": False, "duplicate": True, "state": conv["state"], "resolved": False}
+            state, resolved = conv["state"], conv["state"] == "needs_staff"
+            if resolved:
+                state = "work_order_created" if conv["has_order"] else "answered"
+                conn.execute(
+                    "UPDATE conversations SET state = %s, state_reason = %s, updated_at = now() WHERE id = %s",
+                    (state, None if conv["has_order"] else "staff_replied", conv["id"]),
+                )
+                conn.execute(
+                    "UPDATE inbound_messages SET status = 'processed' WHERE conversation_id = %s AND status = 'needs_staff'",
+                    (conv["id"],),
+                )
+            else:
+                conn.execute("UPDATE conversations SET updated_at = now() WHERE id = %s", (conv["id"],))
+            conn.execute(
+                "INSERT INTO events (shop_id, conversation_id, type, detail) VALUES (%s, %s, 'staff_replied', %s)",
+                (shop_id, conv["id"], _jsonb({"resolved": resolved, "state": state})),
+            )
+        return {"sent": True, "duplicate": False, "state": state, "resolved": resolved}
 
     @app.get("/v1/me")
     def me(request: Request, authorization: str | None = Header(default=None)):

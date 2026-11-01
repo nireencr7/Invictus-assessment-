@@ -20,6 +20,7 @@ const REASONS: Record<string, string> = {
   shop_unclear_after_follow_up: "Shop still unclear",
   no_service_after_follow_up: "Still no clear repair",
   price_question_unclear: "Unclear price question",
+  staff_replied: "Staff replied",
 };
 
 export const reasonLabel = (r: string | null | undefined) => (r ? (REASONS[r] ?? human(r)) : "");
@@ -53,9 +54,24 @@ const EVENTS: Record<string, string> = {
   budget_exhausted: "Spend cap reached",
   budget_cap_changed: "Spend cap changed",
   work_order_status: "Work order status changed",
+  staff_replied: "Staff replied",
 };
 
 export const eventLabel = (t: string) => EVENTS[t] ?? human(t);
+
+const MESSAGE_KINDS: Record<string, string> = {
+  ack: "Acknowledgement",
+  follow_up: "Follow-up question",
+  summary: "Work order summary",
+  price_quote: "Price quote",
+  cancellation_ack: "Cancellation received",
+  redirect: "Pointed to another shop",
+  handoff: "Passed to the team",
+  staff_reply: "Staff reply",
+};
+
+/** What a message we sent the customer was, in words. */
+export const messageKindLabel = (k: string) => MESSAGE_KINDS[k] ?? human(k);
 
 export type Tone = "ok" | "warn" | "bad" | "info" | "neutral";
 
@@ -64,7 +80,7 @@ export function eventTone(t: string, detail: Record<string, unknown> = {}): Tone
   if (["escalated", "budget_exhausted", "llm_transient_error"].includes(t)) return "bad";
   if (["validation_failed", "held_budget", "budget_warning", "cancellation_requested", "duplicate_delivery"].includes(t))
     return "warn";
-  if (["work_order_created", "price_quoted"].includes(t)) return "ok";
+  if (["work_order_created", "price_quoted", "staff_replied"].includes(t)) return "ok";
   return "info";
 }
 

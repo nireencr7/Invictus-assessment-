@@ -27,6 +27,8 @@ export function describe(e: Pick<ActivityItem, "type" | "detail">): string {
       return `cap ${usd(d.cap_usd as string)}`;
     case "redirected":
       return `to ${d.to}`;
+    case "staff_replied":
+      return d.resolved ? `Taken off the needs-a-person list · now ${String(d.state).replaceAll("_", " ")}` : "";
     default:
       return "";
   }

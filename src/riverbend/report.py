@@ -216,7 +216,8 @@ def render(results: dict, raw_path: str) -> str:
         if d.get("customer_views"):
             v = d["customer_views"].get("m-1001")
             if v:
-                md.append(f"- Customer m-1001 sees: _{v['status']}_ and only the acknowledgement message.")
+                kinds = ", ".join(f"`{m['kind']}`" for m in v.get("messages", []))
+                md.append(f"- Customer m-1001 sees: _{v['status']}_, and these messages: {kinds}.")
         md += [
             f"- Recovery: provider restored, staff pressed retry on {o['retried']} conversations → "
             f"{a['work_orders']} work orders, {a['events'].get('follow_up_asked', 0)} follow-ups.",

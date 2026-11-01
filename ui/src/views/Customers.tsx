@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Chip, Empty, ErrorNote, Loading } from "../components/ui";
-import { eventLabel, eventTone, human, reasonLabel, usd, when } from "../lib/format";
+import { eventLabel, eventTone, human, messageKindLabel, reasonLabel, usd, when } from "../lib/format";
 import { useResource } from "../lib/useResource";
 import type { CustomerHistory, TestMessage, TestMessageResult, TimelineEntry } from "../types";
 import { describe } from "./Activity";
@@ -260,7 +260,7 @@ function HistoryRow({ t, n }: { t: TimelineEntry; n?: number }) {
         <time>{when(t.at)}</time>
         <span className="dot ok" />
         <div className="what">
-          Sent to customer · {human(t.message_kind)}{tag}
+          Sent to customer · {messageKindLabel(t.message_kind)}{tag}
           <div className="bubble shop" style={{ marginTop: 6, maxWidth: "100%", marginLeft: 0 }}>{t.body}</div>
         </div>
       </div>

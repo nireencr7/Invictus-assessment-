@@ -8,6 +8,7 @@ import type {
   LlmCall,
   Shop,
   Spend,
+  StaffReplyResult,
   TestMessageResult,
   WorkOrderList,
 } from "../types";
@@ -124,6 +125,12 @@ export class ApiSource implements DataSource {
             return { released: r.released_held_messages };
           }
         : undefined,
+      replyToCustomer: (shop, id, body, clientId) =>
+        call<StaffReplyResult>(s.apiBase, `/v1/shops/${shop}/conversations/${id}/reply`, {
+          method: "POST",
+          headers: { ...this.staff(shop), "Content-Type": "application/json" },
+          body: JSON.stringify({ body, client_id: clientId }),
+        }),
       sendAsCustomer: (shop, message) =>
         call<TestMessageResult>(s.apiBase, `/v1/shops/${shop}/test-messages`, {
           method: "POST",

@@ -51,7 +51,8 @@ A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its 
   - the priced work-order ticket, with the customer's own words as evidence;
   - the full thread, and what the customer currently sees;
   - every model call with its cost, and the timeline;
-  - actions: **Retry AI**, mark completed, cancel.
+  - actions: **Retry AI**, **Reply to the customer**, mark completed, cancel.
+- **Handed to a person:** whenever the system gives a conversation to staff (the AI failed, a cancellation needs matching, the customer wrote again after the order was made…), the customer is told straight away that a member of staff will reply. Staff answer from the conversation panel; the reply goes out through the outbox and takes the conversation off the *Needs a person* list.
 - **Activity** timeline.
 - **Spend & model calls**: the cap meter, setting the cap, and every call, including rejected and failed ones.
 - **Eval results**, checked against the golden labels.

@@ -8,7 +8,8 @@ stand-in provider), captured through the same endpoints the console calls live:
 2. one extra message sent to Downtown while the provider is down (-> handed to staff);
 3. one extra message sent to Northside after its cap is lowered (-> held at the cap);
 4. two demo customers with email addresses, sent through the staff test tool, so the Customers
-   view has someone to show: Jamie (a follow-up answered, then a price question) and Priya
+   view has someone to show: Jamie (a follow-up answered; then "is the price negotiable?" on the
+   finished order, handed to staff and answered by staff; then a price question) and Priya
    (a follow-up still waiting).
 
     uv run python -m riverbend snapshot            # writes ui/public/demo-snapshot.json
@@ -53,20 +54,35 @@ DEMO_CUSTOMERS = [
 ]  # fmt: skip
 
 
+DEMO_AFTER_ORDER = (
+    "Is the price negotiable?",
+    "Hi Jamie, our prices follow the service menu, so the $40.00 estimate stands. If the tube turns out "
+    "to be fine, we'll only charge for the gear adjustment.",
+)
+
+
 def _demo_customers(sc: Scenario) -> None:
     worker = sc.services.worker()
-    for shop, email, name, body, reply in DEMO_CUSTOMERS:
-        h = _headers(sc.settings, shop)
-        first = {"customer_email": email, "customer_name": name, "body": body}
-        r = sc.client.post(f"/v1/shops/{shop}/test-messages", headers=h, json=first)
+
+    def as_customer(shop: str, h: dict, message: dict) -> str:
+        r = sc.client.post(f"/v1/shops/{shop}/test-messages", headers=h, json=message)
         assert r.status_code == 202, r.text
         worker.drain(max_wait_seconds=120)
+        return r.json()["conversation_id"]
+
+    for i, (shop, email, name, body, reply) in enumerate(DEMO_CUSTOMERS):
+        h = _headers(sc.settings, shop)
+        conv = as_customer(shop, h, {"customer_email": email, "customer_name": name, "body": body})
         if reply:
-            answer = {"customer_email": email, "body": reply, "reply_to": r.json()["conversation_id"]}
-            assert (
-                sc.client.post(f"/v1/shops/{shop}/test-messages", headers=h, json=answer).status_code == 202
+            as_customer(shop, h, {"customer_email": email, "body": reply, "reply_to": conv})
+        if i == 0:
+            # A question about the finished order goes to a person, who answers from the console.
+            question, answer = DEMO_AFTER_ORDER
+            as_customer(shop, h, {"customer_email": email, "body": question, "reply_to": conv})
+            r = sc.client.post(
+                f"/v1/shops/{shop}/conversations/{conv}/reply", headers=h, json={"body": answer}
             )
-            worker.drain(max_wait_seconds=120)
+            assert r.json()["resolved"], r.text
 
 
 def _post(sc: Scenario, shop: str, message_id: str, body: str, reply_token: str | None = None) -> dict:

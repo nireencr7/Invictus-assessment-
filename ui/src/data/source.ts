@@ -10,6 +10,7 @@ import type {
   Spend,
   WorkOrderList,
   WorkOrderStatus,
+  StaffReplyResult,
   TestMessage,
   TestMessageResult,
 } from "../types";
@@ -42,6 +43,8 @@ export interface Actions {
   setWorkOrderStatus(shop: string, id: string, status: Exclude<WorkOrderStatus, "cancel_requested">): Promise<void>;
   /** Present only with an admin token. */
   setCap?: (shop: string, usd: string) => Promise<{ released: number }>;
+  /** Staff write to the customer; answering a conversation that needed a person hands it back. */
+  replyToCustomer(shop: string, conversationId: string, body: string, clientId: string): Promise<StaffReplyResult>;
   /** Staff test tool: send a message as a customer of this shop. Only works where features().testMessages. */
   sendAsCustomer(shop: string, message: TestMessage): Promise<TestMessageResult>;
 }

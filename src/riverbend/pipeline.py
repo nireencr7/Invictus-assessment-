@@ -386,6 +386,20 @@ class Pipeline:
             "escalated",
             {"reason": reason, "detail": detail},
         )
+        # Tell the customer a person has it: once per hand-off, not again for every message they
+        # send while they wait. Staff answer from the console (a staff_reply).
+        last = conn.execute(
+            "SELECT kind FROM outbound_messages WHERE conversation_id = %s ORDER BY created_at DESC LIMIT 1",
+            (loaded.conv["id"],),
+        ).fetchone()
+        if last is None or last["kind"] != "handoff":
+            self._send(
+                conn,
+                loaded.conv["id"],
+                "handoff",
+                customer_copy.handoff(loaded.shop["name"]),
+                f"handoff:{loaded.msg['id']}",
+            )
 
     def _apply(self, job: Job, loaded: Loaded, ex: Extraction, decision: Decision) -> str:
         msg, conv, shop = loaded.msg, loaded.conv, loaded.shop

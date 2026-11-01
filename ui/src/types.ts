@@ -187,6 +187,14 @@ export interface CustomerHistory {
   timeline: TimelineEntry[];
 }
 
+export interface StaffReplyResult {
+  sent: boolean;
+  duplicate: boolean;
+  state: string;
+  /** True when the reply took the conversation off the "needs a person" list. */
+  resolved: boolean;
+}
+
 export interface TestMessage {
   customer_email: string;
   customer_name?: string;

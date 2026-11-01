@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { centsToUsd, eventTone, flagLabel, ratio, reasonLabel, usd } from "./format";
+import { centsToUsd, eventTone, flagLabel, messageKindLabel, ratio, reasonLabel, usd } from "./format";
 
 describe("money display", () => {
   it("shows sub-dollar model costs with four decimals and prices with two", () => {
@@ -33,5 +33,13 @@ describe("labels", () => {
     expect(eventTone("llm_call", { valid: false })).toBe("warn");
     expect(eventTone("escalated")).toBe("bad");
     expect(eventTone("work_order_created")).toBe("ok");
+  });
+});
+
+describe("message kinds", () => {
+  it("names every kind of message sent to a customer, and falls back to words", () => {
+    expect(messageKindLabel("handoff")).toBe("Passed to the team");
+    expect(messageKindLabel("staff_reply")).toBe("Staff reply");
+    expect(messageKindLabel("something_new")).toBe("something new");
   });
 });

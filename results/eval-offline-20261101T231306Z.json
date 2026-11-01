@@ -1249,7 +1249,7 @@
    "HTTP responses to the 40 posts: {200: 1, 202: 39}",
    "Simulated customer replies sent to: m-1009, m-1027"
   ],
-  "seconds": 0.3,
+  "seconds": 1.1,
   "customer_views": {
    "m-1001": {
     "status": "Your request is with the workshop team.",
@@ -1257,12 +1257,12 @@
      {
       "kind": "ack",
       "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
-      "created_at": "2026-10-31T07:20:23.140781+05:30"
+      "created_at": "2026-11-02T04:42:55.404838+05:30"
      },
      {
       "kind": "summary",
       "body": "Hi Priya, thanks for contacting Riverbend Cycles Downtown. Here's what we've noted:\n\u2022 Basic tune-up \u2014 $65.00\nEstimated total: $65.00.\nRequested: Thu 24 Sep 2026, morning.\nA team member will confirm your appointment shortly.",
-      "created_at": "2026-10-31T07:20:23.251091+05:30"
+      "created_at": "2026-11-02T04:42:55.768075+05:30"
      }
     ]
    },
@@ -1272,17 +1272,17 @@
      {
       "kind": "ack",
       "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
-      "created_at": "2026-10-31T07:20:23.210518+05:30"
+      "created_at": "2026-11-02T04:42:55.637312+05:30"
      },
      {
       "kind": "follow_up",
       "body": "When would you like to bring the bike in?\n\n(Just reply to this message \u2014 we'll pick up where we left off.)",
-      "created_at": "2026-10-31T07:20:23.387096+05:30"
+      "created_at": "2026-11-02T04:42:56.199543+05:30"
      },
      {
       "kind": "summary",
       "body": "Thanks for contacting Riverbend Cycles Downtown. Here's what we've noted:\n\u2022 Brake adjustment (per wheel) \u00d7 2 \u2014 $36.00\nEstimated total: $36.00.\nRequested: Thu 24 Sep 2026, afternoon.\nA team member will confirm your appointment shortly.",
-      "created_at": "2026-10-31T07:20:23.468295+05:30"
+      "created_at": "2026-11-02T04:42:56.439231+05:30"
      }
     ]
    },
@@ -1292,12 +1292,12 @@
      {
       "kind": "ack",
       "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
-      "created_at": "2026-10-31T07:20:23.189736+05:30"
+      "created_at": "2026-11-02T04:42:55.563916+05:30"
      },
      {
       "kind": "price_quote",
       "body": "Thanks for asking! Current prices at Riverbend Cycles Downtown:\n\u2022 Full overhaul \u2014 $185.00 (about 180 minutes)\nReply to this message with a day that suits you if you'd like to book.",
-      "created_at": "2026-10-31T07:20:23.341610+05:30"
+      "created_at": "2026-11-02T04:42:56.076067+05:30"
      }
     ]
    },
@@ -1307,17 +1307,17 @@
      {
       "kind": "ack",
       "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
-      "created_at": "2026-10-31T07:20:23.168094+05:30"
+      "created_at": "2026-11-02T04:42:55.494911+05:30"
      },
      {
       "kind": "follow_up",
       "body": "Your message reached Riverbend Cycles Downtown, but it mentions Riverbend Cycles Lakeshore. Would you like Riverbend Cycles Downtown to handle this request? Reply 'yes' to continue here, or let us know if you'd rather contact Riverbend Cycles Lakeshore directly.\n\n(Just reply to this message \u2014 we'll pick up where we left off.)",
-      "created_at": "2026-10-31T07:20:23.299463+05:30"
+      "created_at": "2026-11-02T04:42:55.948821+05:30"
      },
      {
       "kind": "summary",
       "body": "Hi Jo, thanks for contacting Riverbend Cycles Downtown. Here's what we've noted:\n\u2022 Tire replacement (per wheel, labor only) \u00d7 2 \u2014 $40.00\nEstimated total: $40.00.\nRequested: Sun 27 Sep 2026.\nA team member will confirm your appointment shortly.",
-      "created_at": "2026-10-31T07:20:23.463321+05:30"
+      "created_at": "2026-11-02T04:42:56.426089+05:30"
      }
     ]
    }
@@ -1405,8 +1405,8 @@
     ],
     "urgency": "normal",
     "review": [],
-    "wo_status": "open",
-    "calls": 2,
+    "wo_status": "cancel_requested",
+    "calls": 3,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -1436,7 +1436,7 @@
     "urgency": "high",
     "review": [],
     "wo_status": "open",
-    "calls": 4,
+    "calls": 3,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -1467,7 +1467,7 @@
     "urgency": "normal",
     "review": [],
     "wo_status": "open",
-    "calls": 2,
+    "calls": 3,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -1592,7 +1592,7 @@
      "customer_confirmed_shop_after_wrong_shop_question"
     ],
     "wo_status": "open",
-    "calls": 4,
+    "calls": 2,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -1715,7 +1715,7 @@
     "urgency": "normal",
     "review": [],
     "wo_status": "open",
-    "calls": 3,
+    "calls": 4,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -1775,7 +1775,7 @@
     "urgency": "normal",
     "review": [],
     "wo_status": "open",
-    "calls": 5,
+    "calls": 3,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -1919,7 +1919,7 @@
      "wheel_not_specified_estimate_assumes_one"
     ],
     "wo_status": "open",
-    "calls": 2,
+    "calls": 4,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -2047,7 +2047,7 @@
      "estimate_provisional_until_inspection"
     ],
     "wo_status": "open",
-    "calls": 2,
+    "calls": 3,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -2077,7 +2077,7 @@
     "urgency": "normal",
     "review": [],
     "wo_status": "open",
-    "calls": 2,
+    "calls": 5,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -2293,7 +2293,7 @@
      "customer_language_es"
     ],
     "wo_status": "open",
-    "calls": 5,
+    "calls": 2,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -2371,7 +2371,7 @@
     "first_id": "m-1036",
     "shop_id": "rb-downtown",
     "state": "needs_staff",
-    "outcome": "ai_unavailable",
+    "outcome": "invalid_model_output",
     "follow_up": null,
     "codes": {},
     "estimate_cents": null,
@@ -2379,8 +2379,8 @@
     "urgency": null,
     "review": [],
     "wo_status": null,
-    "calls": 9,
-    "state_reason": "ai_unavailable",
+    "calls": 10,
+    "state_reason": "invalid_model_output",
     "quoted": null,
     "golden_outcome": "work_order_created",
     "ok_outcome": false,
@@ -2409,7 +2409,7 @@
     "urgency": "normal",
     "review": [],
     "wo_status": "open",
-    "calls": 3,
+    "calls": 2,
     "state_reason": null,
     "quoted": null,
     "golden_outcome": "work_order_created",
@@ -2425,8 +2425,8 @@
    {
     "first_id": "m-1038",
     "shop_id": "rb-lakeshore",
-    "state": "needs_staff",
-    "outcome": "cancellation_needs_match",
+    "state": "cancellation_requested",
+    "outcome": "cancellation_requested",
     "follow_up": null,
     "codes": {},
     "estimate_cents": null,
@@ -2435,10 +2435,10 @@
     "review": [],
     "wo_status": null,
     "calls": 2,
-    "state_reason": "cancellation_needs_match",
+    "state_reason": null,
     "quoted": null,
     "golden_outcome": "cancellation_requested",
-    "ok_outcome": false
+    "ok_outcome": true
    },
    {
     "first_id": "m-1039",
@@ -2506,60 +2506,63 @@
   "events": {
    "received": 41,
    "duplicate_delivery": 1,
-   "llm_call": 51,
+   "llm_call": 52,
    "work_order_created": 36,
-   "validation_failed": 11,
+   "validation_failed": 12,
    "llm_transient_error": 29,
    "follow_up_asked": 2,
    "price_quoted": 1,
-   "escalated": 2
+   "cancellation_requested": 1,
+   "escalated": 1
   },
   "outbound": {
    "ack": 39,
    "summary": 36,
    "follow_up": 2,
-   "price_quote": 1
+   "price_quote": 1,
+   "cancellation_ack": 1,
+   "handoff": 1
   },
   "messages_received": 40,
   "replies": 2,
   "duplicates": 1,
   "conversations": 39,
   "work_orders": 36,
-  "work_orders_open": 36,
-  "cancel_requested": 0,
-  "calls": 80,
+  "work_orders_open": 35,
+  "cancel_requested": 1,
+  "calls": 81,
   "calls_by_status": {
    "ok": 40,
-   "invalid_output": 11,
+   "invalid_output": 12,
    "transient_error": 29
   },
-  "input_tokens": 113997,
-  "output_tokens": 20511,
-  "cost_usd": "0.866208",
+  "input_tokens": 116006,
+  "output_tokens": 20632,
+  "cost_usd": "0.876664",
   "jobs": {
    "done": 40,
    "dead": 1
   },
-  "retries": 28,
+  "retries": 29,
   "spend": [
    {
-    "shop_id": "rb-lakeshore",
+    "shop_id": "rb-northside",
     "cap_usd": "5.0000",
-    "spent_usd": "0.240516",
+    "spent_usd": "0.276524",
     "reserved_usd": "0.000000",
     "exhausted_at": null
    },
    {
-    "shop_id": "rb-northside",
+    "shop_id": "rb-lakeshore",
     "cap_usd": "5.0000",
-    "spent_usd": "0.274932",
+    "spent_usd": "0.256968",
     "reserved_usd": "0.000000",
     "exhausted_at": null
    },
    {
     "shop_id": "rb-downtown",
     "cap_usd": "5.0000",
-    "spent_usd": "0.350760",
+    "spent_usd": "0.343172",
     "reserved_usd": "0.000000",
     "exhausted_at": null
    }
@@ -2568,7 +2571,7 @@
    "HTTP responses to the 40 posts: {200: 1, 202: 39}",
    "Simulated customer replies sent to: m-1009, m-1027"
   ],
-  "seconds": 1.9,
+  "seconds": 2.9,
   "injected": {
    "outage": 0,
    "flaky": 29,
@@ -3745,7 +3748,7 @@
      "cap_usd": "0.2000",
      "spent_usd": "0.103316",
      "reserved_usd": "0.000000",
-     "exhausted_at": "2026-10-31 07:20:26.153394+05:30"
+     "exhausted_at": "2026-11-02 04:43:01.153838+05:30"
     },
     {
      "shop_id": "rb-lakeshore",
@@ -3765,7 +3768,7 @@
    "notes": [
     "HTTP responses to the 40 posts: {200: 1, 202: 39}"
    ],
-   "seconds": 0.4
+   "seconds": 1.0
   },
   "after_raise": {
    "scenario": "budget",
@@ -5020,11 +5023,11 @@
    "notes": [
     "HTTP responses to the 40 posts: {200: 1, 202: 39}"
    ],
-   "seconds": 0.5
+   "seconds": 1.3
   },
   "spend_at_cap": {
    "shop_id": "rb-northside",
-   "month": "2026-10-01",
+   "month": "2026-11-01",
    "cap_usd": "0.2000",
    "spent_usd": "0.103316",
    "reserved_usd": "0.000000",
@@ -5090,7 +5093,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 2,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5191,7 +5194,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5241,7 +5244,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 0,
+     "calls": 1,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5285,7 +5288,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5360,7 +5363,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5410,7 +5413,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5528,7 +5531,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 0,
+     "calls": 1,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5578,7 +5581,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 0,
+     "calls": 2,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5629,7 +5632,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 0,
+     "calls": 1,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5698,7 +5701,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5723,7 +5726,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5749,7 +5752,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 1,
+     "calls": 0,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -5925,7 +5928,7 @@
      "urgency": null,
      "review": [],
      "wo_status": null,
-     "calls": 0,
+     "calls": 1,
      "state_reason": "ai_unavailable",
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6015,7 +6018,8 @@
     "escalated": 39
    },
    "outbound": {
-    "ack": 39
+    "ack": 39,
+    "handoff": 39
    },
    "messages_received": 40,
    "replies": 0,
@@ -6037,7 +6041,7 @@
    "retries": 11,
    "spend": [
     {
-     "shop_id": "rb-northside",
+     "shop_id": "rb-downtown",
      "cap_usd": "5.0000",
      "spent_usd": "0.000000",
      "reserved_usd": "0.000000",
@@ -6051,7 +6055,7 @@
      "exhausted_at": null
     },
     {
-     "shop_id": "rb-downtown",
+     "shop_id": "rb-northside",
      "cap_usd": "5.0000",
      "spent_usd": "0.000000",
      "reserved_usd": "0.000000",
@@ -6069,7 +6073,12 @@
       {
        "kind": "ack",
        "body": "Thanks for contacting Riverbend Cycles Downtown. We've received your message and will get back to you shortly. You don't need to send it again.",
-       "created_at": "2026-10-31T07:20:26.535618+05:30"
+       "created_at": "2026-11-02T04:43:02.219622+05:30"
+      },
+      {
+       "kind": "handoff",
+       "body": "Thanks for your message. We've passed it to the team at Riverbend Cycles Downtown, and a member of staff will reply to you personally.",
+       "created_at": "2026-11-02T04:43:04.844308+05:30"
       }
      ]
     }
@@ -6129,7 +6138,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 3,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6251,7 +6260,7 @@
      "urgency": "low",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 1,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6313,7 +6322,7 @@
       "estimate_provisional_until_inspection"
      ],
      "wo_status": "open",
-     "calls": 1,
+     "calls": 2,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6376,7 +6385,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 1,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6468,7 +6477,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 3,
+     "calls": 2,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6528,7 +6537,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 1,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6672,7 +6681,7 @@
       "wheel_not_specified_estimate_assumes_one"
      ],
      "wo_status": "open",
-     "calls": 1,
+     "calls": 2,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6735,7 +6744,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 1,
+     "calls": 3,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6800,7 +6809,7 @@
       "estimate_provisional_until_inspection"
      ],
      "wo_status": "open",
-     "calls": 1,
+     "calls": 2,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6891,7 +6900,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 1,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6922,7 +6931,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 1,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -6953,7 +6962,7 @@
      "urgency": "high",
      "review": [],
      "wo_status": "open",
-     "calls": 2,
+     "calls": 1,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -7169,7 +7178,7 @@
      "urgency": "normal",
      "review": [],
      "wo_status": "open",
-     "calls": 1,
+     "calls": 2,
      "state_reason": null,
      "quoted": null,
      "golden_outcome": "work_order_created",
@@ -7269,13 +7278,14 @@
     "llm_transient_error": 11,
     "escalated": 40,
     "llm_call": 44,
-    "validation_failed": 3,
     "work_order_created": 37,
     "follow_up_asked": 2,
+    "validation_failed": 3,
     "price_quoted": 1
    },
    "outbound": {
     "ack": 39,
+    "handoff": 39,
     "summary": 37,
     "follow_up": 2,
     "price_quote": 1
@@ -7290,8 +7300,8 @@
    "calls": 55,
    "calls_by_status": {
     "transient_error": 11,
-    "invalid_output": 3,
-    "ok": 41
+    "ok": 41,
+    "invalid_output": 3
    },
    "input_tokens": 97896,
    "output_tokens": 18042,
@@ -7326,7 +7336,7 @@
    "notes": [
     "HTTP responses to the 40 posts: {200: 1, 202: 39}"
    ],
-   "seconds": 3.5
+   "seconds": 4.1
   },
   "retried": 39
  }
