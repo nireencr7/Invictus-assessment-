@@ -54,7 +54,7 @@ A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its 
 - **Spend & model calls**: the cap meter, setting the cap, and every call, including rejected and failed ones.
 - **Eval results**, checked against the golden labels.
 
-Sign in with a staff token (each token opens one shop only), or press **Use local dev credentials**.
+Sign in with a staff token (each token opens one shop only), or press **Use local dev credentials**. On the GCP deployment, paste the `riverbend-staff-tokens` secret exactly as `gcloud` prints it to open all three shops.
 
 **Snapshot mode.** The console also ships a read-only dataset exported from a real run (`make snapshot`), so it can be hosted with no backend at all (`CONSOLE_MODE=snapshot`). `CONSOLE_MODE=auto` falls back to the snapshot when the API doesn't answer.
 

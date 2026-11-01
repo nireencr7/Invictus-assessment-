@@ -27,7 +27,7 @@ This Terraform has been applied for real, to a dedicated project created for it,
 ```bash
 gcloud secrets versions access latest --secret=riverbend-staff-tokens --project riverbend-wo-ac52e3
 ```
-That prints `{"<token>": "<shop>", …}`; paste one or more tokens into the console. The admin token (for changing caps) is in `riverbend-admin-token`.
+That prints `{"<token>": "<shop>", …}`. Paste the output into the console's sign-in box as it is, and the console reads the tokens out of it. To open fewer shops, paste only those shops' tokens, one per line. The admin token (for changing caps) is in `riverbend-admin-token`.
 
 **What the first real deployment caught** (each is now fixed in this repo):
 1. **Cloud Run rejects always-on CPU with under 512 MiB of memory.** When no CPU mode is set, the provider defaults to always-on, so the console (256 MiB) failed to create. Fix: `cpu_idle = true` set explicitly on the API and the console. It is also cheaper for services that scale to zero.
@@ -82,7 +82,7 @@ terraform apply
 # 4. Schema + shops, then smoke test.
 gcloud run jobs execute riverbend-migrate --region "$REGION" --wait
 curl "$(terraform output -raw api_url)/readyz"
-open "$(terraform output -raw console_url)"          # sign in with a token from the riverbend-staff-tokens secret
+open "$(terraform output -raw console_url)"          # sign in by pasting the riverbend-staff-tokens secret
 ```
 
 After that, every merge to `main` runs `deploy/cloudbuild.yaml`: tests (against a throwaway Postgres) → build both images → push → **migrate** → roll the worker, then the API, then the console. Infrastructure changes go through `terraform plan` in review. The pipeline only ships images.

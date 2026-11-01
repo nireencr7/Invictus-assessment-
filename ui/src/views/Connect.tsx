@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { devSession, whoAmI, type Session } from "../data/api";
+import { parseTokens } from "../lib/tokens";
 
 // Dev credentials only exist on a local API (DEV_MODE=true); don't offer them anywhere else.
 const LOCAL = ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
@@ -20,7 +21,7 @@ export function Connect({ apiBase, onConnected, onUseSnapshot, reason }: {
     setBusy(true);
     setError(null);
     try {
-      const list = tokens.split(/[\s,]+/).map((t) => t.trim()).filter(Boolean);
+      const list = parseTokens(tokens);
       if (!list.length) throw new Error("Paste at least one staff token.");
       const shops = [];
       for (const token of list) shops.push({ ...(await whoAmI(apiBase, token)), token });
@@ -60,7 +61,8 @@ export function Connect({ apiBase, onConnected, onUseSnapshot, reason }: {
         <label className="field">
           Staff token(s)
           <textarea id="connect-tokens" className="input mono" value={tokens} onChange={(e) => setTokens(e.target.value)}
-                    placeholder="one per line" autoComplete="off" spellCheck={false} />
+                    placeholder={"one per line, or the riverbend-staff-tokens secret\nas gcloud prints it"}
+                    autoComplete="off" spellCheck={false} />
         </label>
         <label className="field">
           Admin token (optional, for changing spend caps)
