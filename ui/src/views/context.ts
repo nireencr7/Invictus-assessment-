@@ -6,7 +6,8 @@ export interface Ctx {
   source: DataSource;
   shopId: string;
   shopName: (id: string) => string;
-  /** Poll interval for live data; undefined for a snapshot, which never changes. */
+  /** Auto-refresh interval for live data. Undefined means no auto-refresh: always for a snapshot,
+   *  which never changes, and for now for live data too (staff press Refresh instead). */
   poll?: number;
   openConversation: (shopId: string, conversationId: string) => void;
   go: (view: View, shopId?: string) => void;

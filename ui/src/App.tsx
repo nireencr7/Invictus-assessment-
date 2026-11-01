@@ -4,7 +4,7 @@ import { ApiSource, apiReachable, loadSession, saveSession, type Session } from 
 import { SnapshotSource } from "./data/snapshot";
 import type { DataSource } from "./data/source";
 import { when } from "./lib/format";
-import { useResource } from "./lib/useResource";
+import { refreshAll, useResource } from "./lib/useResource";
 import { Activity } from "./views/Activity";
 import { Connect } from "./views/Connect";
 import type { Ctx, View } from "./views/context";
@@ -126,7 +126,9 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
     source,
     shopId,
     shopName: (id) => names.get(id) ?? id,
-    poll: source.kind === "live" ? 4000 : undefined,
+    // Auto-refresh is switched off for now: staff press Refresh in the top bar instead.
+    // To switch it back on, uncomment the next line (useResource pauses it while the tab is hidden).
+    // poll: source.kind === "live" ? 15_000 : undefined,
     openConversation: (shop, id) => setOpen({ shop, id }),
     go: (v, shop) => {
       if (shop) {
@@ -188,6 +190,7 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
               ))}
             </div>
           ) : null}
+          {source.kind === "live" ? <RefreshButton onDone={() => setToast("Refreshed")} /> : null}
           <span className={`chip ${source.kind === "live" ? "ok" : "warn"}`}>
             {source.kind === "live" ? "Live" : "Snapshot"}
           </span>
@@ -212,5 +215,25 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
       {open ? <Conversation ctx={ctx} shopId={open.shop} conversationId={open.id} onClose={() => setOpen(null)} /> : null}
       {toast ? <div className="toast" role="status">{toast}</div> : null}
     </div>
+  );
+}
+
+/** Reloads everything on screen: the open view, the conversation drawer and the inbox count. */
+function RefreshButton({ onDone }: { onDone: () => void }) {
+  const [busy, setBusy] = useState(false);
+  return (
+    <button
+      className="btn"
+      disabled={busy}
+      onClick={() => {
+        setBusy(true);
+        void refreshAll().finally(() => {
+          setBusy(false);
+          onDone();
+        });
+      }}
+    >
+      {busy ? "Refreshing…" : "Refresh"}
+    </button>
   );
 }

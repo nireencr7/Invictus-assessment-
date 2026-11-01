@@ -56,6 +56,8 @@ A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its 
 
 Sign in with a staff token (each token opens one shop only), or press **Use local dev credentials**. On the GCP deployment, paste the `riverbend-staff-tokens` secret exactly as `gcloud` prints it to open all three shops.
 
+Pages load when you open them; press **Refresh** in the top bar to see what the worker has done since. Auto-refresh is switched off for now. Uncommenting one line in `ui/src/App.tsx` turns it back on, every 15 seconds and only while the tab is visible.
+
 **Snapshot mode.** The console also ships a read-only dataset exported from a real run (`make snapshot`), so it can be hosted with no backend at all (`CONSOLE_MODE=snapshot`). `CONSOLE_MODE=auto` falls back to the snapshot when the API doesn't answer.
 
 **Using it caught a real bug.** Pressing *Retry AI* on an hour-old escalated message sent it straight back to staff after one transient failure. The processing deadline was measured from the message's arrival, not from the retry. It is fixed in migration `003`, with a regression test.
