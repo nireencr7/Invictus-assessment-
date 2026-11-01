@@ -33,6 +33,7 @@ That prints `{"<token>": "<shop>", …}`. Paste the output into the console's si
 1. **Cloud Run rejects always-on CPU with under 512 MiB of memory.** When no CPU mode is set, the provider defaults to always-on, so the console (256 MiB) failed to create. Fix: `cpu_idle = true` set explicitly on the API and the console. It is also cheaper for services that scale to zero.
 2. **Default service accounts got no permissions**, because this organisation enforces `iam.automaticIamGrantsForDefaultServiceAccounts`. Builds now run as a dedicated `riverbend-build` account with exactly three roles.
 3. **No Claude quota in a new Vertex project** (HTTP 429 on the first call). The app's own outage handling would have sent every message to staff, so the deployment runs the stand-in until quota is granted.
+4. **The second migration run failed on Cloud SQL.** Re-asserting the app role with `ALTER ROLE riverbend_app … NOSUPERUSER NOBYPASSRLS` is refused there: the migration user isn't a superuser, and Postgres won't let a non-superuser even mention those flags. The first run had only *created* the role, and locally the owner is a superuser, so nothing caught it before. Migration `004` had committed; only the grants step after it failed. Fix: the role is now altered for login and password only, and the job checks `pg_roles` and fails loudly if the role can ever bypass row-level security.
 
 **Tear it all down** (deletion protection is off for this demo):
 ```bash

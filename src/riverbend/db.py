@@ -103,12 +103,19 @@ def ensure_app_role(conn: psycopg.Connection, app_password: str) -> None:
     exists = conn.execute("SELECT 1 FROM pg_roles WHERE rolname = 'riverbend_app'").fetchone()
     pw = sql.Literal(app_password)
     if exists:
-        conn.execute(
-            sql.SQL("ALTER ROLE riverbend_app WITH LOGIN NOSUPERUSER NOBYPASSRLS PASSWORD {}").format(pw)
-        )
+        # Only LOGIN and the password: a non-superuser owner (Cloud SQL's) may not even *mention*
+        # SUPERUSER or BYPASSRLS in ALTER ROLE. Whether they're off is checked below instead.
+        conn.execute(sql.SQL("ALTER ROLE riverbend_app WITH LOGIN PASSWORD {}").format(pw))
     else:
         conn.execute(
             sql.SQL("CREATE ROLE riverbend_app WITH LOGIN NOSUPERUSER NOBYPASSRLS PASSWORD {}").format(pw)
+        )
+    su, bypass = conn.execute(
+        "SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = 'riverbend_app'"
+    ).fetchone()
+    if su or bypass:
+        raise RuntimeError(
+            "riverbend_app must not be a superuser or bypass row-level security; fix the role by hand"
         )
     dbname = conn.execute("SELECT current_database()").fetchone()[0]
     conn.execute(sql.SQL("GRANT CONNECT ON DATABASE {} TO riverbend_app").format(sql.Identifier(dbname)))
