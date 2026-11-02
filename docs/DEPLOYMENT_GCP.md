@@ -1,6 +1,6 @@
 # Deploying to GCP
 
-Infrastructure-as-code lives in [`infra/terraform/`](../infra/terraform). The image pipeline is [`deploy/cloudbuild.yaml`](../deploy/cloudbuild.yaml); first-time image builds use [`deploy/cloudbuild-images.yaml`](../deploy/cloudbuild-images.yaml).
+Infrastructure-as-code lives in [`infra/terraform/`](../infra/terraform). Every merge to `main` is tested and deployed by GitHub Actions ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml), [below](#continuous-deployment)); first-time image builds use [`deploy/cloudbuild-images.yaml`](../deploy/cloudbuild-images.yaml).
 
 ## It is deployed
 
@@ -25,11 +25,13 @@ This Terraform has been applied for real, to a dedicated project created for it,
 - **The real model, live** (`633b6d3`): a Spanish message sent through the public API ("los frenos … chirrían mucho y la cadena salta al cambiar … el jueves por la tarde") became a work order in one Gemini call (4 s, $0.008): brake adjustment on both wheels plus a gear adjustment, mountain bike, Thu 5 Nov afternoon, flagged `customer_language_es`. The keyword stand-in could not have read it. No warnings in the logs after the rollout.
 - **A message that names no bike** (`2b161fa`): before, "Hi, what are the services you provide?" took two Gemini calls, because the first said `bike_count: 0` and was rejected. After the fix, "What are your opening hours on Saturday?" took one call ($0.0065), valid first time, and went to staff as not a repair request.
 
-**Signing in to the console.** Each shop has its own staff token in Secret Manager:
+**Signing in to the console.** From the release with staff accounts ([D20](DECISIONS.md#d20-staff-sign-in-with-email-and-password-the-session-token-is-used-like-a-shop-token)) onwards, staff sign in with email and password. Nothing in Terraform changes: the tables come from migration `006`, run by the migrate job. There are no accounts until an admin creates them with the admin token (in `riverbend-admin-token`). See [the walkthrough](API_WALKTHROUGH.md#admin-staff) for the `curl`, or use **Create a staff account** in the Postman collection. The demo accounts from `make dev` never exist on GCP: they're created only when `DEV_MODE=true`, and the API runs with `DEV_MODE=false`.
+
+Each shop's static token still works, under **Other ways to sign in**:
 ```bash
 gcloud secrets versions access latest --secret=riverbend-staff-tokens --project riverbend-wo-ac52e3
 ```
-That prints `{"<token>": "<shop>", …}`. Paste the output into the console's sign-in box as it is, and the console reads the tokens out of it. To open fewer shops, paste only those shops' tokens, one per line. The admin token (for changing caps) is in `riverbend-admin-token`.
+That prints `{"<token>": "<shop>", …}`. Paste the output into the box as it is, and the console reads the tokens out of it. To open fewer shops, paste only those shops' tokens, one per line.
 
 **What the first real deployment caught** (each is now fixed in this repo):
 1. **Cloud Run rejects always-on CPU with under 512 MiB of memory.** When no CPU mode is set, the provider defaults to always-on, so the console (256 MiB) failed to create. Fix: `cpu_idle = true` set explicitly on the API and the console. It is also cheaper for services that scale to zero.
@@ -56,7 +58,7 @@ gcloud projects delete riverbend-wo-ac52e3
 | Data, queue, spend ledger | **Cloud SQL for PostgreSQL 16** | RLS, `FOR UPDATE SKIP LOCKED`, transactional DDL, PITR backups, managed. Reached via the Cloud SQL connector (IAM + TLS, no authorised networks). | AlloyDB (later, for scale), Firestore (no RLS, no multi-row transactions of this shape) |
 | The model | **Claude on Vertex AI** (live: **Gemini on Vertex AI** until Claude quota is granted) | **No API key exists anywhere**: only the worker's service account has `roles/aiplatform.user`, which covers both. Spend shows on the GCP invoice, quotas are per project, and traffic stays in Google's network. | Anthropic API key in Secret Manager (supported with `LLM_PROVIDER=anthropic`; it also unlocks server-side refusal fallback, which Vertex lacks) |
 | Secrets and config | **Secret Manager** → env vars | Per-secret IAM: the API cannot read the owner DSN; only the migrate job can. Rotation means a new version, picked up at next instance start. | Env vars in Terraform state only |
-| Images | **Artifact Registry** + **Cloud Build** | Native and IAM-integrated. The pipeline runs tests → build → push → migrate → deploy. | GitHub Actions with Workload Identity Federation (equally good) |
+| Images and delivery | **Artifact Registry**; **GitHub Actions** with Workload Identity Federation | The same workflow that tests every push ships `main`: tests → build → push → migrate → deploy, keyless ([below](#continuous-deployment)). Cloud Build is used only for the very first images. | A Cloud Build trigger (needs the GitHub app connected in the console; splits the test gate from the deploy) |
 | Alerting | **Cloud Logging** metrics + **Cloud Monitoring** alerts | Alerts on: shop hit its cap, escalations because the AI is unavailable, invalid model output, permanent provider errors. | — |
 
 The tenancy and failure boundaries carry over into IAM:
@@ -91,7 +93,35 @@ curl "$(terraform output -raw api_url)/readyz"
 open "$(terraform output -raw console_url)"          # sign in by pasting the riverbend-staff-tokens secret
 ```
 
-After that, every merge to `main` runs `deploy/cloudbuild.yaml`: tests (against a throwaway Postgres) → build both images → push → **migrate** → roll the worker, then the API, then the console. Infrastructure changes go through `terraform plan` in review. The pipeline only ships images.
+## Continuous deployment
+
+Every push to `main` runs [`.github/workflows/ci.yml`](../.github/workflows/ci.yml):
+
+1. **test** (lint, the backend suite against Postgres 16, the API image builds) and **console** (type-check, tests, build, image) run in parallel.
+2. Only if both pass, **deploy** runs:
+   1. it builds both images, tagged with the commit;
+   2. it pushes them to Artifact Registry;
+   3. it **runs the migration job and waits for it**, so the schema is ready before any new code runs;
+   4. it rolls out the worker, then the API, then the console;
+   5. it smoke-tests `/readyz`, the console and sign-in.
+3. Pull requests and other branches run the tests only. **Run workflow** in the Actions tab re-runs everything on `main`, deploy included.
+
+**No key exists.** The job logs in with Workload Identity Federation ([`cicd.tf`](../infra/terraform/cicd.tf)):
+- GitHub signs a short-lived OIDC token for the run.
+- GCP trades it for a short-lived token of `riverbend-deploy`, but only if the token says it comes from this repository's `main` branch.
+- `riverbend-deploy` may push images, update the Cloud Run services and the migration job, run that job, and act as the four runtime accounts. It can't read secrets or the database.
+
+**Terraform and the pipeline don't fight.** Terraform owns the infrastructure, the pipeline owns which image runs, and the services' `lifecycle` blocks ignore the image. So a later `terraform apply` never rolls a deploy back. Infrastructure changes still go through `terraform plan`. `terraform.tfvars` still names the images used to *create* the services the first time.
+
+**Setting it up once**, after `terraform apply` has created the pool and the account:
+
+```bash
+gh variable set GCP_PROJECT_ID --body "$PROJECT"
+gh variable set GCP_WORKLOAD_IDENTITY_PROVIDER --body "$(terraform output -raw github_workload_identity_provider)"
+gh variable set GCP_DEPLOY_SERVICE_ACCOUNT --body "$(terraform output -raw deploy_service_account)"
+```
+
+These are identifiers, not secrets. Until they exist the deploy job is skipped, so forks and fresh clones stay green.
 
 ## How an email reaches the API
 

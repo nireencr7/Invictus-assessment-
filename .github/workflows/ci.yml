@@ -1,5 +1,8 @@
 name: ci
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch: # run it by hand, deploy included (main only)
 
 jobs:
   test:
@@ -44,3 +47,63 @@ jobs:
       - run: npm run build
       - name: Console image builds
         run: docker build -t riverbend-console:ci .
+
+  # Ships main to GCP once both jobs above pass. No key is stored anywhere: GitHub's OIDC token is
+  # exchanged for a short-lived token of the riverbend-deploy service account (infra/terraform/cicd.tf),
+  # which GCP grants only to this repository's main branch. Skipped until the repository variables
+  # below exist, so forks and fresh clones stay green.
+  deploy:
+    needs: [test, console]
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+      vars.GCP_WORKLOAD_IDENTITY_PROVIDER != ''
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false # never stop a rollout halfway
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      REGION: us-central1
+      REGISTRY: us-central1-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/riverbend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Build and push both images, tagged with the commit
+        run: |
+          echo "TAG=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+          TAG=${GITHUB_SHA::7}
+          gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet
+          docker build -t "$REGISTRY/app:$TAG" .
+          docker build -t "$REGISTRY/console:$TAG" ui
+          docker push "$REGISTRY/app:$TAG"
+          docker push "$REGISTRY/console:$TAG"
+      - name: Migrate the database before any new code runs
+        run: |
+          gcloud run jobs update riverbend-migrate --region "$REGION" --image "$REGISTRY/app:$TAG" --quiet
+          gcloud run jobs execute riverbend-migrate --region "$REGION" --wait
+      - name: Roll out the worker, then the API, then the console
+        run: |
+          for svc in riverbend-worker riverbend-api; do
+            gcloud run services update "$svc" --region "$REGION" --image "$REGISTRY/app:$TAG" --quiet
+          done
+          gcloud run services update riverbend-console --region "$REGION" --image "$REGISTRY/console:$TAG" --quiet
+      - name: Smoke test the live services
+        run: |
+          API=$(gcloud run services describe riverbend-api --region "$REGION" --format 'value(status.url)')
+          CONSOLE=$(gcloud run services describe riverbend-console --region "$REGION" --format 'value(status.url)')
+          # The API scales to zero, so the first request may wait for an instance to start.
+          curl -fsS --retry 6 --retry-all-errors --retry-delay 5 "$API/readyz"
+          curl -fsS --retry 3 --retry-all-errors --retry-delay 5 -o /dev/null "$CONSOLE/"
+          # Sign-in answers, and refuses a made-up login.
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "$API/v1/auth/login" \
+            -H 'Content-Type: application/json' -d '{"email":"smoke-test@example.com","password":"not-a-real-password"}')
+          test "$code" = "401" || { echo "sign-in answered $code, expected 401"; exit 1; }
+          echo "Deployed $TAG: $API · $CONSOLE"

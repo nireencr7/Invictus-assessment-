@@ -14,7 +14,7 @@ The LLM reads; **code prices, dates and decides**:
 | Code, tests, one-command local run | this repo · **`make up`** (Docker) or **`make dev`** (no Docker) · `make test` |
 | A UI to see it all | the **staff console** in [`ui/`](ui): a separate React app with its own container and Cloud Run service |
 | Architecture note, 2 pages max | [**`docs/ARCHITECTURE.pdf`**](docs/ARCHITECTURE.pdf) (source: [`ARCHITECTURE.md`](docs/ARCHITECTURE.md)) |
-| Deployment path to GCP, IaC + plan | [`docs/DEPLOYMENT_GCP.md`](docs/DEPLOYMENT_GCP.md) · [`infra/terraform/`](infra/terraform) · [`deploy/cloudbuild.yaml`](deploy/cloudbuild.yaml). **Deployed:** [staff console](https://riverbend-console-wndzwkly3a-uc.a.run.app) · [API](https://riverbend-api-wndzwkly3a-uc.a.run.app/docs) |
+| Deployment path to GCP, IaC + plan | [`docs/DEPLOYMENT_GCP.md`](docs/DEPLOYMENT_GCP.md) · [`infra/terraform/`](infra/terraform) · CI/CD: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) tests every push and deploys `main`. **Deployed:** [staff console](https://riverbend-console-wndzwkly3a-uc.a.run.app) · [API](https://riverbend-api-wndzwkly3a-uc.a.run.app/docs) |
 | Results table for the 40 samples | [`docs/RESULTS.md`](docs/RESULTS.md) (+ chaos, spend-cap and outage runs) |
 | "Not built" list, next steps, 100 shops | [`docs/NOT_BUILT.md`](docs/NOT_BUILT.md) |
 | Loom: one AI decision I overrode | _link_ · the incident is in [`docs/AI_JUDGEMENT.md`](docs/AI_JUDGEMENT.md), evidence in [`docs/loom-evidence/`](docs/loom-evidence/) |
@@ -37,7 +37,7 @@ make console    # the staff console on http://localhost:5173 (proxies /v1 to :80
 
 The provider defaults to an **offline stand-in**: hand-written outputs, $0, deterministic, clearly labelled as not a model. To use Claude, put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY=…` in `.env`. Never commit it; `.env` is git-ignored. To use Gemini on Vertex AI with your own `gcloud` login (no key), set `LLM_PROVIDER=gemini`, `LLM_MODEL=gemini-3.8-flash` and `VERTEX_PROJECT=<your project>`. The live deployment runs Gemini until its Claude quota is granted ([D19](docs/DECISIONS.md#d19-gemini-runs-on-vertex-while-the-project-has-no-claude-quota)).
 
-Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. The Docker images are proven by the GCP deployment (Cloud Build); `make up` itself wasn't run on the build machine, which has no Docker.
+Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. Both Docker images build in CI on every push and run on the GCP deployment; `make up` itself wasn't run on the build machine, which has no Docker.
 
 ## The staff console
 
@@ -60,7 +60,9 @@ A separate app in [`ui/`](ui) (React + TypeScript + Vite). It is built into its 
 
 The three shops are **Riverbend Cycles Downtown** (`rb-downtown`), **Northside** (`rb-northside`) and **Lakeshore** (`rb-lakeshore`).
 
-Sign in with a staff token (each token opens one shop only), or press **Use local dev credentials**. On the GCP deployment, paste the `riverbend-staff-tokens` secret exactly as `gcloud` prints it to open all three shops.
+**Signing in.** Staff sign in with their **email and password**. That gives them a personal session that opens the shops on their account and lasts 12 hours. **Sign out** ends it on the server at once, and **Change password** signs out their other sessions. Five wrong passwords in a row lock the account for 15 minutes. There's no self sign-up: an admin creates accounts (`POST /v1/admin/staff-accounts`, see [the walkthrough](docs/API_WALKTHROUGH.md#admin-staff)).
+- **Locally:** `make dev` creates `manager@riverbend.test` (all shops) and `downtown@riverbend.test` (Downtown only), both with password `riverbend-dev`. **Use local dev credentials** still works.
+- **Static tokens:** a shop's static token still works for scripts and tools, under **Other ways to sign in**. On the GCP deployment you can paste the `riverbend-staff-tokens` secret exactly as `gcloud` prints it to open all three shops.
 
 Pages load when you open them; press **Refresh** in the top bar to see what the worker has done since. Auto-refresh is switched off for now. Uncommenting one line in `ui/src/App.tsx` turns it back on, every 15 seconds and only while the tab is visible.
 
@@ -84,7 +86,11 @@ curl -s localhost:8000/v1/shops/rb-northside/inbound-messages \
   -d '{"message_id":"m-1005","channel":"email","received_at":"2026-09-22T08:30:00",
        "body":"My rear brake squeals and the gears skip on hills, can I bring it Saturday?"}'
 
-# A shop's open work orders, with estimates computed from the catalog
+# Sign in as a person: returns a personal session token ("rbs_…") that opens the account's shops
+curl -s localhost:8000/v1/auth/login -H 'Content-Type: application/json' \
+  -d '{"email":"manager@riverbend.test","password":"riverbend-dev"}'
+
+# A shop's open work orders, with estimates computed from the catalog (a session token works the same way)
 curl -s localhost:8000/v1/shops/rb-northside/work-orders -H 'Authorization: Bearer dev-northside-token'
 
 # Another shop's token gets 404, not 403: we don't confirm the other shop's data exists
@@ -92,7 +98,7 @@ curl -s -o /dev/null -w '%{http_code}\n' localhost:8000/v1/shops/rb-northside/wo
   -H 'Authorization: Bearer dev-lakeshore-token'
 ```
 
-Other routes: `/v1/me`, `/v1/shops/{shop}/inbox`, `/activity`, `/llm-calls`, `/conversations/{id}`, `/conversations/{id}/retry`, `/spend`, `/work-orders/{id}/status`; `/v1/customer/{shop}/{reply_token}` (what the customer sees); `PUT /v1/admin/shops/{shop}/budget`. OpenAPI is at `/docs`.
+Other routes: `/v1/me`, `/v1/auth/logout`, `/v1/auth/password`, `/v1/shops/{shop}/inbox`, `/activity`, `/llm-calls`, `/conversations/{id}`, `/conversations/{id}/retry`, `/spend`, `/work-orders/{id}/status`; `/v1/customer/{shop}/{reply_token}` (what the customer sees); `PUT /v1/admin/shops/{shop}/budget`, `/v1/admin/staff-accounts`. OpenAPI is at `/docs`.
 
 ## Results, in one table
 
@@ -124,6 +130,7 @@ All configuration goes through one typed class, [`src/riverbend/config.py`](src/
 ```
 src/riverbend/
   api.py, intake.py        HTTP, auth, idempotent intake
+  staff_auth.py            staff sign-in: password hashes, sessions, lockout, account admin
   jobqueue.py, worker.py   Postgres queue: claim/lease/retry/park/dead-letter
   pipeline.py              one message end to end
   llm/                     provider port, Claude adapter (Anthropic/Vertex), Gemini adapter, offline stand-in, breaker, fault injection, pricing

@@ -1,6 +1,6 @@
 # Builds and pushes both images (API/worker, staff console) in parallel. Used for the first
-# deployment and for image-only rebuilds; deploy/cloudbuild.yaml is the full pipeline
-# (tests, build, migrate, roll out).
+# deployment, before the pipeline exists; after that the deploy job in .github/workflows/ci.yml
+# ships every merge to main (tests, build, migrate, roll out).
 #   gcloud builds submit --config deploy/cloudbuild-images.yaml --substitutions=_TAG=$(git rev-parse --short HEAD) \
 #     --service-account projects/$PROJECT/serviceAccounts/riverbend-build@$PROJECT.iam.gserviceaccount.com .
 substitutions:

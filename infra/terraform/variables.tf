@@ -88,3 +88,8 @@ variable "console_image" {
   description = "Staff console image, e.g. us-central1-docker.pkg.dev/<project>/riverbend/console:<git-sha>. Set by CI."
   type        = string
 }
+
+variable "github_repository" {
+  description = "The GitHub repository allowed to deploy, as owner/name. Only its main branch can (cicd.tf)."
+  type        = string
+}

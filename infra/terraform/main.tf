@@ -19,6 +19,8 @@ locals {
     "iam.googleapis.com",
     "cloudbuild.googleapis.com",
     "cloudresourcemanager.googleapis.com",
+    "iamcredentials.googleapis.com", # GitHub Actions: keyless deploys (cicd.tf)
+    "sts.googleapis.com",
   ]
 }
 

@@ -76,6 +76,12 @@ resource "google_cloud_run_v2_service" "api" {
   }
 
   depends_on = [google_secret_manager_secret_iam_member.readers]
+
+  lifecycle {
+    # The deploy pipeline (.github/workflows/ci.yml) sets the running image; Terraform owns the rest.
+    # Service-level `scaling` is unused; the provider reads it back as zeros and would "remove" it.
+    ignore_changes = [template[0].containers[0].image, client, client_version, scaling]
+  }
 }
 
 # Intake must be reachable by the email gateway / web form. Auth is the ingest key (and staff tokens)
@@ -141,6 +147,12 @@ resource "google_cloud_run_v2_service" "worker" {
   }
 
   depends_on = [google_secret_manager_secret_iam_member.readers]
+
+  lifecycle {
+    # The deploy pipeline (.github/workflows/ci.yml) sets the running image; Terraform owns the rest.
+    # Service-level `scaling` is unused; the provider reads it back as zeros and would "remove" it.
+    ignore_changes = [template[0].containers[0].image, client, client_version, scaling]
+  }
 }
 
 # --- Migrations: run by CI before each rollout (gcloud run jobs execute riverbend-migrate --wait) -
@@ -191,6 +203,11 @@ resource "google_cloud_run_v2_job" "migrate" {
   }
 
   depends_on = [google_secret_manager_secret_iam_member.readers]
+
+  lifecycle {
+    # The deploy pipeline (.github/workflows/ci.yml) sets the image; Terraform owns the rest.
+    ignore_changes = [template[0].template[0].containers[0].image, client, client_version]
+  }
 }
 
 # --- Staff console: a separate static app (nginx + React build), deployed and rolled back on its own.
@@ -233,6 +250,12 @@ resource "google_cloud_run_v2_service" "console" {
         http_get { path = "/console-healthz" }
       }
     }
+  }
+
+  lifecycle {
+    # The deploy pipeline (.github/workflows/ci.yml) sets the running image; Terraform owns the rest.
+    # Service-level `scaling` is unused; the provider reads it back as zeros and would "remove" it.
+    ignore_changes = [template[0].containers[0].image, client, client_version, scaling]
   }
 }
 
