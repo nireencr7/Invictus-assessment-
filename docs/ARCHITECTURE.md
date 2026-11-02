@@ -23,12 +23,14 @@ What crosses each line is narrow: the pipeline hands the port an `LLMRequest` an
 
 ## Data model
 
-`conversations` (state, `follow_ups_asked CHECK ≤ 1`, unguessable `reply_token`) → `inbound_messages` (`UNIQUE(shop_id, external_id)` is the idempotency key) → `work_orders` (`UNIQUE(shop_id, conversation_id)`, requested window, urgency, review flags, the validated extraction for audit, `catalog_version`, `prompt_version`, `model`) → `work_order_lines` (unit price snapshot, `CHECK line_total = unit × qty`; a deferred trigger rejects any order whose estimate ≠ Σ lines). `outbound_messages` is the customer outbox (dedupe key per send). `llm_calls` is one row per call, failures included, with tokens, cost and the raw output when it was rejected. `shop_spend` holds cap, spent and reserved per shop-month. `events` is the timeline. `jobs` holds ids only.
+![Database schema](schema.svg)
+
+`customers` (one per email address per shop, `UNIQUE(shop_id, email)`) → `conversations` (state, `follow_ups_asked CHECK ≤ 1`, unguessable `reply_token`) → `inbound_messages` (`UNIQUE(shop_id, external_id)` is the idempotency key) → `work_orders` (`UNIQUE(shop_id, conversation_id)`, requested window, urgency, review flags, the validated extraction for audit, `catalog_version`, `prompt_version`, `model`) → `work_order_lines` (unit price snapshot, `CHECK line_total = unit × qty`; a deferred trigger rejects any order whose estimate ≠ Σ lines). `outbound_messages` is the customer outbox (dedupe key per send). `llm_calls` is one row per call, failures included, with tokens, cost and the raw output when it was rejected. `shop_spend` holds cap, spent and reserved per shop-month. `events` is the timeline. `jobs` holds ids only.
 
 ## Tenancy isolation: three layers, each sufficient alone
 
 1. **Data model.** Every tenant table has `shop_id NOT NULL`. Every primary key is `(shop_id, id)` and every foreign key is composite, so a Lakeshore line item *cannot* point at a Downtown order, even when written by a superuser.
-2. **Database.** Row-level security is `FORCE`d on all eight tenant tables. Each request or job opens a `tenant_tx(shop)` that sets `app.current_shop` **transaction-locally**, so the setting cannot leak through the connection pool. With no tenant set, every policy matches zero rows: it fails closed. The runtime role has no superuser, no `BYPASSRLS` and no `DELETE`.
+2. **Database.** Row-level security is `FORCE`d on all nine tenant tables. Each request or job opens a `tenant_tx(shop)` that sets `app.current_shop` **transaction-locally**, so the setting cannot leak through the connection pool. With no tenant set, every policy matches zero rows: it fails closed. The runtime role has no superuser, no `BYPASSRLS` and no `DELETE`.
 3. **Edge.** Each staff token is bound to one shop. Asking about another shop returns `404`, so the API doesn't even confirm the other shop's data exists. The queue is tenant-blind but holds only ids. The model sees one conversation. A message addressed to another shop is **never moved across tenants**: the customer is asked and pointed to that shop.
 
 `tests/test_tenancy.py` attacks these layers as the real runtime role: a missing WHERE clause, a missing tenant, a wrong-tenant INSERT and UPDATE, pool reuse, and cross-tenant API calls.

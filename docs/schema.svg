@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1390 1060" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11.5">
+<rect width="1390" height="1060" fill="#ffffff"/>
+<text x="20" y="30" font-size="16" font-weight="700" fill="#24292f">Riverbend work orders · database schema</text>
+<text x="20" y="49" font-size="11.5" fill="#57606a">Postgres (Cloud SQL), migrations 001–005. Key columns only; see migrations/ for every column.</text>
+<rect x="20" y="66" width="1350" height="40" rx="8" fill="#f6f8fa" stroke="#8c959f" stroke-width="1.4"/>
+<text x="34" y="91" fill="#24292f"><tspan font-weight="700" font-size="13">shops</tspan><tspan dx="6" fill="#57606a">reference data</tspan><tspan dx="22">PK id (rb-downtown, rb-northside, rb-lakeshore) · name · timezone · monthly_llm_cap_usd · public_contact</tspan><tspan dx="22" fill="#57606a">every other table: shop_id → shops.id</tspan></text>
+<rect x="1314" y="78" width="46" height="15" rx="7.5" fill="#ffffff" stroke="#8c959f"/><text x="1337" y="89" text-anchor="middle" font-size="9.5" font-weight="700" fill="#57606a">no RLS</text>
+<path d="M300,180 H350" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="306" y="175" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="344" y="175" font-size="11" font-weight="700" fill="#57606a" text-anchor="end">0..*</text>
+<path d="M670,180 H720" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="676" y="175" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="714" y="175" font-size="11" font-weight="700" fill="#57606a" text-anchor="end">0..1</text>
+<path d="M1040,180 H1090" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="1046" y="175" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="1084" y="175" font-size="11" font-weight="700" fill="#57606a" text-anchor="end">1..*</text>
+<path d="M350,307 H160 V346" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="344" y="302" font-size="11" font-weight="700" fill="#57606a" text-anchor="end">1</text>
+<text x="166" y="340" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">*</text>
+<path d="M470,323 V438" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="476" y="337" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="476" y="432" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1..*</text>
+<path d="M670,460 H780 V408" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="676" y="455" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="786" y="422" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">0..1</text>
+<path d="M670,504 H1090" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="676" y="499" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="1084" y="499" font-size="11" font-weight="700" fill="#57606a" text-anchor="end">0..1</text>
+<path d="M470,633 V689" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="476" y="647" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">1</text>
+<text x="476" y="683" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">*</text>
+<path d="M670,755 H720" fill="none" stroke="#57606a" stroke-width="1.3" stroke-dasharray="5 4"/>
+<text x="676" y="750" font-size="11" font-weight="700" fill="#57606a" text-anchor="start">*</text>
+<text x="714" y="750" font-size="11" font-weight="700" fill="#57606a" text-anchor="end">1</text>
+<text x="695.0" y="770" font-size="10" fill="#57606a" text-anchor="middle">settle</text>
+<rect x="20" y="128" width="280" height="144" rx="8" fill="#ffffff" stroke="#1f6feb" stroke-width="1.4"/>
+<path d="M20,158 V136 a8,8 0 0 1 8,-8 H292 a8,8 0 0 1 8,8 V158 Z" fill="#eef4ff" stroke="#1f6feb" stroke-width="1.4"/>
+<text x="32" y="148" font-weight="700" font-size="13" fill="#0b3d91">customers</text>
+<rect x="260" y="136" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="275.0" y="147" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="30" y="168" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="43" y="178" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="64" y="178" fill="#24292f">(shop_id, id)</text>
+<rect x="30" y="185" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="43" y="195" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text>
+<text x="64" y="195" fill="#24292f">(shop_id, email)<tspan dx="8" fill="#57606a">lower-case</tspan></text>
+<text x="64" y="212" fill="#24292f">display_name</text>
+<text x="64" y="229" fill="#24292f">first_seen_at · last_seen_at</text>
+<text x="64" y="246" font-size="11" fill="#57606a">same address at two shops</text>
+<text x="64" y="263" font-size="11" fill="#57606a">= two customers</text>
+<rect x="350" y="128" width="320" height="195" rx="8" fill="#ffffff" stroke="#1f6feb" stroke-width="1.4"/>
+<path d="M350,158 V136 a8,8 0 0 1 8,-8 H662 a8,8 0 0 1 8,8 V158 Z" fill="#eef4ff" stroke="#1f6feb" stroke-width="1.4"/>
+<text x="362" y="148" font-weight="700" font-size="13" fill="#0b3d91">conversations</text>
+<rect x="630" y="136" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="645.0" y="147" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="360" y="168" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="373" y="178" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="394" y="178" fill="#24292f">(shop_id, id)</text>
+<rect x="360" y="185" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="373" y="195" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text>
+<text x="394" y="195" fill="#24292f">(shop_id, reply_token)<tspan dx="8" fill="#57606a">unguessable</tspan></text>
+<rect x="360" y="202" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="373" y="212" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="394" y="212" fill="#24292f">customer_id → customers<tspan dx="8" fill="#57606a">optional</tspan></text>
+<rect x="360" y="219" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="229" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="229" fill="#24292f">follow_ups_asked 0–1<tspan dx="8" fill="#57606a">one question max</tspan></text>
+<rect x="360" y="236" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="246" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="246" fill="#24292f">state · state_reason<tspan dx="8" fill="#57606a">8 values</tspan></text>
+<text x="394" y="263" font-size="11" fill="#57606a">processing · awaiting_customer</text>
+<text x="394" y="280" font-size="11" fill="#57606a">work_order_created · answered</text>
+<text x="394" y="297" font-size="11" fill="#57606a">needs_staff · redirected · closed …</text>
+<text x="394" y="314" fill="#24292f">channel · sender · customer_name</text>
+<rect x="720" y="128" width="320" height="280" rx="8" fill="#ffffff" stroke="#1a7f37" stroke-width="1.4"/>
+<path d="M720,158 V136 a8,8 0 0 1 8,-8 H1032 a8,8 0 0 1 8,8 V158 Z" fill="#eefbf1" stroke="#1a7f37" stroke-width="1.4"/>
+<text x="732" y="148" font-weight="700" font-size="13" fill="#0f5323">work_orders</text>
+<rect x="1000" y="136" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="1015.0" y="147" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="730" y="168" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="743" y="178" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="764" y="178" fill="#24292f">(shop_id, id)</text>
+<rect x="730" y="185" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="743" y="195" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text>
+<text x="764" y="195" fill="#24292f">(shop_id, conversation_id)</text>
+<text x="764" y="212" font-size="11" fill="#57606a">one per conversation</text>
+<rect x="730" y="219" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="743" y="229" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="764" y="229" fill="#24292f">conversation_id → conversations</text>
+<rect x="730" y="236" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="743" y="246" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="764" y="246" fill="#24292f">source_message_id → inbound_messages</text>
+<rect x="730" y="253" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="743" y="263" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="764" y="263" fill="#24292f">bike_count 1–5 · urgency · status</text>
+<text x="764" y="280" fill="#24292f">bike_type · brake_type · issues (jsonb)</text>
+<rect x="730" y="287" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="743" y="297" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="764" y="297" fill="#24292f">requested_earliest ≤ requested_latest</text>
+<text x="764" y="314" fill="#24292f">requested_time_of_day · time · phrase</text>
+<rect x="730" y="321" width="26" height="14" rx="3" fill="#ffebe9" stroke="#ff8182" stroke-width="0.8"/><text x="743" y="331" text-anchor="middle" font-size="9" font-weight="700" fill="#cf222e">TG</text>
+<text x="764" y="331" fill="#24292f">estimate_cents = Σ line totals</text>
+<text x="764" y="348" font-size="11" fill="#57606a">deferred trigger</text>
+<text x="764" y="365" fill="#24292f">review_reasons[] · notes_for_staff</text>
+<text x="764" y="382" fill="#24292f">extraction (jsonb)<tspan dx="8" fill="#57606a">validated AI output</tspan></text>
+<text x="764" y="399" fill="#24292f">catalog_version · prompt_version · model</text>
+<rect x="1090" y="128" width="280" height="161" rx="8" fill="#ffffff" stroke="#1a7f37" stroke-width="1.4"/>
+<path d="M1090,158 V136 a8,8 0 0 1 8,-8 H1362 a8,8 0 0 1 8,8 V158 Z" fill="#eefbf1" stroke="#1a7f37" stroke-width="1.4"/>
+<text x="1102" y="148" font-weight="700" font-size="13" fill="#0f5323">work_order_lines</text>
+<rect x="1330" y="136" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="1345.0" y="147" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="1100" y="168" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="1113" y="178" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="1134" y="178" fill="#24292f">(shop_id, work_order_id, line_no)</text>
+<rect x="1100" y="185" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="1113" y="195" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="1134" y="195" fill="#24292f">work_order_id → work_orders</text>
+<text x="1134" y="212" fill="#24292f">service_code · service_name · wheel</text>
+<rect x="1100" y="219" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="1113" y="229" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="1134" y="229" fill="#24292f">quantity 1–10</text>
+<text x="1134" y="246" fill="#24292f">unit_price_cents<tspan dx="8" fill="#57606a">price snapshot</tspan></text>
+<rect x="1100" y="253" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="1113" y="263" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="1134" y="263" fill="#24292f">line_total = unit × quantity</text>
+<text x="1134" y="280" fill="#24292f">requires_inspection</text>
+<rect x="20" y="346" width="280" height="178" rx="8" fill="#ffffff" stroke="#1f6feb" stroke-width="1.4"/>
+<path d="M20,376 V354 a8,8 0 0 1 8,-8 H292 a8,8 0 0 1 8,8 V376 Z" fill="#eef4ff" stroke="#1f6feb" stroke-width="1.4"/>
+<text x="32" y="366" font-weight="700" font-size="13" fill="#0b3d91">outbound_messages<tspan dx="6" font-weight="400" font-size="11.5" fill="#57606a">outbox</tspan></text>
+<rect x="260" y="354" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="275.0" y="365" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="30" y="386" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="43" y="396" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="64" y="396" fill="#24292f">(shop_id, id)</text>
+<rect x="30" y="403" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="43" y="413" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text>
+<text x="64" y="413" fill="#24292f">(shop_id, dedupe_key)<tspan dx="8" fill="#57606a">sent once</tspan></text>
+<rect x="30" y="420" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="43" y="430" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="64" y="430" fill="#24292f">conversation_id → conversations</text>
+<rect x="30" y="437" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="43" y="447" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="64" y="447" fill="#24292f">kind</text>
+<text x="64" y="464" font-size="11" fill="#57606a">ack · follow_up · summary</text>
+<text x="64" y="481" font-size="11" fill="#57606a">price_quote · cancellation_ack</text>
+<text x="64" y="498" font-size="11" fill="#57606a">redirect · handoff · staff_reply</text>
+<text x="64" y="515" fill="#24292f">body</text>
+<rect x="350" y="438" width="320" height="195" rx="8" fill="#ffffff" stroke="#1f6feb" stroke-width="1.4"/>
+<path d="M350,468 V446 a8,8 0 0 1 8,-8 H662 a8,8 0 0 1 8,8 V468 Z" fill="#eef4ff" stroke="#1f6feb" stroke-width="1.4"/>
+<text x="362" y="458" font-weight="700" font-size="13" fill="#0b3d91">inbound_messages</text>
+<rect x="630" y="446" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="645.0" y="457" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="360" y="478" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="373" y="488" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="394" y="488" fill="#24292f">(shop_id, id)</text>
+<rect x="360" y="495" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="373" y="505" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text>
+<text x="394" y="505" fill="#24292f">(shop_id, external_id)<tspan dx="8" fill="#57606a">idempotency key</tspan></text>
+<rect x="360" y="512" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="373" y="522" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="394" y="522" fill="#24292f">conversation_id → conversations</text>
+<rect x="360" y="529" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="539" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="539" fill="#24292f">body 1–10,000 chars · body_sha256</text>
+<rect x="360" y="546" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="556" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="556" fill="#24292f">status · outcome</text>
+<text x="394" y="573" font-size="11" fill="#57606a">queued, then processed · held_budget</text>
+<text x="394" y="590" font-size="11" fill="#57606a">or needs_staff</text>
+<text x="394" y="607" fill="#24292f">duplicate_deliveries<tspan dx="8" fill="#57606a">+1 per repeat</tspan></text>
+<text x="394" y="624" fill="#24292f">received_at · channel · sender</text>
+<rect x="1090" y="345" width="280" height="246" rx="8" fill="#ffffff" stroke="#8c959f" stroke-width="1.4"/>
+<path d="M1090,375 V353 a8,8 0 0 1 8,-8 H1362 a8,8 0 0 1 8,8 V375 Z" fill="#f6f8fa" stroke="#8c959f" stroke-width="1.4"/>
+<text x="1102" y="365" font-weight="700" font-size="13" fill="#24292f">jobs<tspan dx="6" font-weight="400" font-size="11.5" fill="#57606a">queue</tspan></text>
+<rect x="1314" y="353" width="46" height="15" rx="7.5" fill="#ffffff" stroke="#8c959f"/><text x="1337.0" y="364" text-anchor="middle" font-size="9.5" font-weight="700" fill="#57606a">no RLS</text>
+<rect x="1100" y="385" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="1113" y="395" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="1134" y="395" fill="#24292f">id (bigserial)</text>
+<rect x="1100" y="402" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="1113" y="412" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text>
+<text x="1134" y="412" fill="#24292f">(shop_id, message_id)</text>
+<text x="1134" y="429" font-size="11" fill="#57606a">one per message</text>
+<rect x="1100" y="436" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="1113" y="446" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="1134" y="446" fill="#24292f">message_id → inbound_messages</text>
+<rect x="1100" y="453" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="1113" y="463" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="1134" y="463" fill="#24292f">status</text>
+<text x="1134" y="480" font-size="11" fill="#57606a">queued · running · done · parked · dead</text>
+<text x="1134" y="497" fill="#24292f">attempts · run_after</text>
+<text x="1134" y="514" fill="#24292f">lease_token · locked_until<tspan dx="8" fill="#57606a">lease</tspan></text>
+<text x="1134" y="531" fill="#24292f">sla_started_at · park_reason</text>
+<text x="1134" y="548" fill="#24292f">last_error</text>
+<text x="1134" y="565" font-size="11" fill="#57606a">ids only, no customer text: the</text>
+<text x="1134" y="582" font-size="11" fill="#57606a">worker scans it across shops</text>
+<rect x="350" y="689" width="320" height="263" rx="8" fill="#ffffff" stroke="#bf8700" stroke-width="1.4"/>
+<path d="M350,719 V697 a8,8 0 0 1 8,-8 H662 a8,8 0 0 1 8,8 V719 Z" fill="#fff8e5" stroke="#bf8700" stroke-width="1.4"/>
+<text x="362" y="709" font-weight="700" font-size="13" fill="#6c4400">llm_calls</text>
+<rect x="630" y="697" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="645.0" y="708" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="360" y="729" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="373" y="739" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="394" y="739" fill="#24292f">(shop_id, id)</text>
+<rect x="360" y="746" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="373" y="756" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text>
+<text x="394" y="756" fill="#24292f">message_id → inbound_messages</text>
+<text x="394" y="773" fill="#24292f">job_id<tspan dx="8" fill="#57606a">no FK</tspan></text>
+<rect x="360" y="780" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="790" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="790" fill="#24292f">purpose<tspan dx="8" fill="#57606a">extract · repair</tspan></text>
+<rect x="360" y="797" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="807" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="807" fill="#24292f">status</text>
+<text x="394" y="824" font-size="11" fill="#57606a">reserved → ok / invalid_output /</text>
+<text x="394" y="841" font-size="11" fill="#57606a">transient_error / permanent_error /</text>
+<text x="394" y="858" font-size="11" fill="#57606a">refused / timeout_unknown / expired</text>
+<rect x="360" y="865" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="373" y="875" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="394" y="875" fill="#24292f">reserved_usd · cost_usd</text>
+<text x="394" y="892" fill="#24292f">provider · model · month</text>
+<text x="394" y="909" fill="#24292f">input / output / cache tokens · latency_ms</text>
+<text x="394" y="926" fill="#24292f">raw_output<tspan dx="8" fill="#57606a">kept only when rejected</tspan></text>
+<text x="394" y="943" fill="#24292f">request_id · error</text>
+<rect x="720" y="729" width="320" height="127" rx="8" fill="#ffffff" stroke="#bf8700" stroke-width="1.4"/>
+<path d="M720,759 V737 a8,8 0 0 1 8,-8 H1032 a8,8 0 0 1 8,8 V759 Z" fill="#fff8e5" stroke="#bf8700" stroke-width="1.4"/>
+<text x="732" y="749" font-weight="700" font-size="13" fill="#6c4400">shop_spend</text>
+<rect x="1000" y="737" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="1015.0" y="748" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="730" y="769" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="743" y="779" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="764" y="779" fill="#24292f">(shop_id, month)</text>
+<rect x="730" y="786" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="743" y="796" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text>
+<text x="764" y="796" fill="#24292f">cap_usd · spent_usd · reserved_usd<tspan dx="8" fill="#57606a">≥ 0</tspan></text>
+<text x="764" y="813" fill="#24292f">warned_at (80%) · exhausted_at</text>
+<text x="764" y="830" font-size="11" fill="#57606a">a call is reserved only if</text>
+<text x="764" y="847" font-size="11" fill="#57606a">spent + reserved + worst case ≤ cap</text>
+<rect x="20" y="580" width="280" height="144" rx="8" fill="#ffffff" stroke="#8c959f" stroke-width="1.4"/>
+<path d="M20,610 V588 a8,8 0 0 1 8,-8 H292 a8,8 0 0 1 8,8 V610 Z" fill="#f6f8fa" stroke="#8c959f" stroke-width="1.4"/>
+<text x="32" y="600" font-weight="700" font-size="13" fill="#24292f">events<tspan dx="6" font-weight="400" font-size="11.5" fill="#57606a">timeline</tspan></text>
+<rect x="260" y="588" width="30" height="15" rx="7.5" fill="#1f6feb" stroke="#1f6feb"/><text x="275.0" y="599" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">RLS</text>
+<rect x="30" y="620" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="43" y="630" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text>
+<text x="64" y="630" fill="#24292f">(shop_id, id)</text>
+<text x="64" y="647" fill="#24292f">conversation_id · message_id<tspan dx="8" fill="#57606a">no FK</tspan></text>
+<text x="64" y="664" fill="#24292f">type · detail (jsonb)</text>
+<text x="64" y="681" font-size="11" fill="#57606a">received · duplicate_delivery ·</text>
+<text x="64" y="698" font-size="11" fill="#57606a">llm_call · validation_failed ·</text>
+<text x="64" y="715" font-size="11" fill="#57606a">escalated · work_order_created …</text>
+<rect x="1090" y="631" width="280" height="280" rx="8" fill="#f6f8fa" stroke="#d0d7de"/>
+<text x="1102" y="651" font-weight="700" fill="#24292f">Key</text>
+<rect x="1102" y="665" width="26" height="14" rx="3" fill="#fff8c5" stroke="#d4a72c" stroke-width="0.8"/><text x="1115" y="675.5" text-anchor="middle" font-size="9" font-weight="700" fill="#7d4e00">PK</text><text x="1136" y="676" font-size="11.5" fill="#24292f">primary key</text>
+<rect x="1102" y="684" width="26" height="14" rx="3" fill="#ddf4ff" stroke="#54aeff" stroke-width="0.8"/><text x="1115" y="694.5" text-anchor="middle" font-size="9" font-weight="700" fill="#0969da">FK</text><text x="1136" y="695" font-size="11.5" fill="#24292f">foreign key (includes shop_id)</text>
+<rect x="1102" y="703" width="26" height="14" rx="3" fill="#fbefff" stroke="#c297ff" stroke-width="0.8"/><text x="1115" y="713.5" text-anchor="middle" font-size="9" font-weight="700" fill="#8250df">UQ</text><text x="1136" y="714" font-size="11.5" fill="#24292f">unique: duplicates stop here</text>
+<rect x="1102" y="722" width="26" height="14" rx="3" fill="#dafbe1" stroke="#4ac26b" stroke-width="0.8"/><text x="1115" y="732.5" text-anchor="middle" font-size="9" font-weight="700" fill="#1a7f37">CK</text><text x="1136" y="733" font-size="11.5" fill="#24292f">CHECK constraint</text>
+<rect x="1102" y="741" width="26" height="14" rx="3" fill="#ffebe9" stroke="#ff8182" stroke-width="0.8"/><text x="1115" y="751.5" text-anchor="middle" font-size="9" font-weight="700" fill="#cf222e">TG</text><text x="1136" y="752" font-size="11.5" fill="#24292f">trigger</text>
+<path d="M1102,774 H1128" fill="none" stroke="#57606a" stroke-width="1.3"/>
+<text x="1136" y="778" font-size="11.5" fill="#24292f">foreign key</text>
+<path d="M1102,793 H1128" fill="none" stroke="#57606a" stroke-width="1.3" stroke-dasharray="5 4"/>
+<text x="1136" y="797" font-size="11.5" fill="#24292f">logical link, no FK</text>
+<text x="1102" y="818" font-size="11.5" fill="#24292f">1 · 0..1 · 1..* · * = how many rows</text>
+<rect x="1102" y="834" width="26" height="14" rx="3" fill="#eef4ff" stroke="#1f6feb" stroke-width="1.2"/><text x="1136" y="845" font-size="11.5" fill="#24292f">intake and conversation</text>
+<rect x="1102" y="853" width="26" height="14" rx="3" fill="#eefbf1" stroke="#1a7f37" stroke-width="1.2"/><text x="1136" y="864" font-size="11.5" fill="#24292f">work orders</text>
+<rect x="1102" y="872" width="26" height="14" rx="3" fill="#fff8e5" stroke="#bf8700" stroke-width="1.2"/><text x="1136" y="883" font-size="11.5" fill="#24292f">AI calls and spend</text>
+<rect x="1102" y="891" width="26" height="14" rx="3" fill="#f6f8fa" stroke="#8c959f" stroke-width="1.2"/><text x="1136" y="902" font-size="11.5" fill="#24292f">queue, timeline, reference</text>
+<rect x="20" y="978" width="1350" height="62" rx="8" fill="#eef4ff" stroke="#1f6feb"/>
+<text x="34" y="1000" fill="#24292f"><tspan font-weight="700" fill="#0b3d91">Tenancy is in the schema.</tspan> Every other table has shop_id NOT NULL → shops.id. Every foreign key includes shop_id (so does every primary key except jobs'), so a row in one shop cannot point at a row in another.</text>
+<text x="34" y="1020" fill="#24292f">Row-level security is FORCEd on the 9 tables marked RLS: a row is visible only when shop_id = app.current_shop, set per transaction (none set → no rows). The app role is not a superuser, has no BYPASSRLS and no DELETE.</text>
+</svg>
