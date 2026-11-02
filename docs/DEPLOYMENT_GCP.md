@@ -11,7 +11,7 @@ This Terraform has been applied for real, to a dedicated project created for it,
 | Project | `riverbend-wo-ac52e3` (us-central1) |
 | Staff console | https://riverbend-console-wndzwkly3a-uc.a.run.app |
 | API | https://riverbend-api-wndzwkly3a-uc.a.run.app (`/readyz`, `/docs`) |
-| Model | the offline stand-in. Claude on Vertex AI answers, but a new project has **zero Claude quota** until Google approves an increase. Then set `llm_provider = "vertex"` and re-apply. |
+| Model | **Gemini 3.8 Flash on Vertex AI** (`llm_provider = "gemini"`), a real model, called by the worker's service account. Claude on Vertex is wired up but the project has **zero Claude quota** until Google approves an increase; then set `llm_provider = "vertex"`, drop `llm_model`, and re-apply. See [D19](DECISIONS.md#d19-gemini-runs-on-vertex-while-the-project-has-no-claude-quota). |
 
 **What was verified on the live deployment:**
 - `terraform validate` against the provider schemas, then three `apply` runs (66 resources).
@@ -22,6 +22,7 @@ This Terraform has been applied for real, to a dedicated project created for it,
 - Another shop's token gets `404`.
 - Dev routes return `404` in production.
 - The console serves its security headers and live config.
+- **The real model, live** (`633b6d3`): a Spanish message sent through the public API ("los frenos … chirrían mucho y la cadena salta al cambiar … el jueves por la tarde") became a work order in one Gemini call (4 s, $0.008): brake adjustment on both wheels plus a gear adjustment, mountain bike, Thu 5 Nov afternoon, flagged `customer_language_es`. The keyword stand-in could not have read it. No warnings in the logs after the rollout.
 
 **Signing in to the console.** Each shop has its own staff token in Secret Manager:
 ```bash
@@ -32,8 +33,10 @@ That prints `{"<token>": "<shop>", …}`. Paste the output into the console's si
 **What the first real deployment caught** (each is now fixed in this repo):
 1. **Cloud Run rejects always-on CPU with under 512 MiB of memory.** When no CPU mode is set, the provider defaults to always-on, so the console (256 MiB) failed to create. Fix: `cpu_idle = true` set explicitly on the API and the console. It is also cheaper for services that scale to zero.
 2. **Default service accounts got no permissions**, because this organisation enforces `iam.automaticIamGrantsForDefaultServiceAccounts`. Builds now run as a dedicated `riverbend-build` account with exactly three roles.
-3. **No Claude quota in a new Vertex project** (HTTP 429 on the first call). The app's own outage handling would have sent every message to staff, so the deployment runs the stand-in until quota is granted.
+3. **No Claude quota in a new Vertex project** (HTTP 429 on every Claude model in `global`; the regional endpoints answer 404). The app's own outage handling would have sent every message to staff, so the deployment first ran the stand-in, and now runs Gemini on Vertex, which has default quota.
 4. **The second migration run failed on Cloud SQL.** Re-asserting the app role with `ALTER ROLE riverbend_app … NOSUPERUSER NOBYPASSRLS` is refused there: the migration user isn't a superuser, and Postgres won't let a non-superuser even mention those flags. The first run had only *created* the role, and locally the owner is a superuser, so nothing caught it before. Migration `004` had committed; only the grants step after it failed. Fix: the role is now altered for login and password only, and the job checks `pg_roles` and fails loudly if the role can ever bypass row-level security.
+
+5. **Slow Gemini calls end at Google, not in our client.** The SDK sends our 45 s timeout as `X-Server-Timeout`, so a slow call comes back as `504 DEADLINE_EXCEEDED` after ~42 s rather than as a client timeout. In the first real eval, 5 of 46 calls did this (median latency was 4.6 s); the queue retried each one and every message still got the right outcome. Fix: a 504 is now booked like a client timeout, at the reserved worst case, because the model may have run.
 
 **Tear it all down** (deletion protection is off for this demo):
 ```bash
@@ -50,7 +53,7 @@ gcloud projects delete riverbend-wo-ac52e3
 | Queue consumers | **Cloud Run** service `riverbend-worker`, min = max = 2, **CPU always allocated**, internal ingress | Pull-based workers need CPU between requests. A tiny `/healthz` lets them run as a normal service. Two instances give overlap during deploys, and SKIP LOCKED makes that safe. | Cloud Run *worker pools* (the better fit; adopt once in our provider version), a GCE managed instance group |
 | Migrations | **Cloud Run job** `riverbend-migrate` | One-off, same image, executed by CI *before* traffic shifts. The checksum guard refuses edited migrations. | Running migrations on app start (races between instances) |
 | Data, queue, spend ledger | **Cloud SQL for PostgreSQL 16** | RLS, `FOR UPDATE SKIP LOCKED`, transactional DDL, PITR backups, managed. Reached via the Cloud SQL connector (IAM + TLS, no authorised networks). | AlloyDB (later, for scale), Firestore (no RLS, no multi-row transactions of this shape) |
-| The model | **Claude on Vertex AI** | **No API key exists anywhere**: only the worker's service account has `roles/aiplatform.user`. Spend shows on the GCP invoice, quotas are per project, and traffic stays in Google's network. | Anthropic API key in Secret Manager (supported with `LLM_PROVIDER=anthropic`; it also unlocks server-side refusal fallback, which Vertex lacks) |
+| The model | **Claude on Vertex AI** (live: **Gemini on Vertex AI** until Claude quota is granted) | **No API key exists anywhere**: only the worker's service account has `roles/aiplatform.user`, which covers both. Spend shows on the GCP invoice, quotas are per project, and traffic stays in Google's network. | Anthropic API key in Secret Manager (supported with `LLM_PROVIDER=anthropic`; it also unlocks server-side refusal fallback, which Vertex lacks) |
 | Secrets and config | **Secret Manager** → env vars | Per-secret IAM: the API cannot read the owner DSN; only the migrate job can. Rotation means a new version, picked up at next instance start. | Env vars in Terraform state only |
 | Images | **Artifact Registry** + **Cloud Build** | Native and IAM-integrated. The pipeline runs tests → build → push → migrate → deploy. | GitHub Actions with Workload Identity Federation (equally good) |
 | Alerting | **Cloud Logging** metrics + **Cloud Monitoring** alerts | Alerts on: shop hit its cap, escalations because the AI is unavailable, invalid model output, permanent provider errors. | — |
@@ -65,6 +68,7 @@ The tenancy and failure boundaries carry over into IAM:
 ```bash
 # 0. Once: project, billing, a private versioned bucket for Terraform state.
 #    In the Vertex AI Model Garden, enable the Claude model for the project (terms + quota).
+#    Until Claude quota is granted, llm_provider = "gemini" + llm_model = "gemini-3.8-flash" works out of the box.
 cd infra/terraform
 cp terraform.tfvars.example terraform.tfvars      # project_id, region, alert_email, image
 
@@ -116,7 +120,8 @@ The live demo uses `db-f1-micro`, one worker and `api_max_instances = 3`: about 
 | Cloud SQL, 1 vCPU / 3.75 GB, zonal, 10 GB SSD + backups | ~$55 | HA (`REGIONAL`) roughly doubles it |
 | 2 always-on workers, 1 vCPU / 512 MiB | ~$90–100 | The largest line. One worker at 0.5 vCPU is ~$25 and is enough for three shops. |
 | API, console, Secret Manager, Artifact Registry, logging | < $10 | Both services scale to zero |
-| Claude on Vertex | ~$0.02 per message on Opus 5.5 (simulated estimate; confirm with `make eval-live`) | ~1,000 messages a month ≈ $20. Haiku 5.5 would be ~40× cheaper if the eval holds up. |
+| Gemini 3.8 Flash on Vertex (live) | **~$0.0075 per message, measured** (`make eval-gemini`: $0.31 for 41 messages at the 2027 rate) | ~1,000 messages a month ≈ $7.50, about half that until 2027. |
+| Claude on Vertex (once quota is granted) | ~$0.02 per message on Opus 5.5 (simulated estimate; confirm with `make eval-live`) | ~1,000 messages a month ≈ $20. Haiku 5.5 would be ~40× cheaper if the eval holds up. |
 
 For three shops the fixed cost (always-on workers + Cloud SQL) dominates, not the model. That is the main argument *against* decision 1 in the architecture note. A push model (Cloud Tasks → Cloud Run, scale to zero) would cut ~$80/month at the price of a second moving part.
 

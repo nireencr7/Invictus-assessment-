@@ -34,7 +34,7 @@ make dev        # throwaway local Postgres + API with an embedded worker on :800
 make console    # the staff console on http://localhost:5173 (proxies /v1 to :8000)
 ```
 
-The provider defaults to an **offline stand-in**: hand-written outputs, $0, deterministic, clearly labelled as not a model. To use Claude, put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY=…` in `.env`. Never commit it; `.env` is git-ignored.
+The provider defaults to an **offline stand-in**: hand-written outputs, $0, deterministic, clearly labelled as not a model. To use Claude, put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY=…` in `.env`. Never commit it; `.env` is git-ignored. To use Gemini on Vertex AI with your own `gcloud` login (no key), set `LLM_PROVIDER=gemini`, `LLM_MODEL=gemini-3.8-flash` and `VERTEX_PROJECT=<your project>`. The live deployment runs Gemini until its Claude quota is granted ([D19](docs/DECISIONS.md#d19-gemini-runs-on-vertex-while-the-project-has-no-claude-quota)).
 
 Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. The Docker images are proven by the GCP deployment (Cloud Build); `make up` itself wasn't run on the build machine, which has no Docker.
 
@@ -101,14 +101,16 @@ From [`docs/RESULTS.md`](docs/RESULTS.md), baseline run:
 |---|---|---|---|---|---|---|---|
 | 37 | 2 | 1 | 1 | 1 | 0 | 3 (all repaired) | **$0.75, simulated** |
 
-> ⚠️ This table comes from the **offline stand-in**, not a model: no API key was available while building. It proves the plumbing, not the model. `make eval-live` reruns everything against Claude and rewrites `RESULTS.md` with real spend, roughly $1–3.
+> ⚠️ This table comes from the **offline stand-in**, not a model. It proves the plumbing, not the model.
+
+**On a real model** ([`docs/RESULTS_GEMINI.md`](docs/RESULTS_GEMINI.md), Gemini 3.8 Flash on Vertex AI, `make eval-gemini`): the same 37 work orders, 2 follow-ups, 1 quote and 1 cancellation, with 0 failures to staff. It agrees with the golden labels on every check: 39/39 outcomes, 37/37 service sets, 35/35 estimates, 37/37 date windows. The prompt was written for Claude and was not changed. Spend was $0.31 for 46 calls, booked at the 2027 rate; the invoice is about half that until then. Five calls ran into Google's server deadline and the queue retried them. `make eval-live` does the same against Claude once a key or Vertex quota exists.
 
 Under 30% injected provider failures, every outcome matches the baseline, with no duplicates. At the cap, messages are held, then released. In a full outage, all 39 messages are acknowledged, $0 is spent, every one is handed to staff, and all recover on retry.
 
 ## How it works
 
 - **Intake** stores message + conversation + acknowledgement + job in one transaction and returns `202`. It never waits on the model.
-- **Workers** claim jobs from Postgres (`SKIP LOCKED`, leases), reserve worst-case budget, call Claude with a strict JSON schema, validate shape *and* meaning, let a pure `policy` function decide, and commit the result with the job's completion.
+- **Workers** claim jobs from Postgres (`SKIP LOCKED`, leases), reserve worst-case budget, call the model (Claude, or Gemini on the live deployment) with a strict JSON schema, validate shape *and* meaning, let a pure `policy` function decide, and commit the result with the job's completion.
 - **Tenancy** is enforced three times: composite keys, row-level security, and per-shop credentials.
 - See the [architecture note](docs/ARCHITECTURE.md) for the diagram, boundaries, data model and the three decisions most worth challenging.
 
@@ -123,7 +125,7 @@ src/riverbend/
   api.py, intake.py        HTTP, auth, idempotent intake
   jobqueue.py, worker.py   Postgres queue: claim/lease/retry/park/dead-letter
   pipeline.py              one message end to end
-  llm/                     provider port, Anthropic/Vertex adapter, offline stand-in, breaker, fault injection, pricing
+  llm/                     provider port, Claude adapter (Anthropic/Vertex), Gemini adapter, offline stand-in, breaker, fault injection, pricing
   extraction/              model contract: schema, prompt, validation (incl. grounding), date resolution
   policy.py                pure decision function
   catalog.py, budget.py    money in cents; per-shop monthly spend cap
