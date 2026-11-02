@@ -128,4 +128,6 @@ def ensure_app_role(conn: psycopg.Connection, app_password: str) -> None:
     )
     # Append-only from the app's point of view.
     conn.execute("GRANT SELECT, INSERT ON outbound_messages, work_order_lines, events TO riverbend_app")
+    # Staff sign-in. Not tenant data (see 006_staff_accounts.sql); still no DELETE.
+    conn.execute("GRANT SELECT, INSERT, UPDATE ON staff_accounts, staff_sessions TO riverbend_app")
     conn.execute("GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO riverbend_app")

@@ -8,7 +8,7 @@
 
 | Module | Owns | Must not |
 |---|---|---|
-| `api`, `intake` | auth, HTTP validation, idempotent accept | call the model; touch a second tenant |
+| `api`, `intake`, `staff_auth` | auth and staff sign-in, HTTP validation, idempotent accept | call the model; touch a second tenant; store a password or token |
 | `ui/` (separate app) | the staff console: read views + staff actions, via its own `/v1` proxy | hold secrets; compute prices or dates |
 | `jobqueue`, `worker` | claim (SKIP LOCKED + lease), retry, park, dead-letter | know any business rule |
 | `pipeline` | orchestrating one message | price, compute dates or make policy itself |
@@ -25,13 +25,13 @@ What crosses each line is narrow: the pipeline hands the port an `LLMRequest` an
 
 ![Database schema](schema.svg)
 
-`customers` (one per email address per shop, `UNIQUE(shop_id, email)`) → `conversations` (state, `follow_ups_asked CHECK ≤ 1`, unguessable `reply_token`) → `inbound_messages` (`UNIQUE(shop_id, external_id)` is the idempotency key) → `work_orders` (`UNIQUE(shop_id, conversation_id)`, requested window, urgency, review flags, the validated extraction for audit, `catalog_version`, `prompt_version`, `model`) → `work_order_lines` (unit price snapshot, `CHECK line_total = unit × qty`; a deferred trigger rejects any order whose estimate ≠ Σ lines). `outbound_messages` is the customer outbox (dedupe key per send). `llm_calls` is one row per call, failures included, with tokens, cost and the raw output when it was rejected. `shop_spend` holds cap, spent and reserved per shop-month. `events` is the timeline. `jobs` holds ids only.
+`customers` (one per email address per shop, `UNIQUE(shop_id, email)`) → `conversations` (state, `follow_ups_asked CHECK ≤ 1`, unguessable `reply_token`) → `inbound_messages` (`UNIQUE(shop_id, external_id)` is the idempotency key) → `work_orders` (`UNIQUE(shop_id, conversation_id)`, requested window, urgency, review flags, the validated extraction for audit, `catalog_version`, `prompt_version`, `model`) → `work_order_lines` (unit price snapshot, `CHECK line_total = unit × qty`; a deferred trigger rejects any order whose estimate ≠ Σ lines). `outbound_messages` is the customer outbox (dedupe key per send). `llm_calls` is one row per call, failures included, with tokens, cost and the raw output when it was rejected. `shop_spend` holds cap, spent and reserved per shop-month. `events` is the timeline. `jobs` holds ids only. `staff_accounts` and `staff_sessions` hold sign-in (password hashes and token hashes only); they're the only tables besides `shops` and `jobs` without a `shop_id`, because sign-in finds the account before it knows the shop.
 
 ## Tenancy isolation: three layers, each sufficient alone
 
 1. **Data model.** Every tenant table has `shop_id NOT NULL`. Every primary key is `(shop_id, id)` and every foreign key is composite, so a Lakeshore line item *cannot* point at a Downtown order, even when written by a superuser.
 2. **Database.** Row-level security is `FORCE`d on all nine tenant tables. Each request or job opens a `tenant_tx(shop)` that sets `app.current_shop` **transaction-locally**, so the setting cannot leak through the connection pool. With no tenant set, every policy matches zero rows: it fails closed. The runtime role has no superuser, no `BYPASSRLS` and no `DELETE`.
-3. **Edge.** Each staff token is bound to one shop. Asking about another shop returns `404`, so the API doesn't even confirm the other shop's data exists. The queue is tenant-blind but holds only ids. The model sees one conversation. A message addressed to another shop is **never moved across tenants**: the customer is asked and pointed to that shop.
+3. **Edge.** Staff sign in with email and password and get a personal session that opens only the shops on their account (a shop's static token opens just that shop). Asking about another shop returns `404`, so the API doesn't even confirm the other shop's data exists. The queue is tenant-blind but holds only ids. The model sees one conversation. A message addressed to another shop is **never moved across tenants**: the customer is asked and pointed to that shop.
 
 `tests/test_tenancy.py` attacks these layers as the real runtime role: a missing WHERE clause, a missing tenant, a wrong-tenant INSERT and UPDATE, pool reuse, and cross-tenant API calls.
 

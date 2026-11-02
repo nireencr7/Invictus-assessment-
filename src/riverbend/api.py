@@ -2,7 +2,9 @@
 
 Three kinds of caller, three credentials:
 - the email gateway / web form backend   -> X-Ingest-Key (scoped to the shops it may post for)
-- shop staff                             -> Bearer token bound to exactly one shop
+- shop staff                             -> Bearer token: a personal session from signing in with
+                                            email and password (opens the account's shops), or a
+                                            shop's static token (one shop; for scripts and tools)
 - the customer                           -> the unguessable reply token in their link
 
 Staff can also send a message as a customer of their own shop (the console's test tool), which
@@ -37,6 +39,20 @@ from riverbend.extraction.dates import DateWindow
 from riverbend.intake import InboundPayload, ingest, parse_sender
 from riverbend.llm.resilience import FaultInjectingProvider, FaultPlan
 from riverbend.services import Services, build_services
+from riverbend.staff_auth import (
+    DEV_ACCOUNTS,
+    DEV_PASSWORD,
+    EMAIL_RE,
+    MIN_PASSWORD,
+    TOKEN_PREFIX,
+    Account,
+    LoginFailed,
+    LoginLocked,
+    StaffAuth,
+    is_uuid,
+    normalize_email,
+    seed_dev_accounts,
+)
 
 log = logging.getLogger(__name__)
 STATIC = Path(__file__).parent / "static"
@@ -104,6 +120,77 @@ class TestMessage(BaseModel):
         return v.strip()
 
 
+def _new_password(v: str) -> str:
+    if len(v) < MIN_PASSWORD:
+        raise ValueError(f"password must be at least {MIN_PASSWORD} characters")
+    return v
+
+
+def _staff_email(v: str) -> str:
+    v = normalize_email(v)
+    if not EMAIL_RE.match(v):
+        raise ValueError("email must be a plain email address, like sam@riverbendcycles.example")
+    return v
+
+
+class LoginRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=1, max_length=200)
+
+
+class PasswordChange(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    current_password: str = Field(min_length=1, max_length=200)
+    new_password: str = Field(max_length=200)
+
+    @field_validator("new_password")
+    @classmethod
+    def _strong_enough(cls, v: str) -> str:
+        return _new_password(v)
+
+
+class StaffAccountCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: str = Field(max_length=254)
+    name: str | None = Field(default=None, max_length=200)
+    password: str = Field(max_length=200)
+    shops: list[str] = Field(min_length=1, max_length=100)
+
+    @field_validator("email")
+    @classmethod
+    def _email(cls, v: str) -> str:
+        return _staff_email(v)
+
+    @field_validator("password")
+    @classmethod
+    def _strong_enough(cls, v: str) -> str:
+        return _new_password(v)
+
+
+class StaffAccountUpdate(BaseModel):
+    """Only the fields given change. A new password or `disabled: true` signs the person out everywhere."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str | None = Field(default=None, max_length=200)
+    password: str | None = Field(default=None, max_length=200)
+    shops: list[str] | None = Field(default=None, min_length=1, max_length=100)
+    disabled: bool | None = None
+
+    @field_validator("password")
+    @classmethod
+    def _strong_enough(cls, v: str | None) -> str | None:
+        return None if v is None else _new_password(v)
+
+
+def _bearer(authorization: str | None) -> str | None:
+    return authorization.removeprefix("Bearer ").strip() if authorization else None
+
+
 def _match(token: str | None, candidates: dict) -> str | None:
     if not token:
         return None
@@ -120,6 +207,8 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
     async def lifespan(app: FastAPI):
         svc = services or build_services(settings)
         app.state.svc = svc
+        if settings.dev_mode:
+            seed_dev_accounts(svc.db, list(svc.catalog.shops))
         worker_thread = None
         if settings.embedded_worker:
             worker = svc.worker()
@@ -142,7 +231,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         app.add_middleware(
             CORSMiddleware,
             allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
-            allow_methods=["GET", "POST", "PUT"],
+            allow_methods=["GET", "POST", "PUT", "PATCH"],
             allow_headers=["Authorization", "Content-Type", "X-Ingest-Key"],
         )
 
@@ -153,15 +242,44 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
         if shop_id not in s.catalog.shops:
             raise HTTPException(404, "not found")
 
-    def staff_shop(shop_id: str, request: Request, authorization: str | None = Header(default=None)) -> str:
-        token = authorization.removeprefix("Bearer ").strip() if authorization else None
+    def auth(request: Request) -> StaffAuth:
+        return StaffAuth(
+            svc(request).db,
+            settings.staff_session_hours,
+            settings.login_max_failures,
+            settings.login_lockout_minutes,
+        )
+
+    def staff_credential(request: Request, authorization: str | None) -> tuple[str | None, Account | None]:
+        """(shop of a static staff token, None) or (None, signed-in account). 401 if neither."""
+        token = _bearer(authorization)
         bound = _match(token, staff_tokens)
-        if bound is None:
-            raise HTTPException(401, "missing or invalid staff token", headers={"WWW-Authenticate": "Bearer"})
-        if bound != shop_id:
+        if bound is not None:
+            return bound, None
+        found = auth(request).account_for(token) if token else None
+        if found is None:
+            raise HTTPException(
+                401, "missing, invalid or expired staff credentials", headers={"WWW-Authenticate": "Bearer"}
+            )
+        return None, found[0]
+
+    def staff_shop(shop_id: str, request: Request, authorization: str | None = Header(default=None)) -> str:
+        bound, account = staff_credential(request, authorization)
+        if shop_id not in ({bound} if account is None else set(account.shops)):
             raise HTTPException(404, "not found")
         known_shop(shop_id, svc(request))
+        # Who did it, for the events staff actions write: the person, or which shop's token.
+        request.state.actor = account.email if account else f"{shop_id} staff token"
         return shop_id
+
+    def shops_json(s: Services, ids) -> list[dict]:
+        return [{"id": i, "name": s.catalog.shops[i].name} for i in ids if i in s.catalog.shops]
+
+    def check_shops(ids: list[str], s: Services) -> list[str]:
+        unknown = sorted(set(ids) - set(s.catalog.shops))
+        if unknown:
+            raise HTTPException(422, f"unknown shop(s): {', '.join(unknown)}")
+        return list(dict.fromkeys(ids))
 
     def require_admin(authorization: str | None = Header(default=None)) -> None:
         token = authorization.removeprefix("Bearer ").strip() if authorization else ""
@@ -250,6 +368,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
     def set_work_order_status(
         work_order_id: str,
         change: StatusChange,
+        request: Request,
         shop_id: str = Depends(staff_shop),
         s: Services = Depends(svc),
     ):
@@ -266,7 +385,9 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
                 (
                     shop_id,
                     row["conversation_id"],
-                    _jsonb({"work_order_id": work_order_id, "status": change.status}),
+                    _jsonb(
+                        {"work_order_id": work_order_id, "status": change.status, "by": request.state.actor}
+                    ),
                 ),
             )
         return {"id": work_order_id, "status": change.status}
@@ -363,6 +484,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
     def staff_reply(
         conversation_id: str,
         reply: StaffReply,
+        request: Request,
         shop_id: str = Depends(staff_shop),
         s: Services = Depends(svc),
     ):
@@ -401,24 +523,77 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
                 conn.execute("UPDATE conversations SET updated_at = now() WHERE id = %s", (conv["id"],))
             conn.execute(
                 "INSERT INTO events (shop_id, conversation_id, type, detail) VALUES (%s, %s, 'staff_replied', %s)",
-                (shop_id, conv["id"], _jsonb({"resolved": resolved, "state": state})),
+                (
+                    shop_id,
+                    conv["id"],
+                    _jsonb({"resolved": resolved, "state": state, "by": request.state.actor}),
+                ),
             )
         return {"sent": True, "duplicate": False, "state": state, "resolved": resolved}
 
     @app.get("/v1/me")
     def me(request: Request, authorization: str | None = Header(default=None)):
-        """Which shop does this staff token belong to? Lets a console sign in with just a token."""
-        token = authorization.removeprefix("Bearer ").strip() if authorization else None
-        shop_id = _match(token, staff_tokens)
-        if shop_id is None:
-            raise HTTPException(401, "missing or invalid staff token", headers={"WWW-Authenticate": "Bearer"})
-        shop = svc(request).catalog.shops[shop_id]
-        return {
-            "shop_id": shop.id,
-            "shop_name": shop.name,
+        """Who is this credential, and which shops does it open? Checked inline: the URL names no shop."""
+        bound, account = staff_credential(request, authorization)
+        s = svc(request)
+        out = {
+            "account": None,
+            "shops": shops_json(s, [bound] if account is None else account.shops),
             "role": "staff",
             "features": {"test_messages": settings.test_messages_enabled},
         }
+        if account is None:
+            # A static token opens one shop; these two fields predate `shops` and are kept for tools.
+            shop = s.catalog.shops[bound]
+            return {"shop_id": shop.id, "shop_name": shop.name, **out}
+        return {**out, "account": {"id": account.id, "email": account.email, "name": account.name}}
+
+    # ------------------------------------------------------------------ staff sign-in
+    @app.post("/v1/auth/login")
+    def login(body: LoginRequest, request: Request):
+        """Email and password in; a personal session token out, used as `Authorization: Bearer <token>`."""
+        try:
+            signed = auth(request).login(body.email, body.password)
+        except LoginLocked as exc:
+            raise HTTPException(
+                429,
+                "Too many failed sign-in attempts. Try again in a few minutes.",
+                headers={"Retry-After": str(exc.retry_after_seconds)},
+            ) from None
+        except LoginFailed:
+            raise HTTPException(401, "Email or password is incorrect.") from None
+        a = signed.account
+        return {
+            "token": signed.token,
+            "token_type": "bearer",
+            "expires_at": signed.expires_at,
+            "account": {"id": a.id, "email": a.email, "name": a.name},
+            "shops": shops_json(svc(request), a.shops),
+            "features": {"test_messages": settings.test_messages_enabled},
+        }
+
+    @app.post("/v1/auth/logout")
+    def logout(request: Request, authorization: str | None = Header(default=None)):
+        """Revokes this session at once. Always succeeds, so signing out twice is harmless."""
+        token = _bearer(authorization)
+        if token and token.startswith(TOKEN_PREFIX):
+            auth(request).logout(token)
+        return {"signed_out": True}
+
+    @app.post("/v1/auth/password")
+    def change_password(
+        body: PasswordChange, request: Request, authorization: str | None = Header(default=None)
+    ):
+        """Change your own password. Every other session of yours is signed out; this one stays."""
+        token = _bearer(authorization) or ""
+        a = auth(request)
+        if a.account_for(token) is None:
+            raise HTTPException(
+                401, "sign in with your email and password first", headers={"WWW-Authenticate": "Bearer"}
+            )
+        if not a.change_password(token, body.current_password, body.new_password):
+            raise HTTPException(400, "Current password is incorrect.")
+        return {"changed": True}
 
     # ------------------------------------------------------------------ customers
     @app.get("/v1/shops/{shop_id}/customers")
@@ -694,6 +869,31 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
     def provider_status(s: Services = Depends(svc)):
         return {"provider": s.provider.name, "model": s.provider.model, "breaker": s.breaker.state}
 
+    @app.get("/v1/admin/staff-accounts", dependencies=[Depends(require_admin)])
+    def list_staff_accounts(request: Request):
+        return {"items": auth(request).list_accounts()}
+
+    @app.post("/v1/admin/staff-accounts", status_code=201, dependencies=[Depends(require_admin)])
+    def create_staff_account(body: StaffAccountCreate, request: Request):
+        """There is no self sign-up: an admin creates each person's account and tells them the password."""
+        shops = check_shops(body.shops, svc(request))
+        created = auth(request).create_account(body.email, body.name, body.password, shops)
+        if created is None:
+            raise HTTPException(409, "an account with that email already exists")
+        return created
+
+    @app.patch("/v1/admin/staff-accounts/{account_id}", dependencies=[Depends(require_admin)])
+    def update_staff_account(account_id: str, body: StaffAccountUpdate, request: Request):
+        if not is_uuid(account_id):
+            raise HTTPException(404, "not found")
+        changes = body.model_dump(exclude_none=True)
+        if "shops" in changes:
+            changes["shops"] = check_shops(changes["shops"], svc(request))
+        updated = auth(request).update_account(account_id, **changes)
+        if updated is None:
+            raise HTTPException(404, "not found")
+        return updated
+
     # ------------------------------------------------------------------ dev dashboard
     if settings.dev_mode:
 
@@ -707,6 +907,8 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
             return {
                 "shops": [{"id": sh.id, "name": sh.name} for sh in s.catalog.shops.values()],
                 "staff_tokens": {v: k for k, v in staff_tokens.items()},
+                "staff_accounts": [{"email": a["email"], "name": a["name"]} for a in DEV_ACCOUNTS],
+                "staff_password": DEV_PASSWORD,
                 "ingest_key": next(iter(ingest_keys), None),
                 "admin_token": settings.admin_token.get_secret_value(),
                 "provider": s.pipeline.provider.name,

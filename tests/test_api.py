@@ -96,6 +96,8 @@ def test_me_identifies_the_tokens_shop(client):
     assert client.get("/v1/me", headers=LAKE).json() == {
         "shop_id": "rb-lakeshore",
         "shop_name": "Riverbend Cycles Lakeshore",
+        "account": None,  # a shop's static token, not a person
+        "shops": [{"id": "rb-lakeshore", "name": "Riverbend Cycles Lakeshore"}],
         "role": "staff",
         "features": {"test_messages": True},  # dev mode; see test_customers for production
     }

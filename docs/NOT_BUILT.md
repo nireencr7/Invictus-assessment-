@@ -9,7 +9,7 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 | **A live-model results table** | `docs/RESULTS.md` comes from the offline stand-in; `make eval-live` regenerates it against Claude | No API key was available while building. The harness, golden labels and scoring are ready; only the run is missing. |
 | **Sending email / web replies** | Every customer message is written to `outbound_messages` (an outbox with dedupe keys) and visible via the customer view | Delivery is plumbing (SendGrid / Gmail API + bounce handling), not architecture |
 | **The email gateway** | Intake assumes a gateway gives `message_id`, body, sender, channel and a reply token (from `Reply-To: reply+<token>@…`). See "How an email reaches the API" in [DEPLOYMENT_GCP.md](DEPLOYMENT_GCP.md) | A small adapter behind an inbound-email service; no product decisions in it |
-| **Real staff identity** | One bearer token per shop, mapped to that shop; the console signs in with it and keeps it in the tab only | IAP / Identity Platform is the production answer; the tenant check is already in one place |
+| **Password reset by email, MFA, SSO** | Staff sign in with email and password ([D20](DECISIONS.md#d20-staff-sign-in-with-email-and-password-the-session-token-is-used-like-a-shop-token)): personal 12-hour sessions, sign-out, password change, lockout after 5 wrong passwords. An admin creates accounts and sets new passwords through the API; there is no admin screen in the console yet | Reset links need the email sender (not built); MFA and Google sign-in are what Identity Platform / IAP would add. The tenant check is in one place (`staff_shop`), so swapping the identity provider changes one function |
 | **Customer identity / CRM** | Customers are identified by email address within one shop (migration `004`), with a full per-customer history in the console. Conversations are still threaded by reply token, and cancellations are still matched by name inside one shop (last 14 days, exactly one match, otherwise staff) | Phone numbers, merging two addresses into one person, and matching cancellations by customer instead of name. The brief's samples carry no sender, so they have no customer |
 | **Scheduling** | A resolved requested *window* (earliest/latest, time of day) on each order | No calendar or capacity model in the brief |
 | **Parts and inventory** | Parts not in the catalog (tubeless tire m-1021, derailleur hanger m-1028) go to `notes_for_staff` | The catalog is services only |
@@ -21,13 +21,13 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 | **Prompt-cache tuning, Batches API** | `cache_control` is set; cache hits are not verified. Budget-held backlog could go through Batches at 50% cost. | Needs live traffic to measure |
 | **Browser tests for the console** | Unit tests on its data layer; checked by hand in live and snapshot modes, at desktop and phone widths, light and dark | Playwright against `make up` is the next step |
 | **Load tests** | Concurrency tests (8 duplicate posts, 30 racing reservations, lease stealing) | Volume is tiny |
-| **Identity-Aware Proxy and a custom domain on the live demo** | The demo is deployed with public Cloud Run URLs and token sign-in | Needs an OAuth consent screen and a domain; first thing to add before real staff use it |
+| **Identity-Aware Proxy and a custom domain on the live demo** | The demo is deployed with public Cloud Run URLs; staff sign in with email and password (or a shop token) | Needs an OAuth consent screen and a domain; first thing to add before real staff use it |
 | **Structured logs / tracing** | Plain logs + an `events` timeline per conversation + log-based alerts | OpenTelemetry is the next step for ops |
 
 ## What I'd build next, in order
 
 1. **Run `make eval-live` on Opus 5.5 *and* Haiku 5.5.** Pick the default model from golden-label agreement versus cost per message. This is a business decision about the spend cap, and it should be made with data.
-2. **Staff auth via IAP/Identity Platform**, with the shop as a claim; per-route authorisation (staff vs. manager vs. HQ).
+2. **Staff identity via Identity Platform / IAP** (password reset, MFA, Google sign-in) with the shops as a claim, an account admin screen in the console, and per-route roles (staff vs. manager vs. HQ). Email-and-password sign-in and per-person sessions exist already.
 3. **Outbox sender** with delivery status; reply-to tokens in the address.
 4. **Fair queueing across tenants**: claim round-robin by shop, cap concurrency per shop, rate-limit intake per shop.
 5. **Customer identity** (email/phone) for threading, cancellations and history.
@@ -38,7 +38,7 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 
 Assume ~30 messages per shop per day: ~3,000/day, peaks of perhaps 30/minute. **Throughput is not the problem** — Postgres-as-queue handles orders of magnitude more. In the order I expect them to hurt:
 
-1. **Staff auth and onboarding.** 100+ hand-rotated tokens in one JSON secret is unmanageable on day one. Needs real identity.
+1. **Staff onboarding and support.** Hundreds of people with accounts that an admin creates by API call, and no self-service password reset, means the admin becomes a help desk. Needs a managed identity provider (reset, MFA, SSO) and an admin screen. Per-person sessions and lockout already exist.
 2. **Noisy neighbours.** The queue is a single global FIFO and there is one provider quota. A spam burst or reply storm at one shop delays all 100. The per-shop caps protect *money*, not *latency*. Fix: fair claim per tenant, intake rate limits, Cloud Armor.
 3. **Database connections.** Every Cloud Run instance opens a pool of up to 10. An autoscaled API plus workers will pass Cloud SQL's `max_connections`. Fix: smaller pools, managed connection pooling or PgBouncer, then AlloyDB.
 4. **The shop list in the prompt.** Wrong-shop detection lists every shop in the system prompt. At 100 shops that's a long prompt and a model-side lookup. Move shop matching into code (name/alias index), and make catalogs tenant-scoped (orders are already version-stamped).

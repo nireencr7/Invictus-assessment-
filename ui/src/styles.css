@@ -82,7 +82,10 @@ code, .mono { font-family: var(--mono); font-size: 0.9em; }
           padding: 10px max(16px, env(safe-area-inset-left, 0px)) 10px max(16px, env(safe-area-inset-right, 0px)); gap: 10px; }
   .nav { flex-direction: row; overflow-x: auto; width: 100%; }
   .nav button { white-space: nowrap; }
-  .rail-foot { display: none; }
+  /* Keep who's signed in and Sign out reachable on a phone: one compact row under the nav. */
+  .rail-foot { margin-top: 0; width: 100%; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 0; }
+  .rail-foot .session-note { display: none; }
+  .rail-foot .who { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .topbar { position: static; }
 }
 
@@ -210,6 +213,12 @@ table.data td.right, table.data th.right { text-align: right; }
 .connect { min-height: 100%; display: grid; place-items: center; padding: 32px max(16px, env(safe-area-inset-left, 0px)); }
 .connect .card { width: min(520px, 100%); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
 .connect h1 { font-size: 26px; }
+.modal { position: fixed; z-index: 21; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(420px, calc(100% - 32px));
+         padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.modal h2 { font-size: 18px; }
+.other-signin { border-top: 1px solid var(--rule); padding-top: 12px; }
+.other-signin summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.other-signin .stack { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
 .divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
 .divider::before, .divider::after { content: ""; flex: 1; border-top: 1px solid var(--rule); }
 

@@ -17,10 +17,18 @@ import { SourceError, type Actions, type DataSource } from "./source";
 /** What a signed-in session holds. Lives in sessionStorage, so it ends with the tab. */
 export interface Session {
   apiBase: string;
-  /** One staff token per shop; each token only ever unlocks its own shop. */
+  /**
+   * The token to use for each shop. Signed in with email and password, every shop carries the same
+   * personal session token; signed in with static tokens, each shop carries its own.
+   */
   shops: { id: string; name: string; token: string }[];
   adminToken?: string;
+  /** Present when signed in with email and password. */
+  account?: { email: string; name: string | null; token: string; expiresAt: string };
 }
+
+/** Fired when the API stops accepting this session's credentials (expired, revoked, disabled). */
+export const SESSION_ENDED = "riverbend:session-ended";
 
 const KEY = "riverbend.session";
 
@@ -61,6 +69,57 @@ async function call<T>(base: string, path: string, init: RequestInit = {}): Prom
     throw new SourceError(detail || `HTTP ${r.status}`, r.status);
   }
   return body as T;
+}
+
+export interface LoginResponse {
+  token: string;
+  expires_at: string;
+  account: { email: string; name: string | null };
+  shops: Shop[];
+}
+
+/** One personal session token opens every shop the account belongs to. */
+export function sessionFromLogin(apiBase: string, r: LoginResponse, adminToken?: string): Session {
+  if (!r.shops.length) throw new SourceError("This account isn't linked to any shop yet. Ask an admin to add one.");
+  return {
+    apiBase,
+    shops: r.shops.map((s) => ({ id: s.id, name: s.name, token: r.token })),
+    adminToken,
+    account: { email: r.account.email, name: r.account.name, token: r.token, expiresAt: r.expires_at },
+  };
+}
+
+/** Sign in with email and password. */
+export async function login(apiBase: string, email: string, password: string, adminToken?: string): Promise<Session> {
+  const r = await call<LoginResponse>(apiBase, "/v1/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  return sessionFromLogin(apiBase, r, adminToken);
+}
+
+/** Revokes the personal session on the server. Static tokens have nothing to revoke. */
+export async function logout(session: Session): Promise<void> {
+  if (!session.account) return;
+  try {
+    await call(session.apiBase, "/v1/auth/logout", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.account.token}` },
+    });
+  } catch {
+    /* already expired or unreachable: the local session is cleared either way */
+  }
+}
+
+/** Every other session of the account is signed out; this one stays. */
+export async function changePassword(session: Session, current: string, next: string): Promise<void> {
+  if (!session.account) throw new SourceError("Only an email sign-in has a password.");
+  await call(session.apiBase, "/v1/auth/password", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${session.account.token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ current_password: current, new_password: next }),
+  });
 }
 
 /** Sign in with a staff token: the API says which shop it belongs to. */
@@ -106,10 +165,10 @@ export class ApiSource implements DataSource {
     const s = session;
     this.actions = {
       retryAi: async (shop, id) => {
-        await call(s.apiBase, `/v1/shops/${shop}/conversations/${id}/retry`, { method: "POST", headers: this.staff(shop) });
+        await this.asStaff(`/v1/shops/${shop}/conversations/${id}/retry`, { method: "POST", headers: this.staff(shop) });
       },
       setWorkOrderStatus: async (shop, id, status) => {
-        await call(s.apiBase, `/v1/shops/${shop}/work-orders/${id}/status`, {
+        await this.asStaff(`/v1/shops/${shop}/work-orders/${id}/status`, {
           method: "POST",
           headers: { ...this.staff(shop), "Content-Type": "application/json" },
           body: JSON.stringify({ status }),
@@ -126,13 +185,13 @@ export class ApiSource implements DataSource {
           }
         : undefined,
       replyToCustomer: (shop, id, body, clientId) =>
-        call<StaffReplyResult>(s.apiBase, `/v1/shops/${shop}/conversations/${id}/reply`, {
+        this.asStaff<StaffReplyResult>(`/v1/shops/${shop}/conversations/${id}/reply`, {
           method: "POST",
           headers: { ...this.staff(shop), "Content-Type": "application/json" },
           body: JSON.stringify({ body, client_id: clientId }),
         }),
       sendAsCustomer: (shop, message) =>
-        call<TestMessageResult>(s.apiBase, `/v1/shops/${shop}/test-messages`, {
+        this.asStaff<TestMessageResult>(`/v1/shops/${shop}/test-messages`, {
           method: "POST",
           headers: { ...this.staff(shop), "Content-Type": "application/json" },
           body: JSON.stringify(message),
@@ -146,8 +205,18 @@ export class ApiSource implements DataSource {
     return { Authorization: `Bearer ${entry.token}` };
   }
 
+  /** A staff request. A 401 means the session expired or was revoked: the app goes back to sign-in. */
+  private async asStaff<T>(path: string, init: RequestInit): Promise<T> {
+    try {
+      return await call<T>(this.session.apiBase, path, init);
+    } catch (e) {
+      if (e instanceof SourceError && e.status === 401) window.dispatchEvent(new Event(SESSION_ENDED));
+      throw e;
+    }
+  }
+
   private get<T>(shop: string, path: string): Promise<T> {
-    return call<T>(this.session.apiBase, path, { headers: this.staff(shop) });
+    return this.asStaff<T>(path, { headers: this.staff(shop) });
   }
 
   shops() {

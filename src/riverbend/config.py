@@ -39,6 +39,10 @@ class Settings(BaseSettings):
         ' "dev-lakeshore-token": "rb-lakeshore"}'
     )
     admin_token: SecretStr = SecretStr("dev-admin-token")
+    # Staff sign-in with email and password (see staff_auth.py). A session lasts about a shift.
+    staff_session_hours: float = Field(default=12.0, gt=0, le=24 * 7)
+    login_max_failures: int = Field(default=5, ge=1)
+    login_lockout_minutes: float = Field(default=15.0, gt=0)
 
     # --- LLM ----------------------------------------------------------------------
     # vertex = Claude on Vertex AI, gemini = Gemini on Vertex AI, anthropic = Claude API (key in .env).

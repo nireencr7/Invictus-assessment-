@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { loadConfig, type Config } from "./config";
-import { ApiSource, apiReachable, loadSession, saveSession, type Session } from "./data/api";
+import { ApiSource, apiReachable, loadSession, logout, saveSession, SESSION_ENDED, type Session } from "./data/api";
 import { SnapshotSource } from "./data/snapshot";
 import type { DataSource } from "./data/source";
 import { when } from "./lib/format";
 import { refreshAll, useResource } from "./lib/useResource";
+import { ChangePassword } from "./views/Account";
 import { Activity } from "./views/Activity";
 import { Connect } from "./views/Connect";
 import type { Ctx, View } from "./views/context";
@@ -75,6 +76,18 @@ export function App() {
     void start();
   }, [start]);
 
+  // The API stopped accepting this session (expired, signed out elsewhere, account disabled).
+  const config = boot.state === "ready" ? boot.config : null;
+  useEffect(() => {
+    if (!config) return;
+    const ended = () => {
+      saveSession(null);
+      setBoot({ state: "connect", config, reason: "Your session has ended. Please sign in again." });
+    };
+    window.addEventListener(SESSION_ENDED, ended);
+    return () => window.removeEventListener(SESSION_ENDED, ended);
+  }, [config]);
+
   if (boot.state === "loading") return <div className="connect"><div className="skeleton" style={{ width: 320 }} /></div>;
   if (boot.state === "error") return <div className="connect"><div className="banner bad">{boot.message}</div></div>;
   if (boot.state === "connect") {
@@ -95,6 +108,7 @@ export function App() {
       source={boot.source}
       banner={boot.banner}
       onSignOut={() => {
+        if (boot.source instanceof ApiSource) void logout(boot.source.session);
         saveSession(null);
         setBoot({ state: "connect", config: boot.config });
       }}
@@ -112,6 +126,8 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
   const [open, setOpen] = useState<{ shop: string; id: string } | null>(null);
   const [customer, setCustomer] = useState<{ shop: string; id: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const session = source instanceof ApiSource ? source.session : null;
 
   useEffect(() => {
     const onHash = () => setView(viewFromHash());
@@ -176,7 +192,15 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
         <div className="rail-foot">
           {source.kind === "live" ? (
             <>
-              <span>Live API · {shops.length} shop{shops.length === 1 ? "" : "s"} in this session</span>
+              {session?.account ? (
+                <span className="who" title={session.account.email}>
+                  Signed in as <b>{session.account.name || session.account.email}</b>
+                </span>
+              ) : null}
+              <span className="session-note">Live API · {shops.length} shop{shops.length === 1 ? "" : "s"} in this session</span>
+              {session?.account ? (
+                <button className="btn" onClick={() => setChangingPassword(true)}>Change password</button>
+              ) : null}
               <button className="btn" onClick={onSignOut}>Sign out</button>
             </>
           ) : (
@@ -225,6 +249,16 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
       </div>
 
       {open ? <Conversation ctx={ctx} shopId={open.shop} conversationId={open.id} onClose={() => setOpen(null)} /> : null}
+      {changingPassword && session ? (
+        <ChangePassword
+          session={session}
+          onClose={() => setChangingPassword(false)}
+          onDone={() => {
+            setChangingPassword(false);
+            setToast("Password changed. Other sessions were signed out.");
+          }}
+        />
+      ) : null}
       {toast ? <div className="toast" role="status">{toast}</div> : null}
     </div>
   );
