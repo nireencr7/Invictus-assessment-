@@ -140,6 +140,8 @@ def api_error(cls, code, status):
     [
         (api_error(errors.ClientError, 429, "RESOURCE_EXHAUSTED"), TransientProviderError, False),
         (api_error(errors.ServerError, 503, "UNAVAILABLE"), TransientProviderError, False),
+        # Google ends a slow call itself (our timeout travels as X-Server-Timeout): maybe billed.
+        (api_error(errors.ServerError, 504, "DEADLINE_EXCEEDED"), TransientProviderError, True),
         (api_error(errors.ClientError, 408, "DEADLINE_EXCEEDED"), TransientProviderError, False),
         (httpx.ReadTimeout("slow"), TransientProviderError, True),
         (httpx.ConnectError("no route"), TransientProviderError, False),

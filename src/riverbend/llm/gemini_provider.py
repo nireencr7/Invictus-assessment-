@@ -104,6 +104,10 @@ class GeminiProvider:
             raise PermanentProviderError(f"credentials: {exc}") from exc
         except errors.APIError as exc:
             detail = f"HTTP {exc.code} {exc.status or ''}: {exc.message or ''}".strip()
+            if exc.code == 504:
+                # The SDK sends our timeout as X-Server-Timeout, so a slow call ends here, not in httpx.
+                # Like a client timeout, the model may have run: book it at the reserved worst case.
+                raise TransientProviderError(detail, billed_unknown=True) from exc
             if exc.code == 429 or exc.code in (408, 409) or exc.code >= 500:
                 raise TransientProviderError(detail) from exc
             raise PermanentProviderError(detail) from exc
