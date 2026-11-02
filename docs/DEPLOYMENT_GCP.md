@@ -23,6 +23,7 @@ This Terraform has been applied for real, to a dedicated project created for it,
 - Dev routes return `404` in production.
 - The console serves its security headers and live config.
 - **The real model, live** (`633b6d3`): a Spanish message sent through the public API ("los frenos … chirrían mucho y la cadena salta al cambiar … el jueves por la tarde") became a work order in one Gemini call (4 s, $0.008): brake adjustment on both wheels plus a gear adjustment, mountain bike, Thu 5 Nov afternoon, flagged `customer_language_es`. The keyword stand-in could not have read it. No warnings in the logs after the rollout.
+- **A message that names no bike** (`2b161fa`): before, "Hi, what are the services you provide?" took two Gemini calls, because the first said `bike_count: 0` and was rejected. After the fix, "What are your opening hours on Saturday?" took one call ($0.0065), valid first time, and went to staff as not a repair request.
 
 **Signing in to the console.** Each shop has its own staff token in Secret Manager:
 ```bash
