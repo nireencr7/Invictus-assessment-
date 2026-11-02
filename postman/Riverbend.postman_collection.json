@@ -1,0 +1,1653 @@
+{
+  "info": {
+    "_postman_id": "fcd755bd-eae0-5c48-bd7c-b9256a66a298",
+    "name": "Riverbend work orders API",
+    "description": "Every endpoint of the Riverbend API, in the order a message flows through the system. Pick an environment (local or GCP), then run the folders top to bottom: later requests use ids saved by earlier ones. Step-by-step code walkthrough for each request: docs/API_WALKTHROUGH.md.\n\nThree credentials: X-Ingest-Key (the email gateway), Bearer staff token (one shop), Bearer admin token. The customer's reply token is in their link.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{staffToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "shopId",
+      "value": "rb-downtown"
+    },
+    {
+      "key": "otherShopId",
+      "value": "rb-northside"
+    },
+    {
+      "key": "conversationId",
+      "value": ""
+    },
+    {
+      "key": "customerId",
+      "value": ""
+    },
+    {
+      "key": "workOrderId",
+      "value": ""
+    },
+    {
+      "key": "gatewayConversationId",
+      "value": ""
+    },
+    {
+      "key": "replyToken",
+      "value": ""
+    },
+    {
+      "key": "gatewayMessageId",
+      "value": ""
+    },
+    {
+      "key": "gatewayReplyId",
+      "value": ""
+    },
+    {
+      "key": "receivedAt",
+      "value": ""
+    },
+    {
+      "key": "replyClientId",
+      "value": ""
+    },
+    {
+      "key": "workerWaitMs",
+      "value": "3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health",
+      "description": "No auth. Used by load balancers and the console's connection check.",
+      "item": [
+        {
+          "name": "Liveness",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/healthz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "healthz"
+              ]
+            },
+            "description": "Is the process up? Never touches the database.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#healthz",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Readiness",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/readyz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "readyz"
+              ]
+            },
+            "description": "Can it reach the database? Also says which model provider this deployment runs.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#readyz",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Sign in (staff)",
+      "description": "A staff token is bound to exactly one shop.",
+      "item": [
+        {
+          "name": "Who am I (staff token -> shop)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "if (json.shop_id != null) pm.collectionVariables.set('shopId', json.shop_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "me"
+              ]
+            },
+            "description": "The console signs in with only a token: this says which shop it belongs to, and which optional features this deployment has. Saves shop_id into {{shopId}}.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Intake: the email gateway",
+      "description": "How a customer's email reaches the system. Auth: X-Ingest-Key.",
+      "item": [
+        {
+          "name": "New message from a customer",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('gatewayMessageId', 'pm-' + Date.now());",
+                  "pm.collectionVariables.set('receivedAt', new Date().toISOString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 202', () => pm.response.to.have.status(202));",
+                  "const json = pm.response.json();",
+                  "if (json.conversation_id != null) pm.collectionVariables.set('gatewayConversationId', json.conversation_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Ingest-Key",
+                "value": "{{ingestKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/inbound-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "inbound-messages"
+              ]
+            },
+            "description": "What the email gateway sends for every inbound email. Returns 202 at once; the AI runs later in the worker. message_id is the idempotency key (the email's Message-ID).\n\nExpected: HTTP 202. Code walkthrough: docs/API_WALKTHROUGH.md#inbound",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message_id\": \"{{gatewayMessageId}}\",\n  \"channel\": \"email\",\n  \"received_at\": \"{{receivedAt}}\",\n  \"sender\": \"Sam Rivera <sam.rivera@example.com>\",\n  \"body\": \"Hi, my rear brake squeals and the chain is rusty. Can I bring it in Thursday morning? Sam\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Same message delivered again (duplicate)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Ingest-Key",
+                "value": "{{ingestKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/inbound-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "inbound-messages"
+              ]
+            },
+            "description": "Gateways retry. Same message_id + same body = 200 with duplicate=true and the same ids; nothing is stored twice and the customer gets no second acknowledgement.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#inbound",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message_id\": \"{{gatewayMessageId}}\",\n  \"channel\": \"email\",\n  \"received_at\": \"{{receivedAt}}\",\n  \"sender\": \"Sam Rivera <sam.rivera@example.com>\",\n  \"body\": \"Hi, my rear brake squeals and the chain is rusty. Can I bring it in Thursday morning? Sam\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Same message_id, different body (conflict)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Ingest-Key",
+                "value": "{{ingestKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/inbound-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "inbound-messages"
+              ]
+            },
+            "description": "A reused message_id with a different body is a gateway bug: 409, nothing stored.\n\nExpected: HTTP 409. Code walkthrough: docs/API_WALKTHROUGH.md#inbound",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message_id\": \"{{gatewayMessageId}}\",\n  \"channel\": \"email\",\n  \"received_at\": \"{{receivedAt}}\",\n  \"sender\": \"Sam Rivera <sam.rivera@example.com>\",\n  \"body\": \"A completely different message\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Wrong ingest key",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Ingest-Key",
+                "value": "not-a-real-key"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/inbound-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "inbound-messages"
+              ]
+            },
+            "description": "Missing or unknown X-Ingest-Key: 401.\n\nExpected: HTTP 401. Code walkthrough: docs/API_WALKTHROUGH.md#inbound",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message_id\": \"{{gatewayMessageId}}\",\n  \"channel\": \"email\",\n  \"received_at\": \"{{receivedAt}}\",\n  \"sender\": \"Sam Rivera <sam.rivera@example.com>\",\n  \"body\": \"Hi, my rear brake squeals and the chain is rusty. Can I bring it in Thursday morning? Sam\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Staff: send a message as a customer (test tool)",
+      "description": "Staff try the whole workflow without an email gateway. Own shop only. Off in production unless TEST_MESSAGES=true (the GCP demo has it on).",
+      "item": [
+        {
+          "name": "New request as a customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 202', () => pm.response.to.have.status(202));",
+                  "const json = pm.response.json();",
+                  "if (json.conversation_id != null) pm.collectionVariables.set('conversationId', json.conversation_id);",
+                  "if (json.customer_id != null) pm.collectionVariables.set('customerId', json.customer_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/test-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "test-messages"
+              ]
+            },
+            "description": "Goes through the same intake as a real email. No day is given, so the AI asks one follow-up question. Saves {{conversationId}} and {{customerId}}.\n\nExpected: HTTP 202. Code walkthrough: docs/API_WALKTHROUGH.md#test-messages",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_email\": \"jamie.lee@example.com\",\n  \"customer_name\": \"Jamie Lee\",\n  \"body\": \"My front tyre keeps going flat and the gears slip. Can you fix it?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Customer answers the follow-up question",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Give the background worker time to process the previous message.",
+                  "const ms = Number(pm.variables.get('workerWaitMs') || 3000);",
+                  "setTimeout(() => {}, ms);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 202', () => pm.response.to.have.status(202));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/test-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "test-messages"
+              ]
+            },
+            "description": "reply_to continues the conversation (it looks up the conversation's reply token for you). The AI now has a problem and a day: a work order is created.\n\nExpected: HTTP 202. Code walkthrough: docs/API_WALKTHROUGH.md#test-messages",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_email\": \"jamie.lee@example.com\",\n  \"body\": \"Saturday morning works for me.\",\n  \"reply_to\": \"{{conversationId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Customer asks about the finished order (goes to staff)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Give the background worker time to process the previous message.",
+                  "const ms = Number(pm.variables.get('workerWaitMs') || 3000);",
+                  "setTimeout(() => {}, ms);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 202', () => pm.response.to.have.status(202));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/test-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "test-messages"
+              ]
+            },
+            "description": "The conversation already has a work order, so the model is not asked: it goes straight to a person and the customer gets a 'passed to the team' note.\n\nExpected: HTTP 202. Code walkthrough: docs/API_WALKTHROUGH.md#test-messages",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_email\": \"jamie.lee@example.com\",\n  \"body\": \"Is the price negotiable?\",\n  \"reply_to\": \"{{conversationId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Staff: inbox and conversations",
+      "description": "Everything that is not (yet) a work order.",
+      "item": [
+        {
+          "name": "Inbox",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Give the background worker time to process the previous message.",
+                  "const ms = Number(pm.variables.get('workerWaitMs') || 3000);",
+                  "setTimeout(() => {}, ms);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/inbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "inbox"
+              ]
+            },
+            "description": "In flight, waiting for the customer, held at the cap, or waiting for a person. needs_action=true is the red badge in the console.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#inbox"
+          }
+        },
+        {
+          "name": "One conversation (everything about it)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/conversations/{{conversationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "conversations",
+                "{{conversationId}}"
+              ]
+            },
+            "description": "Messages both ways, the timeline of events, and every model call with its cost. The reply token is never returned.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#conversation"
+          }
+        },
+        {
+          "name": "Reply to the customer (staff)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('replyClientId', 'pm-' + Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/conversations/{{conversationId}}/reply",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "conversations",
+                "{{conversationId}}",
+                "reply"
+              ]
+            },
+            "description": "Goes out through the outbox. A conversation waiting for a person goes back to 'work order created' (or 'answered' when it has no order). resolved=true says so.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#reply",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Hi Jamie, our prices follow the service menu, so the estimate stands.\",\n  \"client_id\": \"{{replyClientId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Same reply sent twice (idempotent)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/conversations/{{conversationId}}/reply",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "conversations",
+                "{{conversationId}}",
+                "reply"
+              ]
+            },
+            "description": "Same client_id = the same reply: duplicate=true, nothing new is sent.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#reply",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"Hi Jamie, our prices follow the service menu, so the estimate stands.\",\n  \"client_id\": \"{{replyClientId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Retry the AI (only after a failure)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/conversations/{{conversationId}}/retry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "conversations",
+                "{{conversationId}}",
+                "retry"
+              ]
+            },
+            "description": "Re-queues a message the AI gave up on (dead) or that was held at the cap (parked). On a healthy conversation there is nothing to retry: 409.\n\nExpected: HTTP 409. Code walkthrough: docs/API_WALKTHROUGH.md#retry"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Staff: work orders",
+      "description": "",
+      "item": [
+        {
+          "name": "Open work orders",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "const want = pm.variables.get('conversationId');",
+                  "const hit = (json.work_orders || []).find(x => x.conversation_id === want) || (json.work_orders || [])[0];",
+                  "if (hit) pm.collectionVariables.set('workOrderId', hit.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/work-orders?status=open",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "work-orders"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "open"
+                }
+              ]
+            },
+            "description": "Open and cancel-requested orders, oldest first, with the total of open estimates. Saves the test customer's order into {{workOrderId}}.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#work-orders"
+          }
+        },
+        {
+          "name": "All work orders",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/work-orders?status=all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "work-orders"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all"
+                }
+              ]
+            },
+            "description": "Also completed and cancelled ones.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#work-orders"
+          }
+        },
+        {
+          "name": "One work order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/work-orders/{{workOrderId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "work-orders",
+                "{{workOrderId}}"
+              ]
+            },
+            "description": "The ticket: bike, issues, priced lines, estimate, requested window, review flags.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#work-order"
+          }
+        },
+        {
+          "name": "Mark work order completed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/work-orders/{{workOrderId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "work-orders",
+                "{{workOrderId}}",
+                "status"
+              ]
+            },
+            "description": "Staff change the status: open, completed or cancelled. Recorded on the timeline.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#work-order-status",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Staff: customers",
+      "description": "",
+      "item": [
+        {
+          "name": "Customers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/customers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "customers"
+              ]
+            },
+            "description": "Everyone who wrote from an email address, most recently active first.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#customers"
+          }
+        },
+        {
+          "name": "One customer's whole history",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/customers/{{customerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "customers",
+                "{{customerId}}"
+              ]
+            },
+            "description": "Every conversation, every message both ways, and every event, in one timeline.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#customer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Staff: model calls, activity, spend",
+      "description": "",
+      "item": [
+        {
+          "name": "Model calls",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/llm-calls?limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "llm-calls"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Every call to the model, including failed and rejected ones, with tokens and cost.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#llm-calls"
+          }
+        },
+        {
+          "name": "Activity",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/activity?limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "activity"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "The shop's timeline: received, asked, created, escalated, held, ...\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#activity"
+          }
+        },
+        {
+          "name": "Spend this month",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/spend",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "spend"
+              ]
+            },
+            "description": "The monthly cap, spent, reserved (calls in flight) and remaining.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#spend"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Customer side (needs the reply token)",
+      "description": "The customer's link carries an unguessable reply token. No staff API returns it (by design). Locally, read it from the database: psql postgresql://postgres@localhost:5433/riverbend -c \"SELECT reply_token FROM conversations WHERE id = '<gatewayConversationId>'\" and paste it into {{replyToken}}.",
+      "item": [
+        {
+          "name": "What the customer sees",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Give the background worker time to process the previous message.",
+                  "const ms = Number(pm.variables.get('workerWaitMs') || 3000);",
+                  "setTimeout(() => {}, ms);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/customer/{{shopId}}/{{replyToken}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "customer",
+                "{{shopId}}",
+                "{{replyToken}}"
+              ]
+            },
+            "description": "Only the messages we sent them, and a plain-language status. No auth: the token is the key.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#customer-view",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Customer replies by email (gateway, with reply token)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('gatewayReplyId', 'pm-reply-' + Date.now());",
+                  "pm.collectionVariables.set('receivedAt', new Date().toISOString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 202', () => pm.response.to.have.status(202));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Ingest-Key",
+                "value": "{{ingestKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/inbound-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "inbound-messages"
+              ]
+            },
+            "description": "The gateway passes the token from our reply-to address, so the reply lands in the same conversation. This one already has a work order, so it goes to a person.\n\nExpected: HTTP 202. Code walkthrough: docs/API_WALKTHROUGH.md#inbound",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message_id\": \"{{gatewayReplyId}}\",\n  \"channel\": \"email\",\n  \"received_at\": \"{{receivedAt}}\",\n  \"sender\": \"Sam Rivera <sam.rivera@example.com>\",\n  \"reply_token\": \"{{replyToken}}\",\n  \"body\": \"Thanks! Can you also check the tyre pressure?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Admin",
+      "description": "Auth: the admin token (Bearer).",
+      "item": [
+        {
+          "name": "Provider and circuit breaker",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/provider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "provider"
+              ]
+            },
+            "description": "Which model this process uses and whether the circuit breaker is open.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#admin-provider",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set a shop's monthly AI cap",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/shops/{{shopId}}/budget",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "shops",
+                "{{shopId}}",
+                "budget"
+              ]
+            },
+            "description": "Changes the cap. Raising it releases messages held at the cap. CAREFUL on GCP: this changes the live shop's cap.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#admin-budget",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"monthly_cap_usd\": \"5.00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Dev only (make dev)",
+      "description": "Exist only when DEV_MODE=true. 404 on GCP.",
+      "item": [
+        {
+          "name": "Dev config",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "config"
+              ]
+            },
+            "description": "The local dashboard's credentials and provider state. Never available in production.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "The 40 brief samples",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/samples",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "samples"
+              ]
+            },
+            "description": "Expected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Break the provider (outage)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/faults",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "faults"
+              ]
+            },
+            "description": "Every model call now fails. Send a message and watch it get retried, then handed to staff.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"spec\": \"outage\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Heal the provider",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/faults",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "faults"
+              ]
+            },
+            "description": "Back to normal; also closes the circuit breaker.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"spec\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Security checks",
+      "description": "Each of these must fail.",
+      "item": [
+        {
+          "name": "No token: 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/work-orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "work-orders"
+              ]
+            },
+            "description": "Expected: HTTP 401. Code walkthrough: docs/API_WALKTHROUGH.md#security",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Another shop with this token: 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{otherShopId}}/work-orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{otherShopId}}",
+                "work-orders"
+              ]
+            },
+            "description": "404, not 403: the API does not confirm that another shop's data exists.\n\nExpected: HTTP 404. Code walkthrough: docs/API_WALKTHROUGH.md#security"
+          }
+        },
+        {
+          "name": "Admin route with a staff token: 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/admin/provider",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "admin",
+                "provider"
+              ]
+            },
+            "description": "Expected: HTTP 401. Code walkthrough: docs/API_WALKTHROUGH.md#security"
+          }
+        },
+        {
+          "name": "Invalid input: 422",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 422', () => pm.response.to.have.status(422));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v1/shops/{{shopId}}/test-messages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "shops",
+                "{{shopId}}",
+                "test-messages"
+              ]
+            },
+            "description": "Request bodies are validated before any handler code runs.\n\nExpected: HTTP 422. Code walkthrough: docs/API_WALKTHROUGH.md#security",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_email\": \"Jamie <jamie@example.com>\",\n  \"body\": \"hi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

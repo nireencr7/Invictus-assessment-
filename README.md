@@ -19,6 +19,7 @@ The LLM reads; **code prices, dates and decides**:
 | "Not built" list, next steps, 100 shops | [`docs/NOT_BUILT.md`](docs/NOT_BUILT.md) |
 | Loom: one AI decision I overrode | _link_ · the incident is in [`docs/AI_JUDGEMENT.md`](docs/AI_JUDGEMENT.md), evidence in [`docs/loom-evidence/`](docs/loom-evidence/) |
 | Tests for the risky parts, and why those | [`docs/TESTING.md`](docs/TESTING.md) |
+| Every API, step by step | [Postman collection + environments](postman/) · [code walkthrough of each request](docs/API_WALKTHROUGH.md) |
 | Also | [decision log](docs/DECISIONS.md) · [AI judgement](docs/AI_JUDGEMENT.md) · [clarifying questions & assumptions](docs/QUESTIONS.md) |
 
 ## Run it
