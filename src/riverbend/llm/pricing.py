@@ -3,6 +3,10 @@
 USD per million tokens, Anthropic first-party list prices as of 2026-10. Cache writes are
 priced at 1.25x input (5-minute TTL). Vertex AI bills Claude at its own rates; for a
 Vertex deployment, load these from config rather than trusting this table.
+
+Gemini 3.8 Flash on Vertex AI is booked at its standard rate, which starts 2027-01-01. Until then
+Google bills an introductory rate of half that, so spend shown before 2027 is about 2x the invoice:
+the cap errs on the safe side. Gemini has no cache-write surcharge (caching is implicit).
 """
 
 from __future__ import annotations
@@ -18,6 +22,7 @@ PRICES: dict[str, tuple[Decimal, Decimal, Decimal, Decimal]] = {
     "claude-opus-5-5": (Decimal("4.00"), Decimal("20.00"), Decimal("0.20"), Decimal("5.00")),
     "claude-sonnet-5-5": (Decimal("2.00"), Decimal("10.00"), Decimal("0.20"), Decimal("2.50")),
     "claude-haiku-5-5": (Decimal("0.10"), Decimal("0.50"), Decimal("0.01"), Decimal("0.125")),
+    "gemini-3.8-flash": (Decimal("1.50"), Decimal("7.50"), Decimal("0.15"), Decimal("1.50")),
 }
 
 # Characters per token is ~4 for English; 2.5 over-estimates on purpose (accents, JSON,

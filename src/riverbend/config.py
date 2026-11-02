@@ -41,8 +41,9 @@ class Settings(BaseSettings):
     admin_token: SecretStr = SecretStr("dev-admin-token")
 
     # --- LLM ----------------------------------------------------------------------
-    llm_provider: Literal["anthropic", "vertex", "offline"] = "offline"
-    llm_model: str = "claude-opus-5-5"
+    # vertex = Claude on Vertex AI, gemini = Gemini on Vertex AI, anthropic = Claude API (key in .env).
+    llm_provider: Literal["anthropic", "vertex", "gemini", "offline"] = "offline"
+    llm_model: str = "claude-opus-5-5"  # with gemini, a Gemini id such as gemini-3.8-flash
     llm_effort: Literal["low", "medium", "high"] = "low"
     llm_max_tokens: int = 4000
     llm_timeout_seconds: float = 45.0

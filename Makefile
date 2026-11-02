@@ -2,7 +2,7 @@
 #   make up       — Docker: Postgres + migrations + API + 2 workers + staff console -> http://localhost:3000
 #   make dev      — no Docker: local Postgres binaries + API with an embedded worker -> http://localhost:8000
 #   make console  — the staff console in dev mode (run alongside `make dev`)        -> http://localhost:5173
-.PHONY: up down dev console console-test snapshot test lint fmt eval eval-live fixtures clean help
+.PHONY: up down dev console console-test snapshot test lint fmt eval eval-live eval-gemini fixtures clean help
 
 help:
 	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-10s %s\n", $$1, $$2}'
@@ -50,6 +50,12 @@ eval-live: ## Same, against the real model (needs ANTHROPIC_API_KEY in .env). Co
 	scripts/devdb.sh start
 	uv run python -m riverbend migrate
 	LLM_PROVIDER=anthropic LOG_LEVEL=WARNING uv run python -m riverbend eval
+
+eval-gemini: ## The 40 samples against Gemini on Vertex AI (gcloud ADC, VERTEX_PROJECT set). About $0.50.
+	scripts/devdb.sh start
+	uv run python -m riverbend migrate
+	LLM_PROVIDER=gemini LLM_MODEL=gemini-3.8-flash VERTEX_PROJECT=$${VERTEX_PROJECT:?set VERTEX_PROJECT} \
+	  LOG_LEVEL=WARNING uv run python -m riverbend eval --scenarios baseline --out docs/RESULTS_GEMINI.md
 
 fixtures: ## Rebuild offline outputs, golden labels and simulated replies from one table
 	uv run python scripts/build_offline_fixtures.py

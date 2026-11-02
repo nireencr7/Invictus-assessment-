@@ -10,6 +10,7 @@ from riverbend.config import Settings
 from riverbend.db import Database
 from riverbend.llm.anthropic_provider import AnthropicProvider
 from riverbend.llm.base import LLMProvider
+from riverbend.llm.gemini_provider import GeminiProvider
 from riverbend.llm.offline import OfflineProvider
 from riverbend.llm.resilience import CircuitBreaker, FaultInjectingProvider, FaultPlan
 from riverbend.pipeline import Pipeline
@@ -23,6 +24,18 @@ def build_provider(settings: Settings) -> LLMProvider:
         if not settings.vertex_project:
             raise ValueError("LLM_PROVIDER=vertex requires VERTEX_PROJECT")
         provider = AnthropicProvider(
+            model=settings.llm_model,
+            effort=settings.llm_effort,
+            timeout_seconds=settings.llm_timeout_seconds,
+            vertex_project=settings.vertex_project,
+            vertex_region=settings.vertex_region,
+        )
+    elif settings.llm_provider == "gemini":
+        if not settings.vertex_project:
+            raise ValueError("LLM_PROVIDER=gemini requires VERTEX_PROJECT")
+        if not settings.llm_model.startswith("gemini"):
+            raise ValueError(f"LLM_PROVIDER=gemini needs a Gemini LLM_MODEL, not {settings.llm_model!r}")
+        provider = GeminiProvider(
             model=settings.llm_model,
             effort=settings.llm_effort,
             timeout_seconds=settings.llm_timeout_seconds,

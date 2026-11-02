@@ -15,13 +15,13 @@ variable "image" {
 }
 
 variable "llm_model" {
-  description = "Claude model id on Vertex AI."
+  description = "Model id on Vertex AI: a Claude id for llm_provider=vertex, a Gemini id (e.g. gemini-3.8-flash) for gemini."
   type        = string
   default     = "claude-opus-5-5"
 }
 
 variable "vertex_region" {
-  description = "Vertex AI location for Claude ('global' recommended)."
+  description = "Vertex AI location for the model ('global' recommended)."
   type        = string
   default     = "global"
 }
@@ -51,12 +51,12 @@ variable "alert_email" {
 }
 
 variable "llm_provider" {
-  description = "vertex (Claude on Vertex AI) or offline (the labelled stand-in, $0)."
+  description = "vertex (Claude on Vertex AI), gemini (Gemini on Vertex AI) or offline (the labelled stand-in, $0)."
   type        = string
   default     = "vertex"
   validation {
-    condition     = contains(["vertex", "offline"], var.llm_provider)
-    error_message = "llm_provider must be vertex or offline."
+    condition     = contains(["vertex", "gemini", "offline"], var.llm_provider)
+    error_message = "llm_provider must be vertex, gemini or offline."
   }
 }
 
