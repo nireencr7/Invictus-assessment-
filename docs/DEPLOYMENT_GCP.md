@@ -120,7 +120,7 @@ The live demo uses `db-f1-micro`, one worker and `api_max_instances = 3`: about 
 | Cloud SQL, 1 vCPU / 3.75 GB, zonal, 10 GB SSD + backups | ~$55 | HA (`REGIONAL`) roughly doubles it |
 | 2 always-on workers, 1 vCPU / 512 MiB | ~$90–100 | The largest line. One worker at 0.5 vCPU is ~$25 and is enough for three shops. |
 | API, console, Secret Manager, Artifact Registry, logging | < $10 | Both services scale to zero |
-| Gemini 3.8 Flash on Vertex (live) | **~$0.0075 per message, measured** (`make eval-gemini`: $0.31 for 41 messages at the 2027 rate) | ~1,000 messages a month ≈ $7.50, about half that until 2027. |
+| Gemini 3.8 Flash on Vertex (live) | **~$0.008 per message, measured** (`make eval-gemini`: $0.35 for 41 messages at the 2027 rate, including one call booked at its worst case after Google's deadline) | ~1,000 messages a month ≈ $8, about half that until 2027. |
 | Claude on Vertex (once quota is granted) | ~$0.02 per message on Opus 5.5 (simulated estimate; confirm with `make eval-live`) | ~1,000 messages a month ≈ $20. Haiku 5.5 would be ~40× cheaper if the eval holds up. |
 
 For three shops the fixed cost (always-on workers + Cloud SQL) dominates, not the model. That is the main argument *against* decision 1 in the architecture note. A push model (Cloud Tasks → Cloud Run, scale to zero) would cut ~$80/month at the price of a second moving part.

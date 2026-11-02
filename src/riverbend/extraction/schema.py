@@ -101,7 +101,7 @@ class ServiceLine(_Strict):
     wheel: Literal["front", "rear", "both", "unspecified", "not_applicable"] = Field(
         description="Per-wheel services: which wheel(s) the customer named. Other services: 'not_applicable'."
     )
-    bikes: int = Field(ge=1, le=5, description="How many of the customer's bikes this line applies to.")
+    bikes: int = Field(ge=1, le=5, description="How many of the customer's bikes this line applies to, 1-5.")
     evidence: str = Field(
         min_length=1, max_length=300, description="Verbatim quote that justifies this service."
     )
@@ -129,7 +129,11 @@ class Extraction(_Strict):
     language: str = Field(description="ISO 639-1 code of the customer's language, e.g. 'en', 'es'.")
     customer_name: str = Field(max_length=80, description="Name the customer signed with; '' if none.")
     bike_type: BikeType
-    bike_count: int = Field(ge=1, le=5)
+    bike_count: int = Field(
+        ge=1,
+        le=5,
+        description="How many bikes the message is about, 1-5; 1 if it doesn't say or names no bike.",
+    )
     brake_type: Literal["hydraulic_disc", "mechanical_disc", "rim", "unknown"]
     reported_issues: list[ReportedIssue] = Field(max_length=10)
     services: list[ServiceLine] = Field(max_length=10)

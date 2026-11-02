@@ -181,6 +181,16 @@ def test_api_schema_is_closed_and_has_no_unsupported_keywords():
     assert not [n for n in names if any(w in n.lower() for w in money_words)]  # nowhere to put money
 
 
+def test_counts_tell_the_model_their_range():
+    # minimum/maximum are stripped from the API schema, so a count's range has to be in its description.
+    # Without it, "What services do you provide?" (no bike named) came back with bike_count 0: rejected,
+    # and a repair call paid for.
+    schema = api_json_schema(CATALOG.codes, list(CATALOG.shops))
+    bike_count = schema["properties"]["bike_count"]["description"]
+    assert "1-5" in bike_count and "1 if" in bike_count
+    assert "1-5" in schema["$defs"]["ServiceLine"]["properties"]["bikes"]["description"]
+
+
 @pytest.mark.parametrize("field", ["price", "total", "estimate", "discount"])
 def test_schema_has_no_money_fields(field):
     assert field not in Extraction.model_fields

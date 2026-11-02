@@ -459,7 +459,7 @@ Even if the 404 check had a bug, row-level security ([Part 1.4](#14-tenant-isola
 5. **Build the request** ([L135-L153](../src/riverbend/pipeline.py#L135-L153)):
    - **System prompt** ([`system_prompt`](../src/riverbend/extraction/prompt.py#L19)): built once, identical on every call so it can be cached. It holds the shops, the service catalog and 11 rules, such as "never output prices" and "evidence must be a verbatim quote".
    - **User prompt** ([`user_prompt`](../src/riverbend/extraction/prompt.py#L83)): the conversation, with customer text **escaped and fenced** in `<customer_message>` tags ([`_escape`](../src/riverbend/extraction/prompt.py#L72)). A message can't close our tags or pose as an instruction.
-   - **JSON schema** ([`api_json_schema`](../src/riverbend/extraction/schema.py#L180)): generated from the pydantic model [`Extraction`](../src/riverbend/extraction/schema.py#L127), with the catalog codes and shop ids as enums.
+   - **JSON schema** ([`api_json_schema`](../src/riverbend/extraction/schema.py#L184)): generated from the pydantic model [`Extraction`](../src/riverbend/extraction/schema.py#L127), with the catalog codes and shop ids as enums.
 6. **Reserve budget, then call the model** ([`_call_model`](../src/riverbend/pipeline.py#L245)):
    1. **Worst-case cost:** [`worst_case_cost`](../src/riverbend/llm/pricing.py#L53) prices every input token at the dearest rate, plus `max_tokens` of output.
    2. **Reserve:** [`Budget.reserve`](../src/riverbend/budget.py#L59) runs one conditional `UPDATE … WHERE spent + reserved + amount <= cap`. It is atomic, so concurrent workers can't jointly overshoot the cap. It also inserts an `llm_calls` row with status `reserved`.

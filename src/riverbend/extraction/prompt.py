@@ -13,7 +13,7 @@ from dataclasses import dataclass
 
 from riverbend.catalog import USAGE_HINTS, Catalog
 
-PROMPT_VERSION = "2026-10-31.1"
+PROMPT_VERSION = "2026-11-02.1"
 
 
 def system_prompt(catalog: Catalog) -> str:
