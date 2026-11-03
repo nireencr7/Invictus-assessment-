@@ -236,3 +236,16 @@ table.data td.right, table.data th.right { text-align: right; }
 .customer-panel { display: flex; flex-direction: column; gap: 14px; padding-top: 16px; }
 .customer-panel > header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 0 18px; }
 .customer-panel h3 { font-size: 15px; padding: 0 18px; }
+
+/* ---------- worker & logs (dev only) ---------- */
+.step-title { font: 500 11px/1.4 var(--mono); text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
+.step-title .muted { text-transform: none; letter-spacing: 0; font-family: inherit; }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+pre.json { margin: 0; max-height: 360px; overflow: auto; padding: 10px 12px; border-radius: 8px; background: var(--sunk);
+           font: 12px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sent { display: flex; flex-direction: column; gap: 4px; padding: 8px 12px; border-radius: 8px; background: var(--sunk); font-size: 13.5px; }
+.sent + .sent { margin-top: 6px; }
+.log { max-height: 420px; overflow: auto; padding: 4px 16px 14px; font: 12px/1.6 var(--mono); }
+.log-line { white-space: pre-wrap; overflow-wrap: anywhere; border-bottom: 1px dashed var(--rule); padding: 2px 0; }
+.log-line time { color: var(--muted); }
+.log-line.warn b { color: var(--tag); } .log-line.bad b, .log-line.bad { color: var(--bad); }

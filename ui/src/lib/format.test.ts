@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { centsToUsd, eventTone, flagLabel, messageKindLabel, ratio, reasonLabel, usd } from "./format";
+import { centsToUsd, eventTone, flagLabel, jobTone, messageKindLabel, outcomeTone, ratio, reasonLabel, usd } from "./format";
 
 describe("money display", () => {
   it("shows sub-dollar model costs with four decimals and prices with two", () => {
@@ -41,5 +41,24 @@ describe("message kinds", () => {
     expect(messageKindLabel("handoff")).toBe("Passed to the team");
     expect(messageKindLabel("staff_reply")).toBe("Staff reply");
     expect(messageKindLabel("something_new")).toBe("something new");
+  });
+});
+
+describe("worker outcomes (dev page)", () => {
+  it("colours what a worker run ended with, including escalations that carry a reason", () => {
+    expect(outcomeTone("work_order_created")).toBe("ok");
+    expect(outcomeTone("follow_up_asked")).toBe("ok");
+    expect(outcomeTone("retry_scheduled")).toBe("warn");
+    expect(outcomeTone("held_budget")).toBe("warn");
+    expect(outcomeTone("escalated:customer_wrote_after_conversation_closed")).toBe("warn");
+    expect(outcomeTone("dead_after_crash")).toBe("bad");
+    expect(outcomeTone("already_processed")).toBe("info");
+  });
+
+  it("colours job statuses", () => {
+    expect(jobTone("done")).toBe("ok");
+    expect(jobTone("parked")).toBe("warn");
+    expect(jobTone("dead")).toBe("bad");
+    expect(jobTone("queued")).toBe("info");
   });
 });

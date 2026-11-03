@@ -48,6 +48,10 @@ describe("snapshot source", () => {
     expect((await new SnapshotSource(old).customers("rb-downtown")).customers).toEqual([]);
   });
 
+  it("has no dev tools: the worker page is for a local API only", async () => {
+    expect(await source.devTools()).toBeNull();
+  });
+
   it("never exports a customer's reply token", () => {
     expect(JSON.stringify(snapshot)).not.toContain("reply_token");
   });

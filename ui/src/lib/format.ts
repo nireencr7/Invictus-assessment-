@@ -90,6 +90,20 @@ export function callTone(status: string): Tone {
   return "bad";
 }
 
+/** What one worker run ended with (pipeline.py return values; escalations are "escalated:<reason>"). */
+export function outcomeTone(outcome: string): Tone {
+  if (["work_order_created", "follow_up_asked", "price_quoted", "cancellation_requested", "redirected"].includes(outcome))
+    return "ok";
+  if (["dead_after_crash", "crash_retry", "lease_lost", "missing_message"].includes(outcome)) return "bad";
+  if (outcome.startsWith("escalated:") || ["retry_scheduled", "held_budget", "deferred_breaker_open"].includes(outcome))
+    return "warn";
+  return "info";
+}
+
+export function jobTone(status: string): Tone {
+  return ({ done: "ok", queued: "info", running: "info", parked: "warn", dead: "bad" } as Record<string, Tone>)[status] ?? "neutral";
+}
+
 /** "$0.0160" for sub-dollar model costs, "$1.23" otherwise. */
 export function usd(value: string | number | null | undefined): string {
   if (value === null || value === undefined || value === "") return "—";

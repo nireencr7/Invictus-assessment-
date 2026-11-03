@@ -2,7 +2,7 @@
 
 This document follows each request in the Postman collection through the code, line by line. Read it with the collection open: every request's description links back to its section here.
 
-- **Collection:** [`postman/Riverbend.postman_collection.json`](../postman/Riverbend.postman_collection.json): 43 requests in 12 folders, in the order a message flows through the system.
+- **Collection:** [`postman/Riverbend.postman_collection.json`](../postman/Riverbend.postman_collection.json): 46 requests in 12 folders, in the order a message flows through the system.
 - **Environments:** [`Riverbend-local`](../postman/Riverbend-local.postman_environment.json) works with `make dev` as it is. [`Riverbend-GCP`](../postman/Riverbend-GCP.postman_environment.json) points at the live demo; you paste the credentials in yourself.
 
 ## Contents
@@ -214,7 +214,7 @@ This is the front door. Every customer email or web-form submission comes throug
 6. **Store the message** ([L165-L179](../src/riverbend/intake.py#L165-L179)) with `ON CONFLICT (shop_id, external_id) DO NOTHING`. If another delivery of the same message committed in the same instant, nothing comes back. The code raises `_LostRace`, rolls back, and answers as a duplicate ([L125-L130](../src/riverbend/intake.py#L125-L130)).
 7. **Acknowledge the customer**, new conversations only. It writes an `ack` row to `outbound_messages` (the outbox), worded by [`customer_copy.ack`](../src/riverbend/customer_copy.py#L14), with the dedupe key `ack:<message id>` ([L183-L188](../src/riverbend/intake.py#L183-L188)). The customer is told "we've got it" before the AI runs. If the AI is down, they still got that.
 8. **A reply to our question** moves the conversation from `awaiting_customer` back to `processing` ([L189-L193](../src/riverbend/intake.py#L189-L193)).
-9. **Queue the AI work** with [`jobqueue.enqueue`](../src/riverbend/jobqueue.py#L38), one `jobs` row per message, unique per message ([L194](../src/riverbend/intake.py#L194)).
+9. **Queue the AI work** with [`jobqueue.enqueue`](../src/riverbend/jobqueue.py#L42), one `jobs` row per message, unique per message ([L194](../src/riverbend/intake.py#L194)).
 10. **Timeline event `received`**, with the channel, whether it's a reply, and `via` when it came from the test tool ([L195-L210](../src/riverbend/intake.py#L195-L210)).
 11. **Commit, then return 202.**
 
@@ -317,7 +317,7 @@ Like every message to a customer, the reply waits in the outbox; sending it out 
 **Who calls it:** the conversation panel's **Retry AI** button, after an outage or a fix. **Auth:** staff token.
 
 1. [`retry_ai`](../src/riverbend/api.py#L461) finds the conversation's latest inbound message ([L465-L471](../src/riverbend/api.py#L465-L471)). None: **404**.
-2. [`jobqueue.requeue`](../src/riverbend/jobqueue.py#L111) puts that message's job back in the queue, **only if** it is `dead` (the AI gave up) or `parked` (held at the cap). It also resets the attempts and **restarts the processing clock** (`sla_started_at`, [decision D16](DECISIONS.md#d16-the-processing-deadline-restarts-when-processing-restarts)). Anything else: **409**, nothing to retry ([L472-L473](../src/riverbend/api.py#L472-L473)). That's what Postman shows on a healthy conversation.
+2. [`jobqueue.requeue`](../src/riverbend/jobqueue.py#L164) puts that message's job back in the queue, **only if** it is `dead` (the AI gave up) or `parked` (held at the cap). It also resets the attempts and **restarts the processing clock** (`sla_started_at`, [decision D16](DECISIONS.md#d16-the-processing-deadline-restarts-when-processing-restarts)). Anything else: **409**, nothing to retry ([L472-L473](../src/riverbend/api.py#L472-L473)). That's what Postman shows on a healthy conversation.
 3. It sets the message back to `queued` and the conversation back to `processing` ([L474-L480](../src/riverbend/api.py#L474-L480)). The worker picks the job up within about half a second ([Part 3](#part-3-after-intake-the-worker)).
 
 ---
@@ -329,7 +329,7 @@ Like every message to a customer, the reply waits in the outbox; sending it out 
 
 1. `status` must be `open` or `all`; anything else is rejected with 422 ([L327](../src/riverbend/api.py#L327)). `open` means open or cancel-requested. `all` adds cancelled and completed ([L331-L335](../src/riverbend/api.py#L331-L335)).
 2. It runs two queries: the orders, oldest first, then all their lines in one go with `= ANY(ids)`, which avoids a query per order ([L336-L343](../src/riverbend/api.py#L336-L343)).
-3. It groups the lines by order and shapes each order with [`_work_order_json`](../src/riverbend/api.py#L979):
+3. It groups the lines by order and shapes each order with [`_work_order_json`](../src/riverbend/api.py#L1105):
    - the estimate is **recomputed from the lines**, and a database trigger also guarantees the stored total equals the sum of the lines;
    - the requested window gets a human label, such as "Thu 05 Nov 2026, afternoon", from [`DateWindow`](../src/riverbend/extraction/dates.py#L32);
    - money is formatted from integer cents.
@@ -341,7 +341,7 @@ Postman saves the test customer's order id into `{{workOrderId}}`.
 ### `GET /v1/shops/{shop}/work-orders/{id}`: one work order
 
 1. [`get_work_order`](../src/riverbend/api.py#L356) loads the order by id; another shop's order is invisible, so **404** ([L359-L361](../src/riverbend/api.py#L359-L361)). Then it loads its lines.
-2. It shapes the order with [`_work_order_json`](../src/riverbend/api.py#L979), the same as the list.
+2. It shapes the order with [`_work_order_json`](../src/riverbend/api.py#L1105), the same as the list.
 
 <a id="work-order-status"></a>
 ### `POST /v1/shops/{shop}/work-orders/{id}/status`: staff change the status
@@ -356,9 +356,9 @@ Postman saves the test customer's order id into `{{workOrderId}}`.
 <a id="customers"></a>
 ### `GET /v1/shops/{shop}/customers`: everyone who wrote from an email address
 
-1. [`list_customers`](../src/riverbend/api.py#L599) runs [`_CUSTOMER_SUMMARY`](../src/riverbend/api.py#L946): customers left-joined to their conversations and work orders, aggregated per customer. It counts conversations, awaiting reply, needs a person and open orders, sums the open estimate, and finds the last activity. It groups by the primary key `(shop_id, id)`, newest activity first ([L603-L605](../src/riverbend/api.py#L603-L605)).
+1. [`list_customers`](../src/riverbend/api.py#L599) runs [`_CUSTOMER_SUMMARY`](../src/riverbend/api.py#L1072): customers left-joined to their conversations and work orders, aggregated per customer. It counts conversations, awaiting reply, needs a person and open orders, sums the open estimate, and finds the last activity. It groups by the primary key `(shop_id, id)`, newest activity first ([L603-L605](../src/riverbend/api.py#L603-L605)).
 2. It counts conversations with **no** customer (no email address) separately ([L606-L608](../src/riverbend/api.py#L606-L608)).
-3. [`_customer_json`](../src/riverbend/api.py#L963) chooses the display name: the name in their `From` header, else the name the AI read in their message.
+3. [`_customer_json`](../src/riverbend/api.py#L1089) chooses the display name: the name in their `From` header, else the name the AI read in their message.
 
 <a id="customer"></a>
 ### `GET /v1/shops/{shop}/customers/{id}`: one customer's whole history
@@ -423,7 +423,7 @@ Postman saves the test customer's order id into `{{workOrderId}}`.
 
 1. [`set_budget`](../src/riverbend/api.py#L853) checks the shop exists.
 2. [`Budget.set_cap`](../src/riverbend/budget.py#L211) updates the shop's cap and this month's `shop_spend` row. It clears the "exhausted" or "warning" flags if the new cap is above current spend, and records a `budget_cap_changed` event.
-3. [`jobqueue.unpark(shop, "budget")`](../src/riverbend/jobqueue.py#L99) releases every job held at the cap back to `queued`, and restarts their processing clock ([L857](../src/riverbend/api.py#L857)).
+3. [`jobqueue.unpark(shop, "budget")`](../src/riverbend/jobqueue.py#L152) releases every job held at the cap back to `queued`, and restarts their processing clock ([L857](../src/riverbend/api.py#L857)).
 4. If any were released, it sets those messages back to `queued` and clears the conversations' `held_budget` reason ([L858-L865](../src/riverbend/api.py#L858-L865)). The worker processes them next.
 5. It returns the new budget status plus `released_held_messages`.
 
@@ -450,7 +450,7 @@ curl -X POST "$API/v1/admin/staff-accounts" -H "Authorization: Bearer $ADMIN_TOK
 ---
 
 <a id="dev"></a>
-### Dev-only routes (`make dev`; 404 on GCP)
+### Dev-only routes (`make dev` or `make dev-step`; 404 on GCP)
 
 These are registered only when `DEV_MODE=true` ([L898](../src/riverbend/api.py#L898)). In production the routes don't exist at all.
 
@@ -460,6 +460,11 @@ These are registered only when `DEV_MODE=true` ([L898](../src/riverbend/api.py#L
 | `GET /v1/dev/config` | [`dev_config`](../src/riverbend/api.py#L904) | Shops, dev staff tokens, the dev accounts and their password, the ingest key and the admin token, so the local dashboard can act as staff and as the gateway. Provider and breaker state. |
 | `GET /v1/dev/samples` | [`dev_samples`](../src/riverbend/api.py#L920) | The 40 messages from the brief (`data/samples.json`). |
 | `PUT /v1/dev/faults` | [`dev_faults`](../src/riverbend/api.py#L924) | Breaks the model provider on purpose. `{"spec": "outage"}`, `"flaky:0.5"`, `"slow:2"` or `"garbage:0.2"` wraps the real provider in [`FaultInjectingProvider`](../src/riverbend/llm/resilience.py#L108). `{"spec": ""}` restores it and closes the breaker ([L928-L933](../src/riverbend/api.py#L928-L933)). Use it to watch retries, the breaker and the hand-off to staff. |
+| `GET /v1/dev/jobs` | [`dev_jobs`](../src/riverbend/api.py#L946) | The job queue, newest first: status, attempts, `ready` (the worker would take it now), `run_after`, `last_error` and the message it belongs to. `?status=all` includes `done` and `dead` jobs. |
+| `POST /v1/dev/worker/run-once` | [`dev_run_once`](../src/riverbend/api.py#L961) | One turn of the worker loop: [`Worker.run_once`](../src/riverbend/worker.py#L49) claims the next ready job and runs the [pipeline](#part-3-after-intake-the-worker) on it. Returns what that run wrote: `outcome`, `model_calls`, `events`, `messages_sent`, the conversation's state, the job afterwards and, when a work order was created, the validated `model_output` next to `code_decided` (lines and prices). `ran: false` when nothing is ready. |
+| `GET /v1/dev/logs` | [`dev_logs`](../src/riverbend/api.py#L1049) | The latest application log lines (worker outcomes, model calls, warnings, tracebacks), oldest first, from an in-memory buffer ([devlog.py](../src/riverbend/devlog.py)). Uvicorn's per-request lines aren't included. `?after=<seq>` returns only newer lines. |
+
+**Step mode.** `make dev-step` starts the API with no background worker (`EMBEDDED_WORKER=false`). Messages are accepted and queued as usual, but nothing processes them until you call `run-once`, so each step can be watched on its own. The local console shows the same thing on its **Worker & logs (dev)** page: the queue, a Run button, what the last run did and the server log. A retry waits for its `run_after` time before `run-once` will take it.
 
 ---
 
@@ -485,15 +490,18 @@ Even if the 404 check had a bug, row-level security ([Part 1.4](#14-tenant-isola
 
 ### 3.1 The worker loop
 
-1. [`Worker.run_forever`](../src/riverbend/worker.py#L74) loops:
+1. A [`WorkerPool`](../src/riverbend/worker.py#L122) runs 1–3 worker threads in one process, sized by the backlog (jobs due and not started): 1 thread up to 25 waiting, 2 above 25, 3 above 50. It adds threads at once and removes one only after the backlog has stayed lower for 60 seconds; a removed thread finishes its job first. On GCP each `riverbend-worker` instance runs one pool; in `make dev` it runs inside the API. Every thread runs the same loop:
+2. [`Worker.run_forever`](../src/riverbend/worker.py#L81) loops:
    - every 30 seconds it runs housekeeping;
    - otherwise it calls `run_once` and sleeps `poll_seconds` (0.5 s) whenever the queue is empty.
-2. [`run_once`](../src/riverbend/worker.py#L43) → [`jobqueue.claim`](../src/riverbend/jobqueue.py#L45) atomically takes the oldest runnable job:
+3. [`run_once`](../src/riverbend/worker.py#L49) → [`jobqueue.claim`](../src/riverbend/jobqueue.py#L98) takes one runnable job, **fairly across shops** ([the query](../src/riverbend/jobqueue.py#L62)):
+   - the shop with the fewest jobs running goes first; on a tie, the shop served longest ago (`claimed_at`); then the shop whose oldest job has waited longest. Within a shop it's oldest first. So one shop's burst can't hold up another shop, with one worker or many;
+   - claims take turns under a Postgres advisory lock (a few milliseconds each), so workers that free up at the same moment don't all pick the same shop;
    - `FOR UPDATE SKIP LOCKED` means many workers never take the same job;
    - the job gets a **lease** (`locked_until`, 120 s) and a fresh `lease_token`;
    - a job whose worker died is re-claimed once its lease expires.
-3. It calls [`pipeline.process(job)`](../src/riverbend/pipeline.py#L95). An unexpected crash, meaning a bug rather than a provider failure, is rescheduled with backoff. After `max_attempts` (6) the job is marked `dead` ([worker.py L50-L63](../src/riverbend/worker.py#L50-L63)).
-4. **Housekeeping** ([L69](../src/riverbend/worker.py#L69)) books budget reservations orphaned by a crashed worker at their worst case ([`sweep_orphans`](../src/riverbend/budget.py#L164)).
+4. It calls [`pipeline.process(job)`](../src/riverbend/pipeline.py#L95). An unexpected crash, meaning a bug rather than a provider failure, is rescheduled with backoff. After `max_attempts` (6) the job is marked `dead` ([worker.py L57-L70](../src/riverbend/worker.py#L57-L70)).
+5. **Housekeeping** ([L76](../src/riverbend/worker.py#L76)) books budget reservations orphaned by a crashed worker at their worst case ([`sweep_orphans`](../src/riverbend/budget.py#L164)).
 
 ### 3.2 Processing one message: `Pipeline._process`
 
@@ -515,7 +523,7 @@ Even if the 404 check had a bug, row-level security ([Part 1.4](#14-tenant-isola
    2. **Reserve:** [`Budget.reserve`](../src/riverbend/budget.py#L59) runs one conditional `UPDATE … WHERE spent + reserved + amount <= cap`. It is atomic, so concurrent workers can't jointly overshoot the cap. It also inserts an `llm_calls` row with status `reserved`.
    3. **No room under the cap:** the message is **held** ([`_hold_for_budget`](../src/riverbend/pipeline.py#L346)). The job is parked, staff see it in the inbox, and raising the cap releases it.
    4. **Call the provider:** `self.provider.complete(request)`, which is [`GeminiProvider.complete`](../src/riverbend/llm/gemini_provider.py#L90) on the live site, [`AnthropicProvider.complete`](../src/riverbend/llm/anthropic_provider.py#L73) for Claude, or the [offline stand-in](../src/riverbend/llm/offline.py#L36). Each adapter turns provider errors into one of three kinds.
-   5. **Transient error** (timeout, 429, 5xx): settle the reservation, record a breaker failure, then retry with backoff, which is exponential with jitter ([`backoff_seconds`](../src/riverbend/jobqueue.py#L122)). After `max_attempts` the message goes to staff ([`_retry_or_escalate`](../src/riverbend/pipeline.py#L331)). If the provider may have billed us, the full reservation is booked.
+   5. **Transient error** (timeout, 429, 5xx): settle the reservation, record a breaker failure, then retry with backoff, which is exponential with jitter ([`backoff_seconds`](../src/riverbend/jobqueue.py#L175)). After `max_attempts` the message goes to staff ([`_retry_or_escalate`](../src/riverbend/pipeline.py#L331)). If the provider may have billed us, the full reservation is booked.
    6. **Refusal:** goes to staff (`model_refused`). **Permanent error** (bad configuration): goes to staff (`ai_configuration_error`).
    7. **Success:** [`cost_of`](../src/riverbend/llm/pricing.py#L42) computes the real cost from token usage, and [`Budget.settle`](../src/riverbend/budget.py#L119) books it: it releases the reservation and adds the actual cost.
 7. **Validate** ([`parse_and_validate`](../src/riverbend/extraction/validate.py#L134)):
@@ -550,7 +558,7 @@ Even if the 404 check had a bug, row-level security ([Part 1.4](#14-tenant-isola
    | Escalate ([`_mark_needs_staff`](../src/riverbend/pipeline.py#L372)) | conversation → `needs_staff`, with the reason | `handoff`: "a member of staff will reply personally", once per hand-off |
 
    - Every outbox row goes through [`_send`](../src/riverbend/pipeline.py#L641) with a dedupe key, so re-processing never sends twice.
-   - Then [`jobqueue.complete`](../src/riverbend/jobqueue.py#L64) marks the job done **only if this worker still holds the lease**. If another worker took the job over meanwhile, `LeaseLost` rolls the whole transaction back. Its results count, not ours ([L503-L507](../src/riverbend/pipeline.py#L503-L507)).
+   - Then [`jobqueue.complete`](../src/riverbend/jobqueue.py#L117) marks the job done **only if this worker still holds the lease**. If another worker took the job over meanwhile, `LeaseLost` rolls the whole transaction back. Its results count, not ours ([L503-L507](../src/riverbend/pipeline.py#L503-L507)).
 
 The customer sees the result on their status page ([customer view](#customer-view)), and staff see it in the inbox, the work orders and the customer's history.
 

@@ -1633,8 +1633,8 @@
       ]
     },
     {
-      "name": "10. Dev only (make dev)",
-      "description": "Exist only when DEV_MODE=true. 404 on GCP.",
+      "name": "10. Dev only (make dev / make dev-step)",
+      "description": "Exist only when DEV_MODE=true. 404 on GCP.\n\nStep mode: start the API with `make dev-step` (no background worker). A message you send then waits in the queue: 'Job queue' shows it, and each 'Run the worker once' processes exactly one job and shows what that run did.",
       "item": [
         {
           "name": "Dev config",
@@ -1793,6 +1793,112 @@
                   "language": "json"
                 }
               }
+            }
+          }
+        },
+        {
+          "name": "Job queue (waiting and running)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/jobs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "jobs"
+              ]
+            },
+            "description": "The job queue: one job per accepted message, newest first. `ready: true` means the worker would take it now; a retry waits until `run_after`. Under `make dev-step` a new message stays here until you run the worker.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Run the worker once (one job)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/worker/run-once",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "worker",
+                "run-once"
+              ]
+            },
+            "description": "One turn of the worker loop: claim the next ready job, run the whole AI pipeline on it, and show what that run wrote: `outcome`, `model_calls` (tokens, cost), `events`, `messages_sent`, the conversation's new `state`, `model_output` next to `code_decided` when a work order was created, and `job_after`. `ran: false` means nothing was ready.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Job queue (all, including done)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/dev/jobs?status=all",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "dev",
+                "jobs"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "all"
+                }
+              ]
+            },
+            "description": "The same list including finished (`done`) and dead-lettered (`dead`) jobs.\n\nExpected: HTTP 200. Code walkthrough: docs/API_WALKTHROUGH.md#dev",
+            "auth": {
+              "type": "noauth"
             }
           }
         }

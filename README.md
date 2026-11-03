@@ -35,6 +35,8 @@ make dev        # throwaway local Postgres + API with an embedded worker on :800
 make console    # the staff console on http://localhost:5173 (proxies /v1 to :8000)
 ```
 
+To watch the worker one step at a time, start with `make dev-step` instead of `make dev`: messages wait in the queue until you call `POST /v1/dev/worker/run-once` (folder 10 of the Postman collection), which processes exactly one job and shows what it did. The console's **Worker & logs (dev)** page does the same with a button, and also shows the job queue and the server log; it appears only when the API runs in dev mode.
+
 The provider defaults to an **offline stand-in**: hand-written outputs, $0, deterministic, clearly labelled as not a model. To use Claude, put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY=…` in `.env`. Never commit it; `.env` is git-ignored. To use Gemini on Vertex AI with your own `gcloud` login (no key), set `LLM_PROVIDER=gemini`, `LLM_MODEL=gemini-3.8-flash` and `VERTEX_PROJECT=<your project>`. The live deployment runs Gemini until its Claude quota is granted ([D19](docs/DECISIONS.md#d19-gemini-runs-on-vertex-while-the-project-has-no-claude-quota)).
 
 Verified on Linux with Postgres 16: `make dev`, `make console`, `make test`, `make console-test` and `make eval`. Both Docker images build in CI on every push and run on the GCP deployment; `make up` itself wasn't run on the build machine, which has no Docker.
@@ -117,7 +119,7 @@ Under 30% injected provider failures, every outcome matches the baseline, with n
 ## How it works
 
 - **Intake** stores message + conversation + acknowledgement + job in one transaction and returns `202`. It never waits on the model.
-- **Workers** claim jobs from Postgres (`SKIP LOCKED`, leases), reserve worst-case budget, call the model (Claude, or Gemini on the live deployment) with a strict JSON schema, validate shape *and* meaning, let a pure `policy` function decide, and commit the result with the job's completion.
+- **Workers** claim jobs from Postgres (`SKIP LOCKED`, leases), taking turns between shops so one shop's burst can't hold up the others, with 1–3 threads per worker process sized by the backlog, reserve worst-case budget, call the model (Claude, or Gemini on the live deployment) with a strict JSON schema, validate shape *and* meaning, let a pure `policy` function decide, and commit the result with the job's completion.
 - **Tenancy** is enforced three times: composite keys, row-level security, and per-shop credentials.
 - See the [architecture note](docs/ARCHITECTURE.md) for the diagram, boundaries, data model and the three decisions most worth challenging.
 

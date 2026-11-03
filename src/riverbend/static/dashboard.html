@@ -99,6 +99,7 @@
   <span class="spacer"></span>
   <span class="pill" id="providerPill">…</span>
   <span class="pill" id="breakerPill">breaker: …</span>
+  <button class="btn" id="refreshBtn">Refresh</button>
 </header>
 
 <main>
@@ -206,7 +207,8 @@ async function boot() {
   const tabs = $("shopTabs");
   for (const s of cfg.shops) tabs.append(h("button", { "data-shop": s.id, onclick: () => { shop = s.id; try { localStorage.setItem("shop", shop); } catch (e) {} render(); } },
     s.name.replace("Riverbend Cycles ", "")));
-  render(); setInterval(render, 1500);
+  // No timer: the page reloads its data only when you press Refresh or act on it, like the staff console.
+  render();
 }
 
 async function render() {
@@ -296,6 +298,8 @@ async function renderConversation(id, open) {
     h("h4", {}, "Timeline"), events);
 }
 $("dClose").onclick = () => { openConv = null; $("drawer").classList.remove("open"); $("drawer").setAttribute("aria-hidden", "true"); };
+
+$("refreshBtn").onclick = async () => { await render(); toast("Refreshed"); };
 
 $("sendBtn").onclick = async () => {
   const body = $("msgBody").value.trim(); if (!body) return toast("Type a message first");

@@ -3,6 +3,10 @@ import type {
   ConversationDetail,
   CustomerHistory,
   CustomerList,
+  DevJob,
+  DevLogLine,
+  DevRun,
+  DevStatus,
   EvalSummary,
   Inbox,
   LlmCall,
@@ -12,7 +16,7 @@ import type {
   TestMessageResult,
   WorkOrderList,
 } from "../types";
-import { SourceError, type Actions, type DataSource } from "./source";
+import { SourceError, type Actions, type DataSource, type DevTools } from "./source";
 
 /** What a signed-in session holds. Lives in sessionStorage, so it ends with the tab. */
 export interface Session {
@@ -157,6 +161,7 @@ export class ApiSource implements DataSource {
   readonly kind = "live" as const;
   readonly actions: Actions;
   private readonly featureCache = new Map<string, Promise<{ testMessages: boolean }>>();
+  private devCache: Promise<DevTools | null> | null = null;
 
   constructor(
     readonly session: Session,
@@ -266,6 +271,34 @@ export class ApiSource implements DataSource {
       this.featureCache.set(shop, f);
     }
     return f;
+  }
+
+  /** Asked once per session: the dev routes exist only when the API runs with DEV_MODE=true. */
+  devTools(): Promise<DevTools | null> {
+    const base = this.session.apiBase;
+    const status = async (): Promise<DevStatus> => {
+      const c = await call<{ embedded_worker: boolean; worker_threads?: number; provider: string; model: string; breaker: string }>(
+        base,
+        "/v1/dev/config",
+      );
+      return {
+        embeddedWorker: c.embedded_worker,
+        workerThreads: c.worker_threads ?? 0,
+        provider: c.provider,
+        model: c.model,
+        breaker: c.breaker,
+      };
+    };
+    this.devCache ??= status().then(
+      (): DevTools => ({
+        status,
+        jobs: async (scope) => (await call<{ items: DevJob[] }>(base, `/v1/dev/jobs?status=${scope}`)).items,
+        runOnce: () => call<DevRun>(base, "/v1/dev/worker/run-once", { method: "POST" }),
+        logs: async () => (await call<{ items: DevLogLine[] }>(base, "/v1/dev/logs?limit=200")).items,
+      }),
+      () => null,
+    );
+    return this.devCache;
   }
 
   /** Eval results are a build artefact, not live data: read them from the bundled snapshot. */

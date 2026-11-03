@@ -1,8 +1,9 @@
 # One-command local runs:
 #   make up       — Docker: Postgres + migrations + API + 2 workers + staff console -> http://localhost:3000
 #   make dev      — no Docker: local Postgres binaries + API with an embedded worker -> http://localhost:8000
+#   make dev-step — like `make dev` but no worker: POST /v1/dev/worker/run-once runs one job at a time
 #   make console  — the staff console in dev mode (run alongside `make dev`)        -> http://localhost:5173
-.PHONY: up down dev console console-test snapshot test lint fmt eval eval-live eval-gemini fixtures clean help
+.PHONY: up down dev dev-step console console-test snapshot test lint fmt eval eval-live eval-gemini fixtures clean help
 
 help:
 	@grep -E '^[a-z-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-10s %s\n", $$1, $$2}'
@@ -18,6 +19,12 @@ dev: ## Run locally without Docker (needs Postgres binaries); API + embedded wor
 	scripts/devdb.sh start
 	uv run python -m riverbend migrate
 	EMBEDDED_WORKER=true uv run python -m riverbend api --port 8000
+
+dev-step: ## Like dev, but no background worker: each POST /v1/dev/worker/run-once processes one job
+	uv sync --quiet
+	scripts/devdb.sh start
+	uv run python -m riverbend migrate
+	EMBEDDED_WORKER=false uv run python -m riverbend api --port 8000
 
 console: ## Run the staff console (React) against the local API; open http://localhost:5173
 	cd ui && npm install --no-audit --no-fund && npm run dev

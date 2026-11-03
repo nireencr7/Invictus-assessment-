@@ -10,7 +10,7 @@
 |---|---|---|
 | `api`, `intake`, `staff_auth` | auth and staff sign-in, HTTP validation, idempotent accept | call the model; touch a second tenant; store a password or token |
 | `ui/` (separate app) | the staff console: read views + staff actions, via its own `/v1` proxy | hold secrets; compute prices or dates |
-| `jobqueue`, `worker` | claim (SKIP LOCKED + lease), retry, park, dead-letter | know any business rule |
+| `jobqueue`, `worker` | claim (fair across shops; SKIP LOCKED + lease), retry, park, dead-letter; 1–3 worker threads by backlog | know any business rule |
 | `pipeline` | orchestrating one message | price, compute dates or make policy itself |
 | `llm/` port + adapters | provider calls, error classification, breaker, fault injection | leak SDK types; retry (SDK retries are **off**) |
 | `extraction/` | the model contract: schema, prompt, validation, date resolution | see a price or the database |

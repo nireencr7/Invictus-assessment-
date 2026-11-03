@@ -72,4 +72,8 @@ export class SnapshotSource implements DataSource {
   async evalSummary() {
     return this.snapshot.eval;
   }
+
+  async devTools() {
+    return null;
+  }
 }

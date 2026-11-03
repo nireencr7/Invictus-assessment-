@@ -74,6 +74,14 @@ class Settings(BaseSettings):
     # --- runtime ----------------------------------------------------------------------
     embedded_worker: bool = False
     worker_poll_seconds: float = 0.5
+    # One worker process runs between min and max worker threads: one per `jobs_per_thread` jobs
+    # waiting (1 up to 25, 2 above 25, 3 above 50). It adds threads at once and removes one only
+    # after the backlog has stayed lower for `scale_down_seconds`.
+    worker_min_threads: int = Field(default=1, ge=1)
+    worker_max_threads: int = Field(default=3, ge=1)
+    worker_jobs_per_thread: int = Field(default=25, ge=1)
+    worker_scale_check_seconds: float = Field(default=5.0, gt=0)
+    worker_scale_down_seconds: float = Field(default=60.0, ge=0)
     dev_mode: bool = True
     # Lets signed-in staff send a message *as a customer* of their own shop from the console, to
     # try the workflow end to end. Always on in dev mode; off in production unless switched on.

@@ -32,7 +32,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from riverbend import jobqueue
+from riverbend import devlog, jobqueue
 from riverbend.catalog import format_money
 from riverbend.config import REPO_ROOT, Settings, get_settings
 from riverbend.extraction.dates import DateWindow
@@ -211,14 +211,14 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
             seed_dev_accounts(svc.db, list(svc.catalog.shops))
         worker_thread = None
         if settings.embedded_worker:
-            worker = svc.worker()
-            app.state.worker = worker
-            worker_thread = threading.Thread(target=worker.run_forever, name="embedded-worker", daemon=True)
+            pool = svc.worker_pool()  # 1-3 worker threads, sized by the backlog
+            app.state.worker = pool
+            worker_thread = threading.Thread(target=pool.run_forever, name="worker-pool", daemon=True)
             worker_thread.start()
         yield
         if worker_thread:
             app.state.worker.stop()
-            worker_thread.join(timeout=10)
+            worker_thread.join(timeout=35)  # each thread finishes the job in hand
         if services is None:
             svc.close()
 
@@ -902,7 +902,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
             return (STATIC / "dashboard.html").read_text()
 
         @app.get("/v1/dev/config")
-        def dev_config(s: Services = Depends(svc)):
+        def dev_config(request: Request, s: Services = Depends(svc)):
             """Dev only: lets the local dashboard act as staff and as the email gateway."""
             return {
                 "shops": [{"id": sh.id, "name": sh.name} for sh in s.catalog.shops.values()],
@@ -914,6 +914,7 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
                 "provider": s.pipeline.provider.name,
                 "model": s.pipeline.provider.model,
                 "embedded_worker": settings.embedded_worker,
+                "worker_threads": request.app.state.worker.size if settings.embedded_worker else 0,
                 "breaker": s.breaker.state,
             }
 
@@ -932,7 +933,133 @@ def create_app(settings: Settings | None = None, services: Services | None = Non
                 s.breaker.record_success()
             return {"provider": s.pipeline.provider.name, "faults": change.spec, "breaker": s.breaker.state}
 
+        # Step mode: with EMBEDDED_WORKER=false (`make dev-step`) nothing processes a message until
+        # you call run-once, so each turn of the worker loop can be watched on its own.
+        def dev_message(s: Services, shop_id: str, message_id) -> dict | None:
+            with s.db.tenant_tx(shop_id) as conn:
+                return conn.execute(
+                    """SELECT external_id, conversation_id, left(body, 120) AS body, status, outcome
+                       FROM inbound_messages WHERE id = %s""",
+                    (message_id,),
+                ).fetchone()
+
+        @app.get("/v1/dev/jobs")
+        def dev_jobs(status: Literal["open", "all"] = "open", s: Services = Depends(svc)):
+            """Dev only: the job queue, newest first (at most 50). Every accepted message gets one job.
+            open = queued, running or parked; all = done and dead too."""
+            with s.db.system_tx() as conn:
+                rows = conn.execute(
+                    """SELECT id, shop_id, message_id, status, attempts,
+                              status = 'queued' AND run_after <= now() AS ready,
+                              run_after, locked_until, park_reason, last_error, created_at, updated_at
+                       FROM jobs WHERE %s OR status IN ('queued', 'running', 'parked')
+                       ORDER BY id DESC LIMIT 50""",
+                    (status == "all",),
+                ).fetchall()
+            return {"items": [{**r, "message": dev_message(s, r["shop_id"], r["message_id"])} for r in rows]}
+
+        @app.post("/v1/dev/worker/run-once")
+        def dev_run_once(request: Request, s: Services = Depends(svc)):
+            """Dev only: one turn of the worker loop. Claims the next ready job, runs the whole pipeline
+            on it, and returns what that run wrote: model calls, events, messages sent, the new state."""
+            worker = getattr(request.app.state, "step_worker", None)
+            if worker is None:
+                worker = request.app.state.step_worker = s.worker()
+            with s.db.system_tx() as conn:
+                started = conn.execute("SELECT clock_timestamp() AS t").fetchone()["t"]
+            outcome = worker.run_once()
+            if outcome is None:
+                with s.db.system_tx() as conn:
+                    later = conn.execute(
+                        """SELECT id, shop_id, run_after, attempts, last_error FROM jobs
+                           WHERE status = 'queued' ORDER BY run_after, id LIMIT 10"""
+                    ).fetchall()
+                return {"ran": False, "detail": "no job is ready", "queued_for_later": later}
+            job = worker.last_job
+            msg = dev_message(s, job.shop_id, job.message_id)
+            trace: dict = {}
+            if msg is not None:
+                with s.db.tenant_tx(job.shop_id) as conn:
+                    since = (msg["conversation_id"], started)
+                    calls = conn.execute(
+                        """SELECT purpose, status, provider, model, reserved_usd, cost_usd, input_tokens,
+                                  output_tokens, latency_ms, error, raw_output
+                           FROM llm_calls WHERE message_id = %s AND created_at >= %s ORDER BY id""",
+                        (job.message_id, started),
+                    ).fetchall()
+                    trace = {
+                        "model_calls": [
+                            {
+                                **c,
+                                "reserved_usd": str(c["reserved_usd"]),
+                                "cost_usd": None if c["cost_usd"] is None else str(c["cost_usd"]),
+                                "raw_output": _maybe_json(c["raw_output"]),
+                            }
+                            for c in calls
+                        ],
+                        "events": conn.execute(
+                            """SELECT type, detail FROM events
+                               WHERE conversation_id = %s AND created_at >= %s ORDER BY id""",
+                            since,
+                        ).fetchall(),
+                        "messages_sent": conn.execute(
+                            """SELECT kind, body FROM outbound_messages
+                               WHERE conversation_id = %s AND created_at >= %s ORDER BY created_at""",
+                            since,
+                        ).fetchall(),
+                        "conversation": conn.execute(
+                            "SELECT id, state, state_reason, follow_ups_asked FROM conversations WHERE id = %s",
+                            (msg["conversation_id"],),
+                        ).fetchone(),
+                    }
+                    # Raw model text is kept only when it fails validation (model_calls.raw_output). A valid
+                    # output is kept on the work order: show it next to what code made of it.
+                    wo = conn.execute(
+                        """SELECT id, extraction, estimate_cents, urgency, requested_earliest, requested_latest,
+                                  requested_time_of_day, review_reasons
+                           FROM work_orders WHERE conversation_id = %s AND created_at >= %s""",
+                        since,
+                    ).fetchone()
+                    if wo is not None:
+                        trace["model_output"] = wo.pop("extraction")
+                        trace["code_decided"] = {
+                            **wo,
+                            "lines": conn.execute(
+                                """SELECT service_code, wheel, quantity, unit_price_cents, line_total_cents
+                                   FROM work_order_lines WHERE work_order_id = %s ORDER BY line_no""",
+                                (wo["id"],),
+                            ).fetchall(),
+                        }
+            with s.db.system_tx() as conn:
+                after = conn.execute(
+                    "SELECT status, attempts, run_after, park_reason, last_error FROM jobs WHERE id = %s",
+                    (job.id,),
+                ).fetchone()
+            return {
+                "ran": True,
+                "job": {"id": job.id, "shop_id": job.shop_id, "attempt": job.attempts},
+                "message": msg,
+                "outcome": outcome,
+                **trace,
+                "job_after": after,
+            }
+
+        log_buffer = devlog.install()
+
+        @app.get("/v1/dev/logs")
+        def dev_logs(after: int = 0, limit: int = 200):
+            """Dev only: the latest application log lines, oldest first (worker outcomes, model calls,
+            warnings, tracebacks; not uvicorn's per-request lines). after = the last seq already seen."""
+            return {"items": log_buffer.lines(after, max(1, min(limit, 500)))}
+
     return app
+
+
+def _maybe_json(text: str | None):
+    try:
+        return json.loads(text) if text else text
+    except ValueError:
+        return text
 
 
 def _jsonb(v):

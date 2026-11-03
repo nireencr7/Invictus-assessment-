@@ -1,5 +1,7 @@
 """The HTTP contract: intake validation and auth, the work-order list, the customer view."""
 
+import logging
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -115,6 +117,58 @@ def test_model_calls_and_activity_feeds_are_scoped_to_the_shop(client):
     down = {"Authorization": "Bearer dev-downtown-token"}
     assert client.get("/v1/shops/rb-downtown/llm-calls", headers=down).json()["items"] == []
     assert client.get("/v1/shops/rb-lakeshore/activity", headers=down).status_code == 404
+
+
+def test_dev_step_mode_runs_one_job_per_call(client):
+    # No embedded worker in tests: the message waits in the queue until someone runs the worker.
+    r = post(client, "rb-lakeshore", "m-1010", "Need new chain, old one is rusty. Road bike. Wednesday.")
+    jobs = client.get("/v1/dev/jobs").json()["items"]
+    assert [(j["status"], j["ready"], j["message"]["external_id"]) for j in jobs] == [
+        ("queued", True, "m-1010")
+    ]
+
+    run = client.post("/v1/dev/worker/run-once").json()
+    assert run["ran"] is True and run["outcome"] == "work_order_created"
+    assert run["message"]["conversation_id"] == r.json()["conversation_id"]
+    assert [(c["purpose"], c["status"]) for c in run["model_calls"]] == [("extract", "ok")]
+    # What the model said (catalog codes + the customer's words), next to what code made of it (prices).
+    assert [s["code"] for s in run["model_output"]["services"]] == ["CHAIN_REPLACE"]
+    assert [(ln["service_code"], ln["line_total_cents"]) for ln in run["code_decided"]["lines"]] == [
+        ("CHAIN_REPLACE", 4500)
+    ]
+    assert {"llm_call", "work_order_created"} <= {e["type"] for e in run["events"]}
+    assert [m["kind"] for m in run["messages_sent"]] == ["summary"]
+    assert run["conversation"]["state"] == "work_order_created"
+    assert run["job_after"]["status"] == "done"
+
+    assert client.post("/v1/dev/worker/run-once").json() == {
+        "ran": False,
+        "detail": "no job is ready",
+        "queued_for_later": [],
+    }
+    assert client.get("/v1/dev/jobs").json()["items"] == []
+    assert client.get("/v1/dev/jobs?status=all").json()["items"][0]["status"] == "done"
+
+
+def test_dev_logs_show_what_the_worker_logged(client, caplog):
+    caplog.set_level(logging.INFO, logger="riverbend")
+    post(client, "rb-lakeshore", "m-1010", "Need new chain, old one is rusty. Road bike. Wednesday.")
+    seen = client.get("/v1/dev/logs").json()["items"]
+    last = seen[-1]["seq"] if seen else 0
+    job = client.post("/v1/dev/worker/run-once").json()["job"]["id"]
+    newer = client.get(f"/v1/dev/logs?after={last}").json()["items"]
+    assert newer and all(line["seq"] > last for line in newer)
+    assert any(
+        f"job {job} shop=rb-lakeshore attempt=1 -> work_order_created" in line["message"] for line in newer
+    )
+
+
+def test_dev_routes_do_not_exist_outside_dev_mode(make_services):
+    s = make_services(dev_mode=False)
+    with TestClient(create_app(s.settings, s)) as c:
+        assert c.get("/v1/dev/jobs").status_code == 404
+        assert c.post("/v1/dev/worker/run-once").status_code == 404
+        assert c.get("/v1/dev/logs").status_code == 404
 
 
 def test_cors_is_off_by_default_and_opt_in(make_services):

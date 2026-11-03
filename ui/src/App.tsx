@@ -16,6 +16,7 @@ import { Orders } from "./views/Orders";
 import { Overview } from "./views/Overview";
 import { Results } from "./views/Results";
 import { Spend } from "./views/Spend";
+import { Worker } from "./views/Worker";
 
 type Boot =
   | { state: "loading" }
@@ -23,7 +24,7 @@ type Boot =
   | { state: "ready"; config: Config; source: DataSource; banner?: string }
   | { state: "error"; message: string };
 
-const VIEWS: { id: View; label: string; title: string; scoped: boolean }[] = [
+const VIEWS: { id: View; label: string; title: string; scoped: boolean; devOnly?: boolean }[] = [
   { id: "overview", label: "Overview", title: "All shops", scoped: false },
   { id: "orders", label: "Work orders", title: "Work orders", scoped: true },
   { id: "inbox", label: "Inbox", title: "Inbox", scoped: true },
@@ -31,6 +32,8 @@ const VIEWS: { id: View; label: string; title: string; scoped: boolean }[] = [
   { id: "activity", label: "Activity", title: "Activity", scoped: true },
   { id: "spend", label: "Spend & model calls", title: "Spend & model calls", scoped: true },
   { id: "results", label: "Eval results", title: "The 40 sample messages", scoped: false },
+  // Shown only when the API runs with DEV_MODE=true (local `make dev` / `make dev-step`).
+  { id: "worker", label: "Worker & logs (dev)", title: "Worker, job queue and logs", scoped: false, devOnly: true },
 ];
 
 const viewFromHash = (): View => {
@@ -171,6 +174,8 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
 
   const inbox = useResource(() => source.inbox(shopId), `nav-inbox:${shopId}`, ctx.poll);
   const needs = inbox.data?.items.filter((i) => i.needs_action).length ?? 0;
+  const dev = useResource(() => source.devTools(), "nav-dev");
+  const views = VIEWS.filter((v) => !v.devOnly || dev.data);
   const meta = VIEWS.find((v) => v.id === view)!;
   const snapshot = source instanceof SnapshotSource ? source.snapshot : null;
 
@@ -182,7 +187,7 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
           <b>Work orders</b>
         </div>
         <div className="nav">
-          {VIEWS.map((v) => (
+          {views.map((v) => (
             <button key={v.id} aria-current={view === v.id ? "page" : undefined} onClick={() => ctx.go(v.id)}>
               {v.label}
               {v.id === "inbox" && needs ? <span className="count">{needs}</span> : null}
@@ -245,6 +250,7 @@ function Console({ source, banner, onSignOut }: { source: DataSource; banner?: s
           {view === "activity" && <Activity ctx={ctx} />}
           {view === "spend" && <Spend ctx={ctx} />}
           {view === "results" && <Results ctx={ctx} />}
+          {view === "worker" && <Worker ctx={ctx} />}
         </div>
       </div>
 

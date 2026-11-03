@@ -29,7 +29,7 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 1. **Run `make eval-live` on Opus 5.5 *and* Haiku 5.5.** Pick the default model from golden-label agreement versus cost per message. This is a business decision about the spend cap, and it should be made with data.
 2. **Staff identity via Identity Platform / IAP** (password reset, MFA, Google sign-in) with the shops as a claim, an account admin screen in the console, and per-route roles (staff vs. manager vs. HQ). Email-and-password sign-in and per-person sessions exist already.
 3. **Outbox sender** with delivery status; reply-to tokens in the address.
-4. **Fair queueing across tenants**: claim round-robin by shop, cap concurrency per shop, rate-limit intake per shop.
+4. **Intake rate limits per shop**, and shop priority in the fair claim. (Claiming is already fair across shops and the worker scales to 3 threads: [D22](DECISIONS.md#d22-workers-take-turns-between-shops-and-one-worker-process-runs-13-threads).)
 5. **Customer identity** (email/phone) for threading, cancellations and history.
 6. **Retention + PII redaction** for raw model output; per-shop export/delete.
 7. **OpenTelemetry + dashboards**: p50/p95 time-to-work-order, cost per message, escalation rate per shop.
@@ -39,7 +39,7 @@ Finishing everything was not the goal. These are the cuts, stated plainly.
 Assume ~30 messages per shop per day: ~3,000/day, peaks of perhaps 30/minute. **Throughput is not the problem** — Postgres-as-queue handles orders of magnitude more. In the order I expect them to hurt:
 
 1. **Staff onboarding and support.** Hundreds of people with accounts that an admin creates by API call, and no self-service password reset, means the admin becomes a help desk. Needs a managed identity provider (reset, MFA, SSO) and an admin screen. Per-person sessions and lockout already exist.
-2. **Noisy neighbours.** The queue is a single global FIFO and there is one provider quota. A spam burst or reply storm at one shop delays all 100. The per-shop caps protect *money*, not *latency*. Fix: fair claim per tenant, intake rate limits, Cloud Armor.
+2. **Noisy neighbours.** Claiming is already fair across shops ([D22](DECISIONS.md#d22-workers-take-turns-between-shops-and-one-worker-process-runs-13-threads)), so one shop's burst no longer holds up the others' processing. What's still shared is the provider quota and intake: a spam burst or reply storm at one shop uses quota and database writes for everyone. The per-shop caps protect *money*, not *latency*. Fix: intake rate limits per shop, Cloud Armor.
 3. **Database connections.** Every Cloud Run instance opens a pool of up to 10. An autoscaled API plus workers will pass Cloud SQL's `max_connections`. Fix: smaller pools, managed connection pooling or PgBouncer, then AlloyDB.
 4. **The shop list in the prompt.** Wrong-shop detection lists every shop in the system prompt. At 100 shops that's a long prompt and a model-side lookup. Move shop matching into code (name/alias index), and make catalogs tenant-scoped (orders are already version-stamped).
 5. **Per-process circuit breakers.** Each worker learns about an outage separately: cheap at 2 workers, wasteful at 20. Move breaker state to the database.

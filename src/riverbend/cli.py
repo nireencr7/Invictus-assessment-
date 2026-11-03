@@ -93,11 +93,11 @@ def main(argv: list[str] | None = None) -> int:
         from riverbend.worker import install_signal_handlers
 
         services = build_services(settings)
-        worker = services.worker()
-        install_signal_handlers(worker)
+        pool = services.worker_pool()
+        install_signal_handlers(pool)
         if args.health_port:
             _serve_health(args.health_port)
-        worker.run_forever()
+        pool.run_forever()
         services.close()
         return 0
     if args.cmd == "snapshot":

@@ -3,6 +3,10 @@ import type {
   ConversationDetail,
   CustomerHistory,
   CustomerList,
+  DevJob,
+  DevLogLine,
+  DevRun,
+  DevStatus,
   EvalSummary,
   Inbox,
   LlmCall,
@@ -35,7 +39,18 @@ export interface DataSource {
   /** What this deployment lets staff do beyond reading (e.g. send test messages). */
   features(shop: string): Promise<{ testMessages: boolean }>;
   evalSummary(): Promise<EvalSummary | null>;
+  /** The worker's queue, a step button and the server log. Null unless the API runs with DEV_MODE=true. */
+  devTools(): Promise<DevTools | null>;
   actions: Actions | null;
+}
+
+/** Dev only. Across all shops: the queue is one table, and these routes don't exist in production. */
+export interface DevTools {
+  status(): Promise<DevStatus>;
+  jobs(scope: "open" | "all"): Promise<DevJob[]>;
+  /** One turn of the worker loop: claim the next ready job and run the whole pipeline on it. */
+  runOnce(): Promise<DevRun>;
+  logs(): Promise<DevLogLine[]>;
 }
 
 export interface Actions {

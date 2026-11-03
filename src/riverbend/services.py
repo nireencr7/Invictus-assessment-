@@ -14,7 +14,7 @@ from riverbend.llm.gemini_provider import GeminiProvider
 from riverbend.llm.offline import OfflineProvider
 from riverbend.llm.resilience import CircuitBreaker, FaultInjectingProvider, FaultPlan
 from riverbend.pipeline import Pipeline
-from riverbend.worker import Worker
+from riverbend.worker import Worker, WorkerPool
 
 
 def build_provider(settings: Settings) -> LLMProvider:
@@ -68,13 +68,26 @@ class Services:
     breaker: CircuitBreaker
     pipeline: Pipeline
 
-    def worker(self) -> Worker:
+    def worker(self, name: str = "worker") -> Worker:
         return Worker(
             self.db,
             self.pipeline,
             self.budget,
             lease_seconds=self.settings.job_lease_seconds,
             poll_seconds=self.settings.worker_poll_seconds,
+            name=name,
+        )
+
+    def worker_pool(self) -> WorkerPool:
+        s = self.settings
+        return WorkerPool(
+            self.worker,
+            self.db,
+            min_threads=s.worker_min_threads,
+            max_threads=s.worker_max_threads,
+            jobs_per_thread=s.worker_jobs_per_thread,
+            check_seconds=s.worker_scale_check_seconds,
+            scale_down_seconds=s.worker_scale_down_seconds,
         )
 
     def close(self) -> None:

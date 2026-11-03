@@ -1,6 +1,6 @@
 import type { DataSource } from "../data/source";
 
-export type View = "overview" | "orders" | "inbox" | "customers" | "activity" | "spend" | "results";
+export type View = "overview" | "orders" | "inbox" | "customers" | "activity" | "spend" | "results" | "worker";
 
 export interface Ctx {
   source: DataSource;

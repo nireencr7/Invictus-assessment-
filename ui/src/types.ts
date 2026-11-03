@@ -297,3 +297,92 @@ export interface Snapshot {
   byShop: Record<string, ShopData>;
   eval: EvalSummary | null;
 }
+
+// Dev only (DEV_MODE=true): the job queue, one turn of the worker, and the server log.
+export type JobStatus = "queued" | "running" | "done" | "parked" | "dead";
+
+export interface DevJobMessage {
+  external_id: string;
+  conversation_id: string;
+  body: string;
+  status: string;
+  outcome: string | null;
+}
+
+export interface DevJob {
+  id: number;
+  shop_id: string;
+  status: JobStatus;
+  attempts: number;
+  ready: boolean;
+  run_after: string;
+  locked_until: string | null;
+  park_reason: string | null;
+  last_error: string | null;
+  created_at: string;
+  updated_at: string;
+  message: DevJobMessage | null;
+}
+
+export interface DevModelCall {
+  purpose: string;
+  status: string;
+  provider: string;
+  model: string;
+  reserved_usd: string;
+  cost_usd: string | null;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  latency_ms: number | null;
+  error: string | null;
+  raw_output: unknown;
+}
+
+export interface DevDecided {
+  id: string;
+  estimate_cents: number;
+  urgency: string;
+  requested_earliest: string | null;
+  requested_latest: string | null;
+  requested_time_of_day: string | null;
+  review_reasons: string[];
+  lines: { service_code: string; wheel: string; quantity: number; unit_price_cents: number; line_total_cents: number }[];
+}
+
+export type DevRun =
+  | {
+      ran: false;
+      detail: string;
+      queued_for_later: { id: number; shop_id: string; run_after: string; attempts: number; last_error: string | null }[];
+    }
+  | {
+      ran: true;
+      job: { id: number; shop_id: string; attempt: number };
+      message: DevJobMessage | null;
+      outcome: string;
+      model_calls?: DevModelCall[];
+      events?: { type: string; detail: Record<string, unknown> }[];
+      messages_sent?: { kind: string; body: string }[];
+      conversation?: { id: string; state: string; state_reason: string | null; follow_ups_asked: number };
+      /** The validated model output, present when this run created a work order. */
+      model_output?: Record<string, unknown>;
+      code_decided?: DevDecided;
+      job_after: { status: JobStatus; attempts: number; run_after: string; park_reason: string | null; last_error: string | null };
+    };
+
+export interface DevLogLine {
+  seq: number;
+  time: string;
+  level: string;
+  logger: string;
+  message: string;
+}
+
+export interface DevStatus {
+  embeddedWorker: boolean;
+  /** Worker threads running right now (1-3, sized by the backlog); 0 in step mode. */
+  workerThreads: number;
+  provider: string;
+  model: string;
+  breaker: string;
+}
